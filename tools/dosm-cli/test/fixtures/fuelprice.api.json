@@ -1,0 +1,52 @@
+{
+  "meta": {
+    "catalogue_id": "fuelprice",
+    "data_as_of": "2026-09-10 00:01",
+    "last_updated": "2026-09-09 23:59",
+    "next_update": "2026-09-16 23:59",
+    "data_source": [
+      "MOF"
+    ],
+    "update_frequency": "WEEKLY",
+    "total": 3,
+    "limit": 3
+  },
+  "data": [
+    {
+      "date": "2017-03-30",
+      "ron95": 2.13,
+      "ron97": 2.41,
+      "diesel": 2.11,
+      "ron95_skps": null,
+      "diesel_budi": null,
+      "diesel_skds": null,
+      "series_type": "level",
+      "ron95_budi95": null,
+      "diesel_eastmsia": 2.11
+    },
+    {
+      "date": "2017-04-06",
+      "ron95": 2.16,
+      "ron97": 2.43,
+      "diesel": 2.08,
+      "ron95_skps": null,
+      "diesel_budi": null,
+      "diesel_skds": null,
+      "series_type": "level",
+      "ron95_budi95": null,
+      "diesel_eastmsia": 2.08
+    },
+    {
+      "date": "2017-04-13",
+      "ron95": 2.24,
+      "ron97": 2.52,
+      "diesel": 2.16,
+      "ron95_skps": null,
+      "diesel_budi": null,
+      "diesel_skds": null,
+      "series_type": "level",
+      "ron95_budi95": null,
+      "diesel_eastmsia": 2.16
+    }
+  ]
+}
