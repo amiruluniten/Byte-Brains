@@ -1,0 +1,25 @@
+[project]
+name = "bytebrains-pipeline"
+version = "0.1.0"
+description = "Byte-Brains DOSM Datathon data/ML pipeline: builds the versioned data bundle."
+requires-python = ">=3.11"
+dependencies = [
+    "openpyxl>=3.1",
+    "pydantic>=2.6",
+]
+
+[project.scripts]
+tsa-pipeline = "bytebrains_pipeline.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/bytebrains_pipeline"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

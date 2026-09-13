@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+
+# OS/editor
+.DS_Store
+
+# Node
+node_modules/
+.next/
+*.tsbuildinfo
+
+# Build output
+dashboard/out/
+
+# Derived data (rebuild with: pipeline/.venv/bin/tsa-pipeline)
+# bundle.json is committed on purpose: it is the checksummed artefact the report cites.

@@ -1,0 +1,2040 @@
+{
+  "bundle_version": 1,
+  "schema_version": "1.0.0",
+  "generated_utc": "2026-09-13T07:27:42Z",
+  "sources": {
+    "tourism_2023.xlsx": "5b0b1b6a136f5e65dc118612c7bee5694e88f1b27c3a211484da38611498eacb",
+    "tourism_2024.xlsx": "eac7cea293cfb2bbb53174c67e0602670a42462a6896c73df06a7d495b5af2e8",
+    "inbrief2024.txt": "f762f9c16dbe91801961d50a8f70fed48812b623711bf656ecb6efa2e26e7229",
+    "cpi_headline.csv": "7035d4692dfeaa33021c2e1ae82e812fe025ee90c454f851604087d818edf6c5",
+    "WEF_TTDI.csv": "e66fae84a4fd7775e4840092512f5c6ecddd7fa67923d58ef6fd9cf0998d7dea"
+  },
+  "fragments": {
+    "national_series": {
+      "series": [
+        {
+          "series_id": "arrivals_tourist_2015_2023",
+          "measure": "arrivals",
+          "basis": "tourist",
+          "unit": "persons",
+          "window": "2015-2023",
+          "source": {
+            "file": "tourism_2023.xlsx",
+            "sheet": "Indicator Inbound",
+            "row_label": "A1. Ketibaan pelancong ke Malaysia dari negara terpilih Tourist arrivals to Malaysia from selected countries",
+            "row": 7
+          },
+          "values": [
+            {
+              "year": 2015,
+              "value": 25721251.0,
+              "revision_flag": null
+            },
+            {
+              "year": 2016,
+              "value": 26757392.0,
+              "revision_flag": null
+            },
+            {
+              "year": 2017,
+              "value": 25948459.0,
+              "revision_flag": null
+            },
+            {
+              "year": 2018,
+              "value": 25832354.0,
+              "revision_flag": null
+            },
+            {
+              "year": 2019,
+              "value": 26100784.0,
+              "revision_flag": null
+            },
+            {
+              "year": 2020,
+              "value": 4332722.0,
+              "revision_flag": null
+            },
+            {
+              "year": 2021,
+              "value": 134728.0,
+              "revision_flag": null
+            },
+            {
+              "year": 2022,
+              "value": 10070964.0,
+              "revision_flag": null
+            },
+            {
+              "year": 2023,
+              "value": 20141846.0,
+              "revision_flag": null
+            }
+          ]
+        },
+        {
+          "series_id": "arrivals_visitor_2019_2024",
+          "measure": "arrivals",
+          "basis": "visitor",
+          "unit": "persons",
+          "window": "2019-2024",
+          "source": {
+            "file": "tourism_2024.xlsx",
+            "sheet": "Indicator Inbound",
+            "row_label": "A1. Ketibaan pelawat ke Malaysia dari negara terpilih Visitor arrivals to Malaysia from selected countries",
+            "row": 7
+          },
+          "values": [
+            {
+              "year": 2019,
+              "value": 35045625.0,
+              "revision_flag": null
+            },
+            {
+              "year": 2020,
+              "value": 6101378.0,
+              "revision_flag": null
+            },
+            {
+              "year": 2021,
+              "value": 399865.0,
+              "revision_flag": null
+            },
+            {
+              "year": 2022,
+              "value": 14267416.0,
+              "revision_flag": null
+            },
+            {
+              "year": 2023,
+              "value": 28964308.0,
+              "revision_flag": null
+            },
+            {
+              "year": 2024,
+              "value": 37961485.0,
+              "revision_flag": null
+            }
+          ]
+        },
+        {
+          "series_id": "arrivals_tourist_2019_2024",
+          "measure": "arrivals",
+          "basis": "tourist",
+          "unit": "persons",
+          "window": "2019-2024",
+          "source": {
+            "file": "tourism_2024.xlsx",
+            "sheet": "Indicator Inbound",
+            "row_label": "A2. Ketibaan pelancong ke Malaysia Tourist arrivals to Malaysia",
+            "row": 26
+          },
+          "values": [
+            {
+              "year": 2019,
+              "value": 26100784.0,
+              "revision_flag": null
+            },
+            {
+              "year": 2020,
+              "value": 4332722.0,
+              "revision_flag": null
+            },
+            {
+              "year": 2021,
+              "value": 134728.0,
+              "revision_flag": null
+            },
+            {
+              "year": 2022,
+              "value": 10070964.0,
+              "revision_flag": null
+            },
+            {
+              "year": 2023,
+              "value": 20141846.0,
+              "revision_flag": null
+            },
+            {
+              "year": 2024,
+              "value": 25016698.0,
+              "revision_flag": null
+            }
+          ]
+        },
+        {
+          "series_id": "arrivals_excursionist_2019_2024",
+          "measure": "arrivals",
+          "basis": "excursionist",
+          "unit": "persons",
+          "window": "2019-2024",
+          "source": {
+            "file": "tourism_2024.xlsx",
+            "sheet": "Indicator Inbound",
+            "row_label": "A3. Ketibaan pelawat harian ke Malaysia Excursionist arrivals to Malaysia",
+            "row": 27
+          },
+          "values": [
+            {
+              "year": 2019,
+              "value": 8944841.0,
+              "revision_flag": null
+            },
+            {
+              "year": 2020,
+              "value": 1768656.0,
+              "revision_flag": null
+            },
+            {
+              "year": 2021,
+              "value": 265137.0,
+              "revision_flag": null
+            },
+            {
+              "year": 2022,
+              "value": 4196452.0,
+              "revision_flag": null
+            },
+            {
+              "year": 2023,
+              "value": 8822462.0,
+              "revision_flag": null
+            },
+            {
+              "year": 2024,
+              "value": 12944787.0,
+              "revision_flag": null
+            }
+          ]
+        },
+        {
+          "series_id": "inbound_consumption_tourist_2015_2024",
+          "measure": "inbound_tourism_consumption",
+          "basis": "tourist",
+          "unit": "rm_million",
+          "window": "2015-2024",
+          "source": {
+            "file": "tourism_2024.xlsx",
+            "sheet": "Jad 1A",
+            "row_label": "Jumlah Total",
+            "row": 14
+          },
+          "values": [
+            {
+              "year": 2015,
+              "value": 72592.5,
+              "revision_flag": null
+            },
+            {
+              "year": 2016,
+              "value": 79325.9,
+              "revision_flag": null
+            },
+            {
+              "year": 2017,
+              "value": 82921.5,
+              "revision_flag": null
+            },
+            {
+              "year": 2018,
+              "value": 84929.9,
+              "revision_flag": null
+            },
+            {
+              "year": 2019,
+              "value": 86706.5,
+              "revision_flag": null
+            },
+            {
+              "year": 2020,
+              "value": 13157.3,
+              "revision_flag": null
+            },
+            {
+              "year": 2021,
+              "value": 389.8,
+              "revision_flag": null
+            },
+            {
+              "year": 2022,
+              "value": 32473.3,
+              "revision_flag": null
+            },
+            {
+              "year": 2023,
+              "value": 72992.8,
+              "revision_flag": null
+            },
+            {
+              "year": 2024,
+              "value": 102815.3,
+              "revision_flag": null
+            }
+          ]
+        }
+      ]
+    },
+    "source_market": {
+      "source_receipts": {
+        "file": "inbrief2024.txt",
+        "table": "VISITOR RECEIPTS (RM MILLION)",
+        "page": 14
+      },
+      "source_arrivals": {
+        "file": "inbrief2024.txt",
+        "table": "COUNTRY OF NATIONALITY (visitor arrivals)",
+        "page": 11
+      },
+      "national_totals": [
+        {
+          "year": 2024,
+          "receipts_rm_million": 106783.11,
+          "arrivals_persons": 37961485,
+          "receipts_rank": null,
+          "arrivals_rank": null,
+          "yield_rm_per_visitor": null
+        },
+        {
+          "year": 2023,
+          "receipts_rm_million": 74291.56,
+          "arrivals_persons": 28964308,
+          "receipts_rank": null,
+          "arrivals_rank": null,
+          "yield_rm_per_visitor": null
+        }
+      ],
+      "markets": [
+        {
+          "market": "Singapore",
+          "coverage": "both",
+          "observations": [
+            {
+              "year": 2024,
+              "receipts_rm_million": 27941.65,
+              "arrivals_persons": 18855680,
+              "receipts_rank": 1,
+              "arrivals_rank": 1,
+              "yield_rm_per_visitor": 1481.87
+            },
+            {
+              "year": 2023,
+              "receipts_rm_million": 21575.31,
+              "arrivals_persons": 14828553,
+              "receipts_rank": 1,
+              "arrivals_rank": 1,
+              "yield_rm_per_visitor": 1454.98
+            }
+          ]
+        },
+        {
+          "market": "China",
+          "coverage": "both",
+          "observations": [
+            {
+              "year": 2024,
+              "receipts_rm_million": 20866.57,
+              "arrivals_persons": 3725894,
+              "receipts_rank": 2,
+              "arrivals_rank": 3,
+              "yield_rm_per_visitor": 5600.42
+            },
+            {
+              "year": 2023,
+              "receipts_rm_million": 8881.23,
+              "arrivals_persons": 1613312,
+              "receipts_rank": 2,
+              "arrivals_rank": 3,
+              "yield_rm_per_visitor": 5504.97
+            }
+          ]
+        },
+        {
+          "market": "Indonesia",
+          "coverage": "both",
+          "observations": [
+            {
+              "year": 2024,
+              "receipts_rm_million": 15323.27,
+              "arrivals_persons": 4145127,
+              "receipts_rank": 3,
+              "arrivals_rank": 2,
+              "yield_rm_per_visitor": 3696.69
+            },
+            {
+              "year": 2023,
+              "receipts_rm_million": 11875.06,
+              "arrivals_persons": 3479392,
+              "receipts_rank": 3,
+              "arrivals_rank": 2,
+              "yield_rm_per_visitor": 3412.97
+            }
+          ]
+        },
+        {
+          "market": "India",
+          "coverage": "both",
+          "observations": [
+            {
+              "year": 2024,
+              "receipts_rm_million": 6112.06,
+              "arrivals_persons": 1365387,
+              "receipts_rank": 4,
+              "arrivals_rank": 6,
+              "yield_rm_per_visitor": 4476.43
+            },
+            {
+              "year": 2023,
+              "receipts_rm_million": 3408.61,
+              "arrivals_persons": 773221,
+              "receipts_rank": 4,
+              "arrivals_rank": 6,
+              "yield_rm_per_visitor": 4408.33
+            }
+          ]
+        },
+        {
+          "market": "Thailand",
+          "coverage": "both",
+          "observations": [
+            {
+              "year": 2024,
+              "receipts_rm_million": 3993.81,
+              "arrivals_persons": 2268182,
+              "receipts_rank": 5,
+              "arrivals_rank": 4,
+              "yield_rm_per_visitor": 1760.8
+            },
+            {
+              "year": 2023,
+              "receipts_rm_million": 3238.5,
+              "arrivals_persons": 2300158,
+              "receipts_rank": 5,
+              "arrivals_rank": 4,
+              "yield_rm_per_visitor": 1407.95
+            }
+          ]
+        },
+        {
+          "market": "Brunei",
+          "coverage": "both",
+          "observations": [
+            {
+              "year": 2024,
+              "receipts_rm_million": 3235.1,
+              "arrivals_persons": 1732119,
+              "receipts_rank": 6,
+              "arrivals_rank": 5,
+              "yield_rm_per_visitor": 1867.71
+            },
+            {
+              "year": 2023,
+              "receipts_rm_million": 2099.56,
+              "arrivals_persons": 1116211,
+              "receipts_rank": 6,
+              "arrivals_rank": 5,
+              "yield_rm_per_visitor": 1880.97
+            }
+          ]
+        },
+        {
+          "market": "South Korea",
+          "coverage": "both",
+          "observations": [
+            {
+              "year": 2024,
+              "receipts_rm_million": 2901.45,
+              "arrivals_persons": 553165,
+              "receipts_rank": 7,
+              "arrivals_rank": 8,
+              "yield_rm_per_visitor": 5245.18
+            },
+            {
+              "year": 2023,
+              "receipts_rm_million": 2302.97,
+              "arrivals_persons": 465617,
+              "receipts_rank": 7,
+              "arrivals_rank": 8,
+              "yield_rm_per_visitor": 4946.06
+            }
+          ]
+        },
+        {
+          "market": "Australia",
+          "coverage": "both",
+          "observations": [
+            {
+              "year": 2024,
+              "receipts_rm_million": 2488.2,
+              "arrivals_persons": 447785,
+              "receipts_rank": 8,
+              "arrivals_rank": 9,
+              "yield_rm_per_visitor": 5556.68
+            },
+            {
+              "year": 2023,
+              "receipts_rm_million": 2114.36,
+              "arrivals_persons": 400909,
+              "receipts_rank": 8,
+              "arrivals_rank": 9,
+              "yield_rm_per_visitor": 5273.92
+            }
+          ]
+        },
+        {
+          "market": "United Kingdom",
+          "coverage": "both",
+          "observations": [
+            {
+              "year": 2024,
+              "receipts_rm_million": 2450.48,
+              "arrivals_persons": 390035,
+              "receipts_rank": 9,
+              "arrivals_rank": 11,
+              "yield_rm_per_visitor": 6282.72
+            },
+            {
+              "year": 2023,
+              "receipts_rm_million": 1880.29,
+              "arrivals_persons": 306926,
+              "receipts_rank": 9,
+              "arrivals_rank": 11,
+              "yield_rm_per_visitor": 6126.2
+            }
+          ]
+        },
+        {
+          "market": "Chinese Taipei",
+          "coverage": "both",
+          "observations": [
+            {
+              "year": 2024,
+              "receipts_rm_million": 2334.84,
+              "arrivals_persons": 423117,
+              "receipts_rank": 10,
+              "arrivals_rank": 10,
+              "yield_rm_per_visitor": 5518.19
+            },
+            {
+              "year": 2023,
+              "receipts_rm_million": 1624.42,
+              "arrivals_persons": 311437,
+              "receipts_rank": 10,
+              "arrivals_rank": 10,
+              "yield_rm_per_visitor": 5215.89
+            }
+          ]
+        },
+        {
+          "market": "Japan",
+          "coverage": "both",
+          "observations": [
+            {
+              "year": 2024,
+              "receipts_rm_million": 1934.97,
+              "arrivals_persons": 367182,
+              "receipts_rank": 11,
+              "arrivals_rank": 12,
+              "yield_rm_per_visitor": 5269.78
+            },
+            {
+              "year": 2023,
+              "receipts_rm_million": 1382.73,
+              "arrivals_persons": 277559,
+              "receipts_rank": 11,
+              "arrivals_rank": 12,
+              "yield_rm_per_visitor": 4981.75
+            }
+          ]
+        },
+        {
+          "market": "Philippines",
+          "coverage": "both",
+          "observations": [
+            {
+              "year": 2024,
+              "receipts_rm_million": 1804.38,
+              "arrivals_persons": 571533,
+              "receipts_rank": 12,
+              "arrivals_rank": 7,
+              "yield_rm_per_visitor": 3157.09
+            },
+            {
+              "year": 2023,
+              "receipts_rm_million": 1370.96,
+              "arrivals_persons": 461787,
+              "receipts_rank": 12,
+              "arrivals_rank": 7,
+              "yield_rm_per_visitor": 2968.81
+            }
+          ]
+        },
+        {
+          "market": "United States",
+          "coverage": "both",
+          "observations": [
+            {
+              "year": 2024,
+              "receipts_rm_million": 1656.75,
+              "arrivals_persons": 304880,
+              "receipts_rank": 13,
+              "arrivals_rank": 14,
+              "yield_rm_per_visitor": 5434.11
+            },
+            {
+              "year": 2023,
+              "receipts_rm_million": 1308.79,
+              "arrivals_persons": 257533,
+              "receipts_rank": 13,
+              "arrivals_rank": 14,
+              "yield_rm_per_visitor": 5082.03
+            }
+          ]
+        },
+        {
+          "market": "Vietnam",
+          "coverage": "both",
+          "observations": [
+            {
+              "year": 2024,
+              "receipts_rm_million": 1306.55,
+              "arrivals_persons": 366525,
+              "receipts_rank": 14,
+              "arrivals_rank": 13,
+              "yield_rm_per_visitor": 3564.7
+            },
+            {
+              "year": 2023,
+              "receipts_rm_million": 1299.92,
+              "arrivals_persons": 374181,
+              "receipts_rank": 14,
+              "arrivals_rank": 13,
+              "yield_rm_per_visitor": 3474.04
+            }
+          ]
+        },
+        {
+          "market": "France",
+          "coverage": "both",
+          "observations": [
+            {
+              "year": 2024,
+              "receipts_rm_million": 924.86,
+              "arrivals_persons": 183872,
+              "receipts_rank": 15,
+              "arrivals_rank": 15,
+              "yield_rm_per_visitor": 5029.91
+            },
+            {
+              "year": 2023,
+              "receipts_rm_million": 623.52,
+              "arrivals_persons": 132311,
+              "receipts_rank": 15,
+              "arrivals_rank": 15,
+              "yield_rm_per_visitor": 4712.53
+            }
+          ]
+        },
+        {
+          "market": "Germany",
+          "coverage": "both",
+          "observations": [
+            {
+              "year": 2024,
+              "receipts_rm_million": 887.54,
+              "arrivals_persons": 170712,
+              "receipts_rank": 16,
+              "arrivals_rank": 16,
+              "yield_rm_per_visitor": 5199.05
+            },
+            {
+              "year": 2023,
+              "receipts_rm_million": 703.01,
+              "arrivals_persons": 137977,
+              "receipts_rank": 16,
+              "arrivals_rank": 16,
+              "yield_rm_per_visitor": 5095.12
+            }
+          ]
+        },
+        {
+          "market": "Russia",
+          "coverage": "both",
+          "observations": [
+            {
+              "year": 2024,
+              "receipts_rm_million": 628.69,
+              "arrivals_persons": 130998,
+              "receipts_rank": 17,
+              "arrivals_rank": 19,
+              "yield_rm_per_visitor": 4799.23
+            },
+            {
+              "year": 2023,
+              "receipts_rm_million": 594.55,
+              "arrivals_persons": 129514,
+              "receipts_rank": 17,
+              "arrivals_rank": 19,
+              "yield_rm_per_visitor": 4590.62
+            }
+          ]
+        },
+        {
+          "market": "Pakistan",
+          "coverage": "both",
+          "observations": [
+            {
+              "year": 2024,
+              "receipts_rm_million": 547.04,
+              "arrivals_persons": 106388,
+              "receipts_rank": 18,
+              "arrivals_rank": 20,
+              "yield_rm_per_visitor": 5141.93
+            },
+            {
+              "year": 2023,
+              "receipts_rm_million": 543.13,
+              "arrivals_persons": 111245,
+              "receipts_rank": 18,
+              "arrivals_rank": 20,
+              "yield_rm_per_visitor": 4882.29
+            }
+          ]
+        },
+        {
+          "market": "Canada",
+          "coverage": "receipts_only",
+          "observations": [
+            {
+              "year": 2024,
+              "receipts_rm_million": 525.27,
+              "arrivals_persons": null,
+              "receipts_rank": 19,
+              "arrivals_rank": null,
+              "yield_rm_per_visitor": null
+            },
+            {
+              "year": 2023,
+              "receipts_rm_million": 409.72,
+              "arrivals_persons": null,
+              "receipts_rank": 19,
+              "arrivals_rank": null,
+              "yield_rm_per_visitor": null
+            }
+          ]
+        },
+        {
+          "market": "Netherlands",
+          "coverage": "receipts_only",
+          "observations": [
+            {
+              "year": 2024,
+              "receipts_rm_million": 494.52,
+              "arrivals_persons": null,
+              "receipts_rank": 20,
+              "arrivals_rank": null,
+              "yield_rm_per_visitor": null
+            },
+            {
+              "year": 2023,
+              "receipts_rm_million": 390.44,
+              "arrivals_persons": null,
+              "receipts_rank": 20,
+              "arrivals_rank": null,
+              "yield_rm_per_visitor": null
+            }
+          ]
+        },
+        {
+          "market": "Bangladesh",
+          "coverage": "arrivals_only",
+          "observations": [
+            {
+              "year": 2024,
+              "receipts_rm_million": null,
+              "arrivals_persons": 154596,
+              "receipts_rank": null,
+              "arrivals_rank": 17,
+              "yield_rm_per_visitor": null
+            },
+            {
+              "year": 2023,
+              "receipts_rm_million": null,
+              "arrivals_persons": 153093,
+              "receipts_rank": null,
+              "arrivals_rank": 17,
+              "yield_rm_per_visitor": null
+            }
+          ]
+        },
+        {
+          "market": "Myanmar",
+          "coverage": "arrivals_only",
+          "observations": [
+            {
+              "year": 2024,
+              "receipts_rm_million": null,
+              "arrivals_persons": 147133,
+              "receipts_rank": null,
+              "arrivals_rank": 18,
+              "yield_rm_per_visitor": null
+            },
+            {
+              "year": 2023,
+              "receipts_rm_million": null,
+              "arrivals_persons": 102587,
+              "receipts_rank": null,
+              "arrivals_rank": 18,
+              "yield_rm_per_visitor": null
+            }
+          ]
+        }
+      ]
+    },
+    "macro_series": {
+      "series": [
+        {
+          "series_id": "cpi_national_overall_2015_2024",
+          "measure": "cpi",
+          "unit": "index",
+          "window": "2015-2024",
+          "source": {
+            "dataset_id": "cpi_headline",
+            "title": "Monthly CPI by Division (2-digit), overall",
+            "url": "https://storage.dosm.gov.my/cpi/cpi_2d.csv",
+            "fetched_utc": "2026-09-13T00:00:00Z",
+            "index_base": "2010=100"
+          },
+          "values": [
+            {
+              "year": 2015,
+              "value": 112.808333,
+              "revision_flag": null
+            },
+            {
+              "year": 2016,
+              "value": 115.15,
+              "revision_flag": null
+            },
+            {
+              "year": 2017,
+              "value": 119.525,
+              "revision_flag": null
+            },
+            {
+              "year": 2018,
+              "value": 120.683333,
+              "revision_flag": null
+            },
+            {
+              "year": 2019,
+              "value": 121.483333,
+              "revision_flag": null
+            },
+            {
+              "year": 2020,
+              "value": 120.1,
+              "revision_flag": null
+            },
+            {
+              "year": 2021,
+              "value": 123.075,
+              "revision_flag": null
+            },
+            {
+              "year": 2022,
+              "value": 127.233333,
+              "revision_flag": null
+            },
+            {
+              "year": 2023,
+              "value": 130.4,
+              "revision_flag": null
+            },
+            {
+              "year": 2024,
+              "value": 132.791667,
+              "revision_flag": null
+            }
+          ]
+        }
+      ]
+    },
+    "missing_billions": {
+      "anchor_year": 2019,
+      "prices": "constant_2019_rm",
+      "receipts_series_id": "inbound_consumption_tourist_2015_2024",
+      "arrivals_series_id": "arrivals_visitor_2019_2024",
+      "cpi_series_id": "cpi_national_overall_2015_2024",
+      "deflator": {
+        "series_id": "cpi_national_overall_2015_2024",
+        "description": "Malaysia national CPI (all items), annual mean of the monthly index — the deflator for the constant-2019-prices counterfactual",
+        "anchor_year": 2019,
+        "anchor_index": 121.483333,
+        "index_base": "2010=100",
+        "source": {
+          "dataset_id": "cpi_headline",
+          "title": "Monthly CPI by Division (2-digit), overall",
+          "url": "https://storage.dosm.gov.my/cpi/cpi_2d.csv",
+          "fetched_utc": "2026-09-13T00:00:00Z",
+          "index_base": "2010=100"
+        }
+      },
+      "years": [
+        {
+          "year": 2019,
+          "visitor_arrivals": 35045625.0,
+          "receipts_nominal_rm_million": 86706.5,
+          "per_visitor_nominal_rm": 2474.1034009237956,
+          "cpi_index": 121.483333,
+          "cpi_ratio_to_anchor": 1.0,
+          "per_visitor_real_2019_rm": 2474.1034009237956,
+          "actual_receipts_2019_prices_rm_million": 86706.5,
+          "counterfactual_receipts_2019_prices_rm_million": 86706.5,
+          "gap_2019_prices_rm_million": 0.0,
+          "naive_nominal_gap_rm_million": 0.0
+        },
+        {
+          "year": 2020,
+          "visitor_arrivals": 6101378.0,
+          "receipts_nominal_rm_million": 13157.3,
+          "per_visitor_nominal_rm": 2156.4472812535137,
+          "cpi_index": 120.1,
+          "cpi_ratio_to_anchor": 0.9886129811733103,
+          "per_visitor_real_2019_rm": 2181.2856216941323,
+          "actual_receipts_2019_prices_rm_million": 13308.8481039209,
+          "counterfactual_receipts_2019_prices_rm_million": 15095.440060121626,
+          "gap_2019_prices_rm_million": 1786.5919562007257,
+          "naive_nominal_gap_rm_million": 1938.1400601216264
+        },
+        {
+          "year": 2021,
+          "visitor_arrivals": 399865.0,
+          "receipts_nominal_rm_million": 389.8,
+          "per_visitor_nominal_rm": 974.8290047891163,
+          "cpi_index": 123.075,
+          "cpi_ratio_to_anchor": 1.013101937201542,
+          "per_visitor_real_2019_rm": 962.2220321499476,
+          "actual_receipts_2019_prices_rm_million": 384.75891288563884,
+          "counterfactual_receipts_2019_prices_rm_million": 989.3073564103935,
+          "gap_2019_prices_rm_million": 604.5484435247547,
+          "naive_nominal_gap_rm_million": 599.5073564103934
+        },
+        {
+          "year": 2022,
+          "visitor_arrivals": 14267416.0,
+          "receipts_nominal_rm_million": 32473.3,
+          "per_visitor_nominal_rm": 2276.046342238847,
+          "cpi_index": 127.233333,
+          "cpi_ratio_to_anchor": 1.047331595684817,
+          "per_visitor_real_2019_rm": 2173.1859819913216,
+          "actual_receipts_2019_prices_rm_million": 31005.748450438692,
+          "counterfactual_receipts_2019_prices_rm_million": 35299.062447994576,
+          "gap_2019_prices_rm_million": 4293.313997555884,
+          "naive_nominal_gap_rm_million": 2825.762447994577
+        },
+        {
+          "year": 2023,
+          "visitor_arrivals": 28964308.0,
+          "receipts_nominal_rm_million": 72992.8,
+          "per_visitor_nominal_rm": 2520.0947317643495,
+          "cpi_index": 130.4,
+          "cpi_ratio_to_anchor": 1.0733982743130699,
+          "per_visitor_real_2019_rm": 2347.77229670609,
+          "actual_receipts_2019_prices_rm_million": 68001.59991566258,
+          "counterfactual_receipts_2019_prices_rm_million": 71660.6929282043,
+          "gap_2019_prices_rm_million": 3659.0930125417217,
+          "naive_nominal_gap_rm_million": -1332.1070717957045
+        },
+        {
+          "year": 2024,
+          "visitor_arrivals": 37961485.0,
+          "receipts_nominal_rm_million": 102815.3,
+          "per_visitor_nominal_rm": 2708.4109064753393,
+          "cpi_index": 132.791667,
+          "cpi_ratio_to_anchor": 1.0930854770011948,
+          "per_visitor_real_2019_rm": 2477.766801829331,
+          "actual_receipts_2019_prices_rm_million": 94059.70728114212,
+          "counterfactual_receipts_2019_prices_rm_million": 93920.63914261764,
+          "gap_2019_prices_rm_million": -139.0681385244825,
+          "naive_nominal_gap_rm_million": -8894.660857382361
+        }
+      ],
+      "volume_trap": {
+        "excursionist_share_2019_pct": 25.5,
+        "excursionist_share_2024_pct": 34.1,
+        "excursionist_share_change_pp": 8.6,
+        "land_mode_share_2024_pct": 66.1,
+        "land_mode_share_source": "Tourism Malaysia Statistics in Brief 2024, mode of arrival (land 25,080,202 of 37,961,485 visitor arrivals, 2024)"
+      }
+    },
+    "simulator": {
+      "prices": "constant_2019_rm",
+      "anchor_year": 2019,
+      "mix_year": 2024,
+      "comparison_year": 2023,
+      "cpi_series_id": "cpi_national_overall_2015_2024",
+      "cpi_ratio_to_anchor_mix_year": 1.0930854770011948,
+      "visitor_arrivals_2024": 37961485,
+      "visitor_arrivals_2023": 28964308,
+      "anchor_per_visitor_real_2019_rm": 2474.1034009237956,
+      "markets": [
+        {
+          "market": "Singapore",
+          "coverage": "both",
+          "yield_2024_nominal_rm_per_visitor": 1481.87,
+          "yield_2024_real_2019_rm_per_visitor": 1355.6762313459774,
+          "arrivals_2024_persons": 18855680,
+          "arrivals_2023_persons": 14828553,
+          "share_of_arrivals_2024": 0.4967055424728511,
+          "share_of_arrivals_2023": 0.5119595123764048
+        },
+        {
+          "market": "China",
+          "coverage": "both",
+          "yield_2024_nominal_rm_per_visitor": 5600.42,
+          "yield_2024_real_2019_rm_per_visitor": 5123.496851650037,
+          "arrivals_2024_persons": 3725894,
+          "arrivals_2023_persons": 1613312,
+          "share_of_arrivals_2024": 0.09814932160846711,
+          "share_of_arrivals_2023": 0.05570000153292114
+        },
+        {
+          "market": "Indonesia",
+          "coverage": "both",
+          "yield_2024_nominal_rm_per_visitor": 3696.69,
+          "yield_2024_real_2019_rm_per_visitor": 3381.8855686763086,
+          "arrivals_2024_persons": 4145127,
+          "arrivals_2023_persons": 3479392,
+          "share_of_arrivals_2024": 0.10919296228796108,
+          "share_of_arrivals_2023": 0.12012688167796033
+        },
+        {
+          "market": "India",
+          "coverage": "both",
+          "yield_2024_nominal_rm_per_visitor": 4476.43,
+          "yield_2024_real_2019_rm_per_visitor": 4095.224110268832,
+          "arrivals_2024_persons": 1365387,
+          "arrivals_2023_persons": 773221,
+          "share_of_arrivals_2024": 0.035967691990974535,
+          "share_of_arrivals_2023": 0.026695649003594356
+        },
+        {
+          "market": "Thailand",
+          "coverage": "both",
+          "yield_2024_nominal_rm_per_visitor": 1760.8,
+          "yield_2024_real_2019_rm_per_visitor": 1610.8529818094685,
+          "arrivals_2024_persons": 2268182,
+          "arrivals_2023_persons": 2300158,
+          "share_of_arrivals_2024": 0.0597495593230876,
+          "share_of_arrivals_2023": 0.07941353199254751
+        },
+        {
+          "market": "Brunei",
+          "coverage": "both",
+          "yield_2024_nominal_rm_per_visitor": 1867.71,
+          "yield_2024_real_2019_rm_per_visitor": 1708.6586907402104,
+          "arrivals_2024_persons": 1732119,
+          "arrivals_2023_persons": 1116211,
+          "share_of_arrivals_2024": 0.04562832565691253,
+          "share_of_arrivals_2023": 0.03853746479978047
+        },
+        {
+          "market": "South Korea",
+          "coverage": "both",
+          "yield_2024_nominal_rm_per_visitor": 5245.18,
+          "yield_2024_real_2019_rm_per_visitor": 4798.508543348131,
+          "arrivals_2024_persons": 553165,
+          "arrivals_2023_persons": 465617,
+          "share_of_arrivals_2024": 0.01457174291258627,
+          "share_of_arrivals_2023": 0.01607554373472344
+        },
+        {
+          "market": "Australia",
+          "coverage": "both",
+          "yield_2024_nominal_rm_per_visitor": 5556.68,
+          "yield_2024_real_2019_rm_per_visitor": 5083.48168273571,
+          "arrivals_2024_persons": 447785,
+          "arrivals_2023_persons": 400909,
+          "share_of_arrivals_2024": 0.011795771424642635,
+          "share_of_arrivals_2023": 0.013841483801373747
+        },
+        {
+          "market": "United Kingdom",
+          "coverage": "both",
+          "yield_2024_nominal_rm_per_visitor": 6282.72,
+          "yield_2024_real_2019_rm_per_visitor": 5747.693233685816,
+          "arrivals_2024_persons": 390035,
+          "arrivals_2023_persons": 306926,
+          "share_of_arrivals_2024": 0.01027449268646893,
+          "share_of_arrivals_2023": 0.010596697148780492
+        },
+        {
+          "market": "Chinese Taipei",
+          "coverage": "both",
+          "yield_2024_nominal_rm_per_visitor": 5518.19,
+          "yield_2024_real_2019_rm_per_visitor": 5048.269431900949,
+          "arrivals_2024_persons": 423117,
+          "arrivals_2023_persons": 311437,
+          "share_of_arrivals_2024": 0.011145954906663952,
+          "share_of_arrivals_2023": 0.010752440555458808
+        },
+        {
+          "market": "Japan",
+          "coverage": "both",
+          "yield_2024_nominal_rm_per_visitor": 5269.78,
+          "yield_2024_real_2019_rm_per_visitor": 4821.013645206668,
+          "arrivals_2024_persons": 367182,
+          "arrivals_2023_persons": 277559,
+          "share_of_arrivals_2024": 0.009672487785975707,
+          "share_of_arrivals_2023": 0.009582794106456816
+        },
+        {
+          "market": "Philippines",
+          "coverage": "both",
+          "yield_2024_nominal_rm_per_visitor": 3157.09,
+          "yield_2024_real_2019_rm_per_visitor": 2888.2370742508265,
+          "arrivals_2024_persons": 571533,
+          "arrivals_2023_persons": 461787,
+          "share_of_arrivals_2024": 0.015055601750036913,
+          "share_of_arrivals_2023": 0.01594331202388816
+        },
+        {
+          "market": "United States",
+          "coverage": "both",
+          "yield_2024_nominal_rm_per_visitor": 5434.11,
+          "yield_2024_real_2019_rm_per_visitor": 4971.349555304777,
+          "arrivals_2024_persons": 304880,
+          "arrivals_2023_persons": 257533,
+          "share_of_arrivals_2024": 0.00803129803799825,
+          "share_of_arrivals_2023": 0.008891391432517565
+        },
+        {
+          "market": "Vietnam",
+          "coverage": "both",
+          "yield_2024_nominal_rm_per_visitor": 3564.7,
+          "yield_2024_real_2019_rm_per_visitor": 3261.135633948326,
+          "arrivals_2024_persons": 366525,
+          "arrivals_2023_persons": 374181,
+          "share_of_arrivals_2024": 0.00965518077072064,
+          "share_of_arrivals_2023": 0.012918692896098191
+        },
+        {
+          "market": "France",
+          "coverage": "both",
+          "yield_2024_nominal_rm_per_visitor": 5029.91,
+          "yield_2024_real_2019_rm_per_visitor": 4601.570605255148,
+          "arrivals_2024_persons": 183872,
+          "arrivals_2023_persons": 132311,
+          "share_of_arrivals_2024": 0.004843646132389183,
+          "share_of_arrivals_2023": 0.0045680704679704415
+        },
+        {
+          "market": "Germany",
+          "coverage": "both",
+          "yield_2024_nominal_rm_per_visitor": 5199.05,
+          "yield_2024_real_2019_rm_per_visitor": 4756.306903155678,
+          "arrivals_2024_persons": 170712,
+          "arrivals_2023_persons": 137977,
+          "share_of_arrivals_2024": 0.004496978977508388,
+          "share_of_arrivals_2023": 0.004763690539404566
+        },
+        {
+          "market": "Russia",
+          "coverage": "both",
+          "yield_2024_nominal_rm_per_visitor": 4799.23,
+          "yield_2024_real_2019_rm_per_visitor": 4390.534959046715,
+          "arrivals_2024_persons": 130998,
+          "arrivals_2023_persons": 129514,
+          "share_of_arrivals_2024": 0.003450813370446388,
+          "share_of_arrivals_2023": 0.004471503341284729
+        },
+        {
+          "market": "Pakistan",
+          "coverage": "both",
+          "yield_2024_nominal_rm_per_visitor": 5141.93,
+          "yield_2024_real_2019_rm_per_visitor": 4704.0511544500005,
+          "arrivals_2024_persons": 106388,
+          "arrivals_2023_persons": 111245,
+          "share_of_arrivals_2024": 0.002802524716828122,
+          "share_of_arrivals_2023": 0.0038407615331255284
+        },
+        {
+          "market": "Other markets (residual)",
+          "coverage": "residual",
+          "yield_2024_nominal_rm_per_visitor": null,
+          "yield_2024_real_2019_rm_per_visitor": 2704.2261741181896,
+          "arrivals_2024_persons": 1852904,
+          "arrivals_2023_persons": 1486465,
+          "share_of_arrivals_2024": 0.04881010318748068,
+          "share_of_arrivals_2023": 0.051320577035708914
+        }
+      ]
+    },
+    "regional_benchmark": {
+      "anchor_year": 2024,
+      "baseline_year": 2019,
+      "currency": "usd",
+      "baseline_market": "Malaysia",
+      "countries": [
+        {
+          "country": "Malaysia",
+          "role": "baseline",
+          "receipts_basis": "survey",
+          "receipts_basis_note": "Tourism Malaysia tourist expenditure survey (Statistics in Brief 2024; consistent with the DOSM TSA inbound consumption aggregate).",
+          "arrivals_2024": 37961485,
+          "receipts_2024": {
+            "local_amount_billion": 106.78,
+            "local_currency": "MYR",
+            "usd_billion": 22.8,
+            "usd_note": "RM 106.78bn at 2024 average ~4.68 MYR/USD"
+          },
+          "yield_2024_usd_per_visitor": 600.0,
+          "yield_2019_usd_per_visitor": 851.0,
+          "yield_change_2024_vs_2019_pct": -29.0,
+          "yield_multiple_of_malaysia_2024": null,
+          "source_urls": [
+            "https://data.tourism.gov.my/",
+            "https://www.worldbank.org/en/programs/wdi"
+          ]
+        },
+        {
+          "country": "Thailand",
+          "role": "comparator",
+          "receipts_basis": "survey",
+          "receipts_basis_note": "MOTS (Ministry of Tourism and Sports) continuous foreign-tourist expenditure survey (departure-point sampling); survey estimates, not balance-of-payments. 2024 headline later restated to ~THB 1.61T by MOTS.",
+          "arrivals_2024": 35546072,
+          "receipts_2024": {
+            "local_amount_billion": 1670.0,
+            "local_currency": "THB",
+            "usd_billion": 48.45,
+            "usd_note": "MOTS-stated conversion at ~34.5 THB/USD"
+          },
+          "yield_2024_usd_per_visitor": 1363.0,
+          "yield_2019_usd_per_visitor": 1613.0,
+          "yield_change_2024_vs_2019_pct": -16.0,
+          "yield_multiple_of_malaysia_2024": 2.3,
+          "source_urls": [
+            "https://english.news.cn/20250107/557d03a80370448b895fbad449e33203/c.html",
+            "https://tpnnational.com/2025/02/01/thailands-foreign-arrivals-surge-26-27-percent-in-2024-generating-1-67-trillion-baht/",
+            "https://www.mots.go.th/"
+          ]
+        },
+        {
+          "country": "Indonesia",
+          "role": "comparator",
+          "receipts_basis": "balance_of_payments",
+          "receipts_basis_note": "Bank Indonesia tourism foreign exchange (devisa pariwisata), processed by Kemenpar — administrative balance-of-payments, not a visitor survey. No official rupiah figure published.",
+          "arrivals_2024": 13902420,
+          "receipts_2024": {
+            "local_amount_billion": null,
+            "local_currency": null,
+            "usd_billion": 16.71,
+            "usd_note": "published in USD (angka sementara); ~Rp265T at ~15,869 IDR/USD is a conversion, not official"
+          },
+          "yield_2024_usd_per_visitor": 1202.0,
+          "yield_2019_usd_per_visitor": 1143.0,
+          "yield_change_2024_vs_2019_pct": 5.0,
+          "yield_multiple_of_malaysia_2024": 2.0,
+          "source_urls": [
+            "https://www.bps.go.id/id/pressrelease",
+            "https://api.kemenpar.go.id/storage/app/uploads/public/67f/e1c/6e4/67fe1c6e4d1b9146250039.pdf"
+          ]
+        }
+      ],
+      "excluded_markets": [
+        {
+          "country": "Vietnam",
+          "reason": "Not comparable: Vietnam publishes only TOTAL tourism revenue (international + domestic, ~840T VND in 2024, an administrative aggregate of provincial estimates). No international-only receipts figure exists, so a defensible 2024 receipts-per-visitor yield cannot be computed; the naive 840T VND / 17.5M arrivals (~US$1,889) overstates the international yield because domestic revenue is in the numerator."
+        }
+      ],
+      "caveats": [
+        "Basis mix: Malaysia and Thailand receipts are visitor-expenditure SURVEY estimates (Tourism Malaysia; Thailand MOTS departure-point survey); Indonesia's are Bank Indonesia balance-of-payments travel credit (administrative). Cross-country yield gaps of 10-20% can be methodological, not real.",
+        "The 2019 baseline for every country is the World Bank WDI receipts-per-visitor (ST.INT.RCPT.CD / arrivals); the current WDI build stops at 2020 for these countries, so 2019 is the latest WDI-comparable yield. The Indonesia 2024-vs-2019 pair is the cleanest (same BI BOP basis); Malaysia's 2024 survey figure vs its 2019 WDI BOP figure is the least clean (survey vs BOP).",
+        "Thailand's headline 2024 revenue (THB 1.67T) was later restated to ~THB 1.61T in MOTS's own year-end summary; the headline figure is cited and the restatement flagged.",
+        "USD conversions use 2024 average rates (THB ~34.5, MYR ~4.68) or authority-stated conversions where published; per-visitor yields are therefore approximate.",
+        "Framing: this regional comparison is supporting context for the Missing Billions (the real-terms 2019-anchor counterfactual), never the headline."
+      ],
+      "research_doc": "research/regional-yield-benchmark-2024.md"
+    },
+    "source_segmentation": {
+      "anchor_year": 2024,
+      "method": "k-means (k=4) on z-scored features, k-means++ init, best of 12 consecutive fixed-seed restarts (seeds 42-53, lowest inertia 53.48 kept); clusters re-labelled by descending mean yield",
+      "seed": 42,
+      "n_clusters": 4,
+      "naming_rationale": "Segment names are derived from cluster profiles by rule, not machine ids: the cluster with the lowest mean yield that also has the highest volume is named 'Volume Traps' (the arrivals KPI over-rewards exactly this short-stay regional traffic - the Volume Trap critique); the cluster with the highest mean yield is named 'High-Yield Long-Haul' (high wallet and development markets, predominantly long-haul, reached by air); among the remaining clusters the one with the strongest arrivals growth is named 'High-Growth Emerging', and any leftover is 'Mid-Yield Steady' or 'Low-Yield Steady' by its mean yield against the panel median. Ties break by the descending-mean-yield cluster order, so names are deterministic.",
+      "source": {
+        "market_source_file": "inbrief2024.txt",
+        "wef_file": "WEF_TTDI.csv",
+        "wef_dataset": "WEF Travel & Tourism Development Index (TTDI), 2024 edition (World Bank Data360 distribution)",
+        "wef_url": "https://data360api.data360api.org/datasets/WB.DATA360:DS_DATA360/download/csv (WEF_TTDI database id)",
+        "wef_ref_year": 2024
+      },
+      "features": [
+        {
+          "name": "yield_rm_per_visitor",
+          "description": "2024 visitor receipts / visitor arrivals per market",
+          "unit": "rm",
+          "source": "source_market fragment (Tourism Malaysia Statistics in Brief 2024)",
+          "transform": "none",
+          "imputation": "none - markets without a 2024 yield are excluded from clustering"
+        },
+        {
+          "name": "log10_arrivals",
+          "description": "2024 visitor arrivals (log10 scale: volume without dominating distance)",
+          "unit": "log10 persons",
+          "source": "source_market fragment (Tourism Malaysia Statistics in Brief 2024)",
+          "transform": "log10",
+          "imputation": "none - markets without 2024 arrivals are excluded from clustering"
+        },
+        {
+          "name": "arrivals_growth_pct",
+          "description": "2024 vs 2023 arrivals growth, computed from the same arrivals the source_market fragment carries (the In Brief growth column, rederived for reconciliation with the emitted figures)",
+          "unit": "percent",
+          "source": "source_market fragment (Tourism Malaysia Statistics in Brief 2024)",
+          "transform": "none",
+          "imputation": "none - markets without 2024 arrivals are excluded from clustering"
+        },
+        {
+          "name": "wef_ppp",
+          "description": "WEF TTDI indicator WEF_TTDI_PPP for the source market, TIME_PERIOD 2024 (latest available kept per indicator)",
+          "unit": "wef score/value",
+          "source": "WEF_TTDI.csv indicator WEF_TTDI_PPP (WEF Travel & Tourism Development Index 2024 edition via World Bank Data360, COMP_BREAKDOWN_1=WEF_TTDI_VAL)",
+          "transform": "none",
+          "imputation": "median of the clustered markets that cover the indicator; missing listed per market in wef_missing"
+        },
+        {
+          "name": "wef_length_stay_days",
+          "description": "WEF TTDI indicator WEF_TTDI_LENGTHSTAY for the source market, TIME_PERIOD 2024 (latest available kept per indicator)",
+          "unit": "wef score/value",
+          "source": "WEF_TTDI.csv indicator WEF_TTDI_LENGTHSTAY (WEF Travel & Tourism Development Index 2024 edition via World Bank Data360, COMP_BREAKDOWN_1=WEF_TTDI_VAL)",
+          "transform": "none",
+          "imputation": "median of the clustered markets that cover the indicator; missing listed per market in wef_missing"
+        },
+        {
+          "name": "wef_ttdi_score",
+          "description": "WEF TTDI indicator WEF_TTDI_TTDI for the source market, TIME_PERIOD 2024 (latest available kept per indicator)",
+          "unit": "wef score/value",
+          "source": "WEF_TTDI.csv indicator WEF_TTDI_TTDI (WEF Travel & Tourism Development Index 2024 edition via World Bank Data360, COMP_BREAKDOWN_1=WEF_TTDI_VAL)",
+          "transform": "none",
+          "imputation": "median of the clustered markets that cover the indicator; missing listed per market in wef_missing"
+        },
+        {
+          "name": "wef_air_connectivity_log10",
+          "description": "WEF TTDI indicator WEF_TTDI_IATACONNECTIDX for the source market, TIME_PERIOD 2024 (latest available kept per indicator)",
+          "unit": "wef score/value",
+          "source": "WEF_TTDI.csv indicator WEF_TTDI_IATACONNECTIDX (WEF Travel & Tourism Development Index 2024 edition via World Bank Data360, COMP_BREAKDOWN_1=WEF_TTDI_VAL)",
+          "transform": "log10",
+          "imputation": "median of the clustered markets that cover the indicator; missing listed per market in wef_missing"
+        },
+        {
+          "name": "wef_passport_mobility",
+          "description": "WEF TTDI indicator WEF_TTDI_PASSPORTMOBHPI for the source market, TIME_PERIOD 2024 (latest available kept per indicator)",
+          "unit": "wef score/value",
+          "source": "WEF_TTDI.csv indicator WEF_TTDI_PASSPORTMOBHPI (WEF Travel & Tourism Development Index 2024 edition via World Bank Data360, COMP_BREAKDOWN_1=WEF_TTDI_VAL)",
+          "transform": "none",
+          "imputation": "median of the clustered markets that cover the indicator; missing listed per market in wef_missing"
+        }
+      ],
+      "markets": [
+        {
+          "market": "Singapore",
+          "clustered": true,
+          "excluded_reason": null,
+          "yield_rm_per_visitor_2024": 1481.87,
+          "arrivals_persons_2024": 18855680,
+          "arrivals_growth_pct": 27.15792296119521,
+          "wef_indicators": {
+            "wef_ppp": 0.649143079453935,
+            "wef_length_stay_days": 10.166666666666666,
+            "wef_ttdi_score": 4.755449301864665,
+            "wef_air_connectivity_log10": 131159.52832803925,
+            "wef_passport_mobility": 193.0
+          },
+          "wef_missing": [],
+          "wef_ref_years": {
+            "wef_ppp": 2024,
+            "wef_length_stay_days": 2024,
+            "wef_ttdi_score": 2024,
+            "wef_air_connectivity_log10": 2024,
+            "wef_passport_mobility": 2024
+          },
+          "cluster_id": 3,
+          "segment_name": "Volume Traps",
+          "yield_tier": "bottom_quartile",
+          "tier_label": "Bottom quartile yield"
+        },
+        {
+          "market": "China",
+          "clustered": true,
+          "excluded_reason": null,
+          "yield_rm_per_visitor_2024": 5600.42,
+          "arrivals_persons_2024": 3725894,
+          "arrivals_growth_pct": 130.94689681847035,
+          "wef_indicators": {
+            "wef_ppp": 0.5923098495217223,
+            "wef_length_stay_days": 2.7000000000000006,
+            "wef_ttdi_score": 4.940714438160133,
+            "wef_air_connectivity_log10": 3040114.869746804,
+            "wef_passport_mobility": 80.0
+          },
+          "wef_missing": [],
+          "wef_ref_years": {
+            "wef_ppp": 2024,
+            "wef_length_stay_days": 2024,
+            "wef_ttdi_score": 2024,
+            "wef_air_connectivity_log10": 2024,
+            "wef_passport_mobility": 2024
+          },
+          "cluster_id": 1,
+          "segment_name": "High-Growth Emerging",
+          "yield_tier": "top_quartile",
+          "tier_label": "Top quartile yield"
+        },
+        {
+          "market": "Indonesia",
+          "clustered": true,
+          "excluded_reason": null,
+          "yield_rm_per_visitor_2024": 3696.69,
+          "arrivals_persons_2024": 4145127,
+          "arrivals_growth_pct": 19.13365898409838,
+          "wef_indicators": {
+            "wef_ppp": 0.3267605776616479,
+            "wef_length_stay_days": 17.099999999999998,
+            "wef_ttdi_score": 4.456035798833534,
+            "wef_air_connectivity_log10": 528996.7055550227,
+            "wef_passport_mobility": 73.0
+          },
+          "wef_missing": [],
+          "wef_ref_years": {
+            "wef_ppp": 2024,
+            "wef_length_stay_days": 2024,
+            "wef_ttdi_score": 2024,
+            "wef_air_connectivity_log10": 2024,
+            "wef_passport_mobility": 2024
+          },
+          "cluster_id": 1,
+          "segment_name": "High-Growth Emerging",
+          "yield_tier": "lower_middle",
+          "tier_label": "Lower-middle quartile yield"
+        },
+        {
+          "market": "India",
+          "clustered": true,
+          "excluded_reason": null,
+          "yield_rm_per_visitor_2024": 4476.43,
+          "arrivals_persons_2024": 1365387,
+          "arrivals_growth_pct": 76.58431418701768,
+          "wef_indicators": {
+            "wef_ppp": 0.2850702213249584,
+            "wef_length_stay_days": 26.433333333333334,
+            "wef_ttdi_score": 4.247584808090231,
+            "wef_air_connectivity_log10": 1128535.8364449576,
+            "wef_passport_mobility": 57.0
+          },
+          "wef_missing": [],
+          "wef_ref_years": {
+            "wef_ppp": 2024,
+            "wef_length_stay_days": 2024,
+            "wef_ttdi_score": 2024,
+            "wef_air_connectivity_log10": 2024,
+            "wef_passport_mobility": 2024
+          },
+          "cluster_id": 1,
+          "segment_name": "High-Growth Emerging",
+          "yield_tier": "lower_middle",
+          "tier_label": "Lower-middle quartile yield"
+        },
+        {
+          "market": "Thailand",
+          "clustered": true,
+          "excluded_reason": null,
+          "yield_rm_per_visitor_2024": 1760.8,
+          "arrivals_persons_2024": 2268182,
+          "arrivals_growth_pct": -1.3901653712484086,
+          "wef_indicators": {
+            "wef_ppp": 0.3342157229068337,
+            "wef_length_stay_days": 11.633333333333333,
+            "wef_ttdi_score": 4.119175131082167,
+            "wef_air_connectivity_log10": 207172.67298034843,
+            "wef_passport_mobility": 79.0
+          },
+          "wef_missing": [],
+          "wef_ref_years": {
+            "wef_ppp": 2024,
+            "wef_length_stay_days": 2024,
+            "wef_ttdi_score": 2024,
+            "wef_air_connectivity_log10": 2024,
+            "wef_passport_mobility": 2024
+          },
+          "cluster_id": 2,
+          "segment_name": "Low-Yield Steady",
+          "yield_tier": "bottom_quartile",
+          "tier_label": "Bottom quartile yield"
+        },
+        {
+          "market": "Brunei",
+          "clustered": true,
+          "excluded_reason": null,
+          "yield_rm_per_visitor_2024": 1867.71,
+          "arrivals_persons_2024": 1732119,
+          "arrivals_growth_pct": 55.178456402956066,
+          "wef_indicators": {
+            "wef_ppp": null,
+            "wef_length_stay_days": null,
+            "wef_ttdi_score": null,
+            "wef_air_connectivity_log10": null,
+            "wef_passport_mobility": null
+          },
+          "wef_missing": [
+            "wef_ppp",
+            "wef_length_stay_days",
+            "wef_ttdi_score",
+            "wef_air_connectivity_log10",
+            "wef_passport_mobility"
+          ],
+          "wef_ref_years": {},
+          "cluster_id": 3,
+          "segment_name": "Volume Traps",
+          "yield_tier": "bottom_quartile",
+          "tier_label": "Bottom quartile yield"
+        },
+        {
+          "market": "South Korea",
+          "clustered": true,
+          "excluded_reason": null,
+          "yield_rm_per_visitor_2024": 5245.18,
+          "arrivals_persons_2024": 553165,
+          "arrivals_growth_pct": 18.80257808456307,
+          "wef_indicators": {
+            "wef_ppp": 0.6441928996938817,
+            "wef_length_stay_days": 6.8,
+            "wef_ttdi_score": 4.743408341559457,
+            "wef_air_connectivity_log10": 212704.2193891983,
+            "wef_passport_mobility": 190.0
+          },
+          "wef_missing": [],
+          "wef_ref_years": {
+            "wef_ppp": 2024,
+            "wef_length_stay_days": 2024,
+            "wef_ttdi_score": 2024,
+            "wef_air_connectivity_log10": 2024,
+            "wef_passport_mobility": 2024
+          },
+          "cluster_id": 0,
+          "segment_name": "High-Yield Long-Haul",
+          "yield_tier": "upper_middle",
+          "tier_label": "Upper-middle quartile yield"
+        },
+        {
+          "market": "Australia",
+          "clustered": true,
+          "excluded_reason": null,
+          "yield_rm_per_visitor_2024": 5556.68,
+          "arrivals_persons_2024": 447785,
+          "arrivals_growth_pct": 11.692428955199308,
+          "wef_indicators": {
+            "wef_ppp": 1.0297973906090072,
+            "wef_length_stay_days": 28.666666666666668,
+            "wef_ttdi_score": 4.995897355650921,
+            "wef_air_connectivity_log10": 323203.94420007715,
+            "wef_passport_mobility": 186.0
+          },
+          "wef_missing": [],
+          "wef_ref_years": {
+            "wef_ppp": 2024,
+            "wef_length_stay_days": 2024,
+            "wef_ttdi_score": 2024,
+            "wef_air_connectivity_log10": 2024,
+            "wef_passport_mobility": 2024
+          },
+          "cluster_id": 0,
+          "segment_name": "High-Yield Long-Haul",
+          "yield_tier": "top_quartile",
+          "tier_label": "Top quartile yield"
+        },
+        {
+          "market": "United Kingdom",
+          "clustered": true,
+          "excluded_reason": null,
+          "yield_rm_per_visitor_2024": 6282.72,
+          "arrivals_persons_2024": 390035,
+          "arrivals_growth_pct": 27.07786241634791,
+          "wef_indicators": {
+            "wef_ppp": 0.8397122632791536,
+            "wef_length_stay_days": 6.5,
+            "wef_ttdi_score": 4.961751267903844,
+            "wef_air_connectivity_log10": 649299.3597748579,
+            "wef_passport_mobility": 189.0
+          },
+          "wef_missing": [],
+          "wef_ref_years": {
+            "wef_ppp": 2024,
+            "wef_length_stay_days": 2024,
+            "wef_ttdi_score": 2024,
+            "wef_air_connectivity_log10": 2024,
+            "wef_passport_mobility": 2024
+          },
+          "cluster_id": 0,
+          "segment_name": "High-Yield Long-Haul",
+          "yield_tier": "top_quartile",
+          "tier_label": "Top quartile yield"
+        },
+        {
+          "market": "Chinese Taipei",
+          "clustered": true,
+          "excluded_reason": null,
+          "yield_rm_per_visitor_2024": 5518.19,
+          "arrivals_persons_2024": 423117,
+          "arrivals_growth_pct": 35.85957994714821,
+          "wef_indicators": {
+            "wef_ppp": null,
+            "wef_length_stay_days": null,
+            "wef_ttdi_score": null,
+            "wef_air_connectivity_log10": null,
+            "wef_passport_mobility": null
+          },
+          "wef_missing": [
+            "wef_ppp",
+            "wef_length_stay_days",
+            "wef_ttdi_score",
+            "wef_air_connectivity_log10",
+            "wef_passport_mobility"
+          ],
+          "wef_ref_years": {},
+          "cluster_id": 0,
+          "segment_name": "High-Yield Long-Haul",
+          "yield_tier": "top_quartile",
+          "tier_label": "Top quartile yield"
+        },
+        {
+          "market": "Japan",
+          "clustered": true,
+          "excluded_reason": null,
+          "yield_rm_per_visitor_2024": 5269.78,
+          "arrivals_persons_2024": 367182,
+          "arrivals_growth_pct": 32.289711376680266,
+          "wef_indicators": {
+            "wef_ppp": 0.7420078160095926,
+            "wef_length_stay_days": 8.0,
+            "wef_ttdi_score": 5.093873758644269,
+            "wef_air_connectivity_log10": 883371.052036173,
+            "wef_passport_mobility": 190.0
+          },
+          "wef_missing": [],
+          "wef_ref_years": {
+            "wef_ppp": 2024,
+            "wef_length_stay_days": 2024,
+            "wef_ttdi_score": 2024,
+            "wef_air_connectivity_log10": 2024,
+            "wef_passport_mobility": 2024
+          },
+          "cluster_id": 0,
+          "segment_name": "High-Yield Long-Haul",
+          "yield_tier": "upper_middle",
+          "tier_label": "Upper-middle quartile yield"
+        },
+        {
+          "market": "Philippines",
+          "clustered": true,
+          "excluded_reason": null,
+          "yield_rm_per_visitor_2024": 3157.09,
+          "arrivals_persons_2024": 571533,
+          "arrivals_growth_pct": 23.76550227702383,
+          "wef_indicators": {
+            "wef_ppp": 0.345252361887729,
+            "wef_length_stay_days": 13.666666666666666,
+            "wef_ttdi_score": 3.842571723702047,
+            "wef_air_connectivity_log10": 178898.38899212482,
+            "wef_passport_mobility": 66.0
+          },
+          "wef_missing": [],
+          "wef_ref_years": {
+            "wef_ppp": 2024,
+            "wef_length_stay_days": 2024,
+            "wef_ttdi_score": 2024,
+            "wef_air_connectivity_log10": 2024,
+            "wef_passport_mobility": 2024
+          },
+          "cluster_id": 2,
+          "segment_name": "Low-Yield Steady",
+          "yield_tier": "bottom_quartile",
+          "tier_label": "Bottom quartile yield"
+        },
+        {
+          "market": "United States",
+          "clustered": true,
+          "excluded_reason": null,
+          "yield_rm_per_visitor_2024": 5434.11,
+          "arrivals_persons_2024": 304880,
+          "arrivals_growth_pct": 18.384828352094672,
+          "wef_indicators": {
+            "wef_ppp": 1.0,
+            "wef_length_stay_days": 11.9,
+            "wef_ttdi_score": 5.2439354044112365,
+            "wef_air_connectivity_log10": 7701477.957220675,
+            "wef_passport_mobility": 185.0
+          },
+          "wef_missing": [],
+          "wef_ref_years": {
+            "wef_ppp": 2024,
+            "wef_length_stay_days": 2024,
+            "wef_ttdi_score": 2024,
+            "wef_air_connectivity_log10": 2024,
+            "wef_passport_mobility": 2024
+          },
+          "cluster_id": 0,
+          "segment_name": "High-Yield Long-Haul",
+          "yield_tier": "top_quartile",
+          "tier_label": "Top quartile yield"
+        },
+        {
+          "market": "Vietnam",
+          "clustered": true,
+          "excluded_reason": null,
+          "yield_rm_per_visitor_2024": 3564.7,
+          "arrivals_persons_2024": 366525,
+          "arrivals_growth_pct": -2.0460686138526585,
+          "wef_indicators": {
+            "wef_ppp": 0.3094042573604779,
+            "wef_length_stay_days": 7.099999999999999,
+            "wef_ttdi_score": 3.957862633358212,
+            "wef_air_connectivity_log10": 300079.2899198196,
+            "wef_passport_mobility": 55.0
+          },
+          "wef_missing": [],
+          "wef_ref_years": {
+            "wef_ppp": 2024,
+            "wef_length_stay_days": 2024,
+            "wef_ttdi_score": 2024,
+            "wef_air_connectivity_log10": 2024,
+            "wef_passport_mobility": 2024
+          },
+          "cluster_id": 2,
+          "segment_name": "Low-Yield Steady",
+          "yield_tier": "bottom_quartile",
+          "tier_label": "Bottom quartile yield"
+        },
+        {
+          "market": "France",
+          "clustered": true,
+          "excluded_reason": null,
+          "yield_rm_per_visitor_2024": 5029.91,
+          "arrivals_persons_2024": 183872,
+          "arrivals_growth_pct": 38.96954901708853,
+          "wef_indicators": {
+            "wef_ppp": 0.738186042282104,
+            "wef_length_stay_days": 2.833333333333333,
+            "wef_ttdi_score": 5.072925542248643,
+            "wef_air_connectivity_log10": 439874.4757949837,
+            "wef_passport_mobility": 190.0
+          },
+          "wef_missing": [],
+          "wef_ref_years": {
+            "wef_ppp": 2024,
+            "wef_length_stay_days": 2024,
+            "wef_ttdi_score": 2024,
+            "wef_air_connectivity_log10": 2024,
+            "wef_passport_mobility": 2024
+          },
+          "cluster_id": 0,
+          "segment_name": "High-Yield Long-Haul",
+          "yield_tier": "lower_middle",
+          "tier_label": "Lower-middle quartile yield"
+        },
+        {
+          "market": "Germany",
+          "clustered": true,
+          "excluded_reason": null,
+          "yield_rm_per_visitor_2024": 5199.05,
+          "arrivals_persons_2024": 170712,
+          "arrivals_growth_pct": 23.724968654195997,
+          "wef_indicators": {
+            "wef_ppp": 0.7669479597354115,
+            "wef_length_stay_days": 2.6333333333333333,
+            "wef_ttdi_score": 4.9957508151244046,
+            "wef_air_connectivity_log10": 551990.2363560187,
+            "wef_passport_mobility": 190.0
+          },
+          "wef_missing": [],
+          "wef_ref_years": {
+            "wef_ppp": 2024,
+            "wef_length_stay_days": 2024,
+            "wef_ttdi_score": 2024,
+            "wef_air_connectivity_log10": 2024,
+            "wef_passport_mobility": 2024
+          },
+          "cluster_id": 0,
+          "segment_name": "High-Yield Long-Haul",
+          "yield_tier": "upper_middle",
+          "tier_label": "Upper-middle quartile yield"
+        },
+        {
+          "market": "Russia",
+          "clustered": true,
+          "excluded_reason": null,
+          "yield_rm_per_visitor_2024": 4799.23,
+          "arrivals_persons_2024": 130998,
+          "arrivals_growth_pct": 1.145822073289371,
+          "wef_indicators": {
+            "wef_ppp": null,
+            "wef_length_stay_days": null,
+            "wef_ttdi_score": null,
+            "wef_air_connectivity_log10": null,
+            "wef_passport_mobility": null
+          },
+          "wef_missing": [
+            "wef_ppp",
+            "wef_length_stay_days",
+            "wef_ttdi_score",
+            "wef_air_connectivity_log10",
+            "wef_passport_mobility"
+          ],
+          "wef_ref_years": {},
+          "cluster_id": 0,
+          "segment_name": "High-Yield Long-Haul",
+          "yield_tier": "lower_middle",
+          "tier_label": "Lower-middle quartile yield"
+        },
+        {
+          "market": "Pakistan",
+          "clustered": true,
+          "excluded_reason": null,
+          "yield_rm_per_visitor_2024": 5141.93,
+          "arrivals_persons_2024": 106388,
+          "arrivals_growth_pct": -4.366038923097671,
+          "wef_indicators": {
+            "wef_ppp": 0.2480382654814884,
+            "wef_length_stay_days": 12.6,
+            "wef_ttdi_score": 3.4075818881778965,
+            "wef_air_connectivity_log10": 80780.17806914,
+            "wef_passport_mobility": 33.0
+          },
+          "wef_missing": [],
+          "wef_ref_years": {
+            "wef_ppp": 2024,
+            "wef_length_stay_days": 2024,
+            "wef_ttdi_score": 2024,
+            "wef_air_connectivity_log10": 2024,
+            "wef_passport_mobility": 2024
+          },
+          "cluster_id": 2,
+          "segment_name": "Low-Yield Steady",
+          "yield_tier": "upper_middle",
+          "tier_label": "Upper-middle quartile yield"
+        },
+        {
+          "market": "Canada",
+          "clustered": false,
+          "excluded_reason": "no 2024 yield: market is absent from the In Brief receipts table (coverage=receipts_only); clustering is anchored on yield",
+          "yield_rm_per_visitor_2024": null,
+          "arrivals_persons_2024": null,
+          "arrivals_growth_pct": null,
+          "wef_indicators": {
+            "wef_ppp": 0.9412143259521092,
+            "wef_length_stay_days": 7.866666666666667,
+            "wef_ttdi_score": 4.805042126740309,
+            "wef_air_connectivity_log10": 385605.1768630309,
+            "wef_passport_mobility": 186.0
+          },
+          "wef_missing": [],
+          "wef_ref_years": {
+            "wef_ppp": 2024,
+            "wef_length_stay_days": 2024,
+            "wef_ttdi_score": 2024,
+            "wef_air_connectivity_log10": 2024,
+            "wef_passport_mobility": 2024
+          },
+          "cluster_id": null,
+          "segment_name": null,
+          "yield_tier": null,
+          "tier_label": null
+        },
+        {
+          "market": "Netherlands",
+          "clustered": false,
+          "excluded_reason": "no 2024 yield: market is absent from the In Brief receipts table (coverage=receipts_only); clustering is anchored on yield",
+          "yield_rm_per_visitor_2024": null,
+          "arrivals_persons_2024": null,
+          "arrivals_growth_pct": null,
+          "wef_indicators": {
+            "wef_ppp": 0.8046492070778241,
+            "wef_length_stay_days": 2.9333333333333336,
+            "wef_ttdi_score": 4.637064046647283,
+            "wef_air_connectivity_log10": 182111.45809953,
+            "wef_passport_mobility": 189.0
+          },
+          "wef_missing": [],
+          "wef_ref_years": {
+            "wef_ppp": 2024,
+            "wef_length_stay_days": 2024,
+            "wef_ttdi_score": 2024,
+            "wef_air_connectivity_log10": 2024,
+            "wef_passport_mobility": 2024
+          },
+          "cluster_id": null,
+          "segment_name": null,
+          "yield_tier": null,
+          "tier_label": null
+        },
+        {
+          "market": "Bangladesh",
+          "clustered": false,
+          "excluded_reason": "no 2024 yield: market is absent from the In Brief receipts table (coverage=arrivals_only); clustering is anchored on yield",
+          "yield_rm_per_visitor_2024": null,
+          "arrivals_persons_2024": 154596,
+          "arrivals_growth_pct": 0.9817561874154945,
+          "wef_indicators": {
+            "wef_ppp": 0.3635252274162605,
+            "wef_length_stay_days": 4.4,
+            "wef_ttdi_score": 3.189645107497736,
+            "wef_air_connectivity_log10": 45195.75501404172,
+            "wef_passport_mobility": 40.0
+          },
+          "wef_missing": [],
+          "wef_ref_years": {
+            "wef_ppp": 2024,
+            "wef_length_stay_days": 2024,
+            "wef_ttdi_score": 2024,
+            "wef_air_connectivity_log10": 2024,
+            "wef_passport_mobility": 2024
+          },
+          "cluster_id": null,
+          "segment_name": null,
+          "yield_tier": null,
+          "tier_label": null
+        },
+        {
+          "market": "Myanmar",
+          "clustered": false,
+          "excluded_reason": "no 2024 yield: market is absent from the In Brief receipts table (coverage=arrivals_only); clustering is anchored on yield",
+          "yield_rm_per_visitor_2024": null,
+          "arrivals_persons_2024": 147133,
+          "arrivals_growth_pct": 43.4226558920721,
+          "wef_indicators": {
+            "wef_ppp": null,
+            "wef_length_stay_days": null,
+            "wef_ttdi_score": null,
+            "wef_air_connectivity_log10": null,
+            "wef_passport_mobility": null
+          },
+          "wef_missing": [
+            "wef_ppp",
+            "wef_length_stay_days",
+            "wef_ttdi_score",
+            "wef_air_connectivity_log10",
+            "wef_passport_mobility"
+          ],
+          "wef_ref_years": {},
+          "cluster_id": null,
+          "segment_name": null,
+          "yield_tier": null,
+          "tier_label": null
+        }
+      ],
+      "clusters": [
+        {
+          "cluster_id": 0,
+          "segment_name": "High-Yield Long-Haul",
+          "naming_rationale": "highest mean yield (RM5,371) with lower volume: high-wallet, high-development markets, predominantly long-haul",
+          "members": [
+            "Australia",
+            "Chinese Taipei",
+            "France",
+            "Germany",
+            "Japan",
+            "Russia",
+            "South Korea",
+            "United Kingdom",
+            "United States"
+          ],
+          "centroid_features": {
+            "yield_rm_per_visitor": 5370.5389,
+            "log10_arrivals": 5.4749,
+            "arrivals_growth_pct": 23.1053,
+            "wef_ppp": 0.7832,
+            "wef_length_stay_days": 9.7407,
+            "wef_ttdi_score": 4.9576,
+            "wef_air_connectivity_log10": 5.7949,
+            "wef_passport_mobility": 187.7778
+          },
+          "mean_yield_rm_per_visitor": 5370.54
+        },
+        {
+          "cluster_id": 1,
+          "segment_name": "High-Growth Emerging",
+          "naming_rationale": "fastest arrivals growth (+75.6% mean) at a solid mid yield (RM4,591): emerging markets scaling in both volume and value",
+          "members": [
+            "China",
+            "India",
+            "Indonesia"
+          ],
+          "centroid_features": {
+            "yield_rm_per_visitor": 4591.18,
+            "log10_arrivals": 6.4413,
+            "arrivals_growth_pct": 75.555,
+            "wef_ppp": 0.4014,
+            "wef_length_stay_days": 15.4111,
+            "wef_ttdi_score": 4.5481,
+            "wef_air_connectivity_log10": 6.0863,
+            "wef_passport_mobility": 70.0
+          },
+          "mean_yield_rm_per_visitor": 4591.18
+        },
+        {
+          "cluster_id": 2,
+          "segment_name": "Low-Yield Steady",
+          "naming_rationale": "below-median yield (RM3,406) with flat growth (+4.0% mean): no standout trait yet",
+          "members": [
+            "Pakistan",
+            "Philippines",
+            "Thailand",
+            "Vietnam"
+          ],
+          "centroid_features": {
+            "yield_rm_per_visitor": 3406.13,
+            "log10_arrivals": 5.6759,
+            "arrivals_growth_pct": 3.9908,
+            "wef_ppp": 0.3092,
+            "wef_length_stay_days": 11.25,
+            "wef_ttdi_score": 3.8318,
+            "wef_air_connectivity_log10": 5.2384,
+            "wef_passport_mobility": 58.25
+          },
+          "mean_yield_rm_per_visitor": 3406.13
+        },
+        {
+          "cluster_id": 3,
+          "segment_name": "Volume Traps",
+          "naming_rationale": "lowest mean yield (RM1,675) and highest volume (mean log10 arrivals 6.76): short-stay regional traffic the arrivals KPI over-rewards - the Volume Trap profile",
+          "members": [
+            "Brunei",
+            "Singapore"
+          ],
+          "centroid_features": {
+            "yield_rm_per_visitor": 1674.79,
+            "log10_arrivals": 6.757,
+            "arrivals_growth_pct": 41.1682,
+            "wef_ppp": 0.6467,
+            "wef_length_stay_days": 10.1667,
+            "wef_ttdi_score": 4.7554,
+            "wef_air_connectivity_log10": 5.3806,
+            "wef_passport_mobility": 189.0
+          },
+          "mean_yield_rm_per_visitor": 1674.79
+        }
+      ],
+      "tier_labels": {
+        "top_quartile": "Top quartile yield",
+        "upper_middle": "Upper-middle quartile yield",
+        "lower_middle": "Lower-middle quartile yield",
+        "bottom_quartile": "Bottom quartile yield"
+      },
+      "yield_quartile_boundaries": {
+        "q25": 3597.6974999999998,
+        "q50": 5085.92,
+        "q75": 5393.027499999999
+      }
+    }
+  },
+  "checksum": "ad9523c82ebaf162f5c88dcf87c2e60102770342835d2376017cca183ca30bbe"
+}
