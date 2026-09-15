@@ -1,8 +1,8 @@
 # Byte-Brains — DOSM Datathon 2026 Entry
 
 Malaysia's tourism recovery measures visitors, not value. This repo holds the team's
-DOSM Datathon 2026 entry: a data + ML project on tourism yield, a dashboard, and the
-project report. The video deliverable is out of scope here.
+DOSM Datathon 2026 entry: a data + ML project on tourism yield and the project
+report. The video deliverable is out of scope here.
 
 ## Language
 
