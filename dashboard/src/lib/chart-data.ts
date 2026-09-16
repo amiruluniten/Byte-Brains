@@ -8,7 +8,7 @@
  * Preliminary years never masquerade as final data: a series whose latest
  * observation is preliminary carries "2025p" in its name and label.
  */
-import { type Bundle, type Basis, type Series } from "./bundle";
+import { BASIS_LABELS, type Bundle, type Series, yearLabel } from "./bundle";
 
 export interface ChartTrace {
   name: string; // legend label, includes basis wording
@@ -28,9 +28,7 @@ export interface ChartSpec {
 export function basisLabelFor(s: Series): string {
   // CONTEXT.md vocabulary: prefer "same-day visitor" in prose; "excursionist"
   // stays as the technical basis token from the bundle.
-  const basisWord =
-    s.basis === "excursionist" ? "same-day visitor (excursionist)" : s.basis;
-  return `${basisWord} basis (${s.window}), source: DOSM TSA ${s.source.file}`;
+  return `${BASIS_LABELS[s.basis].long} basis (${s.window}), source: DOSM TSA ${s.source.file}`;
 }
 
 function measureWord(s: Series): string {
@@ -39,15 +37,15 @@ function measureWord(s: Series): string {
   return s.measure.replace(/_/g, " ");
 }
 
-/** "2025p" suffix for a series whose latest year is preliminary. */
+/** Appends the "2025p" preliminary label when a series' latest year is preliminary. */
 function windowLabel(s: Series): string {
   const last = s.values[s.values.length - 1];
-  return last && last.revision_status === "preliminary" ? `${s.window}, ${last.year}p` : s.window;
+  return last && last.revision_status === "preliminary" ? `${s.window}, ${yearLabel(last)}` : s.window;
 }
 
 function toTrace(s: Series): ChartTrace {
   return {
-    name: `${basisWord(s.basis)} ${measureWord(s)} (${windowLabel(s)})`,
+    name: `${BASIS_LABELS[s.basis].word} ${measureWord(s)} (${windowLabel(s)})`,
     basis: s.basis,
     basisLabel: basisLabelFor(s),
     unit: s.unit,
@@ -56,42 +54,50 @@ function toTrace(s: Series): ChartTrace {
   };
 }
 
-function basisWord(b: Basis): string {
-  switch (b) {
-    case "visitor":
-      return "Visitor";
-    case "tourist":
-      return "Tourist";
-    case "excursionist":
-      return "Same-day visitor";
+/**
+ * The one filter→sort→throw-if-empty→map scaffold (ticket #21) behind every
+ * chart builder. Sorting is deterministic (localeCompare on the sort key), and
+ * an empty selection fails loudly instead of rendering an empty chart.
+ */
+function buildChart(
+  bundle: Bundle,
+  opts: {
+    filter: (s: Series) => boolean;
+    sortKey: (s: Series) => string;
+    emptyError: string;
+    title: string;
+    subtitle: string;
   }
+): ChartSpec {
+  const series = bundle.fragments.national_series.series
+    .filter(opts.filter)
+    .sort((a, b) => opts.sortKey(a).localeCompare(opts.sortKey(b)));
+  if (series.length === 0) {
+    throw new Error(opts.emptyError);
+  }
+  return { title: opts.title, subtitle: opts.subtitle, series: series.map(toTrace) };
 }
 
 export function buildArrivalsChart(bundle: Bundle): ChartSpec {
-  const series = bundle.fragments.national_series.series
-    .filter((s) => s.measure === "arrivals")
-    .sort((a, b) => a.series_id.localeCompare(b.series_id));
-  return {
+  return buildChart(bundle, {
+    filter: (s) => s.measure === "arrivals",
+    sortKey: (s) => s.series_id,
+    emptyError: "bundle has no arrivals series",
     title: "Extensive side: visitor arrivals",
     subtitle:
       "Growth from more visitors. Bases are not comparable — each trace is labelled with its counting basis and window.",
-    series: series.map(toTrace),
-  };
+  });
 }
 
 export function buildReceiptsChart(bundle: Bundle): ChartSpec {
-  const series = bundle.fragments.national_series.series
-    .filter((s) => s.measure === "inbound_tourism_consumption")
-    .sort((a, b) => a.window.localeCompare(b.window));
-  if (series.length === 0) {
-    throw new Error("bundle has no inbound tourism consumption series");
-  }
-  return {
+  return buildChart(bundle, {
+    filter: (s) => s.measure === "inbound_tourism_consumption",
+    sortKey: (s) => s.window,
+    emptyError: "bundle has no inbound tourism consumption series",
     title: "Intensive side: tourism receipts (inbound consumption)",
     subtitle:
       "Growth from more value per visitor. Inbound tourism consumption, RM million, tourist basis.",
-    series: series.map(toTrace),
-  };
+  });
 }
 
 /**
@@ -101,16 +107,12 @@ export function buildReceiptsChart(bundle: Bundle): ChartSpec {
  * never merged, exactly like every other chart built from the bundle.
  */
 export function buildVisitorSplitChart(bundle: Bundle): ChartSpec {
-  const series = bundle.fragments.national_series.series
-    .filter((s) => s.measure === "arrivals" && s.basis !== "visitor")
-    .sort((a, b) => a.series_id.localeCompare(b.series_id));
-  if (series.length === 0) {
-    throw new Error("bundle has no tourist / same-day visitor arrivals series");
-  }
-  return {
+  return buildChart(bundle, {
+    filter: (s) => s.measure === "arrivals" && s.basis !== "visitor",
+    sortKey: (s) => s.series_id,
+    emptyError: "bundle has no tourist / same-day visitor arrivals series",
     title: "Who visits: tourists vs same-day visitors",
     subtitle:
       "Same-day visitors count in arrivals but generate low yield — the Volume Trap. Bases are labelled, never merged.",
-    series: series.map(toTrace),
-  };
+  });
 }

@@ -22,6 +22,17 @@ export const SCHEMA_VERSION = "1.1.0";
 export const PRE_REGISTERED_HEADLINE_WINDOW = "2020-2024";
 
 export type Basis = "visitor" | "tourist" | "excursionist";
+
+/**
+ * The one basis→label map (ticket #21). CONTEXT.md vocabulary: "same-day
+ * visitor" is the prose word; the long form keeps the technical
+ * "excursionist" token visible in labels.
+ */
+export const BASIS_LABELS: Record<Basis, { word: string; long: string }> = {
+  visitor: { word: "Visitor", long: "visitor" },
+  tourist: { word: "Tourist", long: "tourist" },
+  excursionist: { word: "Same-day visitor", long: "same-day visitor (excursionist)" },
+};
 export type Unit = "persons" | "rm_million" | "percent";
 export type Measure = "arrivals" | "inbound_tourism_consumption";
 
@@ -33,6 +44,14 @@ export interface SourceRef {
 }
 
 export type RevisionStatus = "final" | "revised" | "preliminary";
+
+/**
+ * The one "2025p" preliminary-suffix helper (ticket #21): a preliminary
+ * observation is always labelled `${year}p`, never quoted as final data.
+ */
+export function yearLabel(o: Pick<Observation, "year"> & { revision_status?: RevisionStatus }): string {
+  return o.revision_status === "preliminary" ? `${o.year}p` : String(o.year);
+}
 
 export interface Observation {
   year: number;

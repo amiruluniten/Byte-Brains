@@ -8,19 +8,20 @@
  * RM10.2B cumulative 2020-2024) and the stagnation line are the headline;
  * the regional gap is supporting context, never the headline.
  */
+import { parseWindow, type Window } from "./bundle";
+import { fmt1, fmtRmMillion } from "./format";
 import type {
   Bundle,
   CounterfactualYear,
   MarketSegment,
   MissingBillionsFragment,
-  Observation,
   RegionalBenchmarkFragment,
   RegionalCountry,
-  RevisionStatus,
   SegmentationFragment,
   SourceMarketFragment,
   YieldTier,
 } from "./bundle";
+import { yearLabel } from "./bundle";
 
 // ---------------------------------------------------------------------------
 // Decomposition: extensive (volume) vs intensive (value) growth
@@ -33,14 +34,13 @@ export interface DecompositionTrace {
   unit: string;
 }
 
-/** A "2025p"-style year label: preliminary years are always marked. */
-export function yearLabel(o: Pick<Observation, "year"> & { revision_status?: RevisionStatus }): string {
-  return o.revision_status === "preliminary" ? `${o.year}p` : String(o.year);
-}
+// The "2025p" year label lives in bundle.ts (ticket #21); re-exported here so
+// the diagnosis module's API is unchanged.
+export { yearLabel } from "./bundle";
 
 /** The guarded headline + the labelled supplementary cumulative. */
 export interface HeadlineSpec {
-  window: { from: number; to: number };
+  window: Window;
   prices: "constant_2019_rm";
   /** The pre-registered cumulative gap — equals the fragment's own row sum
    * (checked by the bundle parser); NEVER replaced by a longer window. */
@@ -49,7 +49,7 @@ export interface HeadlineSpec {
 }
 
 export interface SupplementarySpec {
-  window: { from: number; to: number };
+  window: Window;
   label: string;
   cumulativeGapRmMillion: number;
 }
@@ -146,16 +146,15 @@ export function buildDecomposition(frag: MissingBillionsFragment): Decomposition
   ];
   // ticket #13: the headline comes from the guarded, pre-registered block —
   // never from "whatever the latest year is" (the 2025p row may not move it).
-  const [hFrom, hTo] = frag.headline.window.split("-").map((x) => Number(x));
-  const headlineYearRow = years.find((y) => y.year === hTo);
+  const headlineWindow = parseWindow(frag.headline.window, "missing_billions.headline.window");
+  const headlineYearRow = years.find((y) => y.year === headlineWindow.to);
   if (!headlineYearRow) {
-    throw new Error(`missing_billions has no row for the headline window end (${hTo})`);
+    throw new Error(`missing_billions has no row for the headline window end (${headlineWindow.to})`);
   }
   let supplementary: SupplementarySpec | null = null;
   if (frag.supplementary) {
-    const [sFrom, sTo] = frag.supplementary.window.split("-").map((x) => Number(x));
     supplementary = {
-      window: { from: sFrom, to: sTo },
+      window: parseWindow(frag.supplementary.window, "missing_billions.supplementary.window"),
       label: frag.supplementary.label,
       cumulativeGapRmMillion: frag.supplementary.cumulative_gap_rm_million,
     };
@@ -166,7 +165,7 @@ export function buildDecomposition(frag: MissingBillionsFragment): Decomposition
     indexed,
     perVisitor,
     headline: {
-      window: { from: hFrom, to: hTo },
+      window: headlineWindow,
       prices: "constant_2019_rm",
       cumulativeGapRmMillion: frag.headline.cumulative_gap_rm_million,
       basisNote: frag.headline.basis_note,
@@ -177,13 +176,13 @@ export function buildDecomposition(frag: MissingBillionsFragment): Decomposition
       `Value: inbound tourism consumption, tourist basis (${frag.receipts_series_id}) — the ticket's pairing; the two bases are labelled, never merged.`,
       `Real terms: deflated by the national CPI (${frag.deflator.series_id}, ${frag.deflator.index_base}, fetched ${frag.deflator.source.fetched_utc.slice(0, 10)}) to constant ${frag.anchor_year} prices.`,
       "The naive nominal gap (comparing ringgit of different years) is INVALID — the bundle emits it flagged, and per the data it shows a false surplus.",
-      `The headline is the pre-registered window ${frag.headline.window} at constant ${frag.anchor_year} prices (RM${frag.headline.cumulative_gap_rm_million.toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} million).`,
+      `The headline is the pre-registered window ${frag.headline.window} at constant ${frag.anchor_year} prices (RM${fmt1(frag.headline.cumulative_gap_rm_million)} million).`,
       frag.supplementary ? `Supplementary only (never the headline): ${frag.supplementary.label}` : undefined,
-      `${lastYear.revision_status === "preliminary" ? `${lastYear.year}p` : lastYear.year}: the latest fragment year; ${lastYear.revision_status === "preliminary" ? "preliminary, labelled 2025p everywhere" : `revision status ${lastYear.revision_status}`}.`,
+      `${yearLabel(lastYear)}: the latest fragment year; ${lastYear.revision_status === "preliminary" ? "preliminary, labelled 2025p everywhere" : `revision status ${lastYear.revision_status}`}.`,
     ].filter((s): s is string => s !== undefined),
     stagnation: {
       anchorPerVisitorRealRm: anchor.per_visitor_real_2019_rm,
-      latestYear: hTo,
+      latestYear: headlineWindow.to,
       latestPerVisitorRealRm: headlineYearRow.per_visitor_real_2019_rm,
     },
   };
@@ -477,6 +476,10 @@ export function buildMethodIndex(bundle: Bundle): {
 /** The flag every nominal (non-price-adjusted) figure renders with. */
 export const NOMINAL_FLAG = "INVALID — nominal (not price-adjusted)";
 
+/** The one false-surplus rationale (ticket #21): why the naive nominal gap is
+ * INVALID — volume and inflation flatter it into a surplus that never existed. */
+export const FALSE_SURPLUS_RATIONALE = "Inflation and visitor volume flatter it — per the bundle it shows a false surplus where the real (constant-2019-prices) gap is missing billions.";
+
 export interface FlaggedNominalFigure {
   /** The formatted figure itself (RM million, one decimal). */
   display: string;
@@ -486,9 +489,7 @@ export interface FlaggedNominalFigure {
   notice: string;
 }
 
-function fmtRmMillion(v: number): string {
-  return `${v >= 0 ? "+" : ""}${v.toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} RM million`;
-}
+// fmtRmMillion lives in ./format (ticket #21)
 
 /**
  * Flag an arbitrary nominal figure. Honesty rule: wherever a nominal figure
@@ -513,22 +514,27 @@ export function flagNaiveNominalGap(year: CounterfactualYear): FlaggedNominalFig
   const fig = flagNominalFigure(year.naive_nominal_gap_rm_million, `The naive nominal gap for ${yearLabel(year)}`);
   return {
     ...fig,
-    notice: `The naive nominal gap for ${yearLabel(year)} (${fig.display}) is INVALID: it compares nominal ringgit across years. Inflation and visitor volume flatter it — per the bundle it shows a false surplus where the real (constant-2019-prices) gap is missing billions. Never read it as a comparison.`,
+    notice: `The naive nominal gap for ${yearLabel(year)} (${fig.display}) is INVALID: it compares nominal ringgit across years. ${FALSE_SURPLUS_RATIONALE} Never read it as a comparison.`,
   };
 }
 
-/** The full naive-nominal twin series, for display in a flagged INVALID card. */
-export function buildNaiveNominalGapSeries(frag: MissingBillionsFragment): {
+/** The naive-nominal twin series, for display in a flagged INVALID card. */
+export interface NaiveNominalGapSeries {
+  /** The series title, as data — no page has to surgery it out of `unit`. */
+  title: string;
   flag: string;
   notice: string;
   unit: string;
   points: [number, number | null][];
-} {
+}
+
+/** The full naive-nominal twin series, for display in a flagged INVALID card. */
+export function buildNaiveNominalGapSeries(frag: MissingBillionsFragment): NaiveNominalGapSeries {
   const years = [...frag.years].sort((a, b) => a.year - b.year);
   return {
+    title: "The naive nominal gap",
     flag: NOMINAL_FLAG,
-    notice:
-      "The naive nominal gap — receipts minus receipts at 2019's NOMINAL per-visitor yield, in ringgit of each year — is INVALID as a value measure: inflation and visitor volume flatter it, and per the data it shows a false surplus where the real (constant-2019-prices) headline shows missing billions. Shown flagged so the error is visible, never as a comparison.",
+    notice: `The naive nominal gap — receipts minus receipts at 2019's NOMINAL per-visitor yield, in ringgit of each year — is INVALID as a value measure: ${FALSE_SURPLUS_RATIONALE} Shown flagged so the error is visible, never as a comparison.`,
     unit: "RM million (INVALID — nominal)",
     points: years.map((y) => [y.year, y.naive_nominal_gap_rm_million] as [number, number | null]),
   };
@@ -540,8 +546,16 @@ export function buildNaiveNominalGapSeries(frag: MissingBillionsFragment): {
  * label wherever it renders. Returns the label text, or null for real-terms
  * traces (which need no flag).
  */
+/**
+ * The one trace-is-nominal predicate (ticket #21): a decomposition trace is
+ * nominal (never price-adjusted, always flagged) exactly when its name says so.
+ */
+export function isNominalTrace(trace: Pick<DecompositionTrace, "name">): boolean {
+  return /nominal/i.test(trace.name);
+}
+
 export function nominalSeriesNotice(trace: Pick<DecompositionTrace, "name" | "kind" | "unit">): string | null {
-  if (!/nominal/i.test(trace.name)) return null;
+  if (!isNominalTrace(trace)) return null;
   if (trace.kind === "index") {
     return `${trace.name} — explicitly NOMINAL, not price-adjusted: an index of the intensive side in ringgit of each year. It is not a gap and not comparable against the real-2019 series (INVALID as a value measure).`;
   }
