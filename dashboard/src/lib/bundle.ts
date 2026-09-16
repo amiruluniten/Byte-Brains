@@ -90,6 +90,52 @@ function asString(v: unknown, what: string): string {
   return v;
 }
 
+/**
+ * Shared union-literal validator (ticket #21): `v` must be one of `allowed`.
+ * Every union-literal cascade in the parser funnels through here so the
+ * "must be a | b | c" wording exists in exactly one place.
+ */
+function oneOf<T extends string>(v: unknown, allowed: readonly T[], what: string): T {
+  if (typeof v !== "string" || !allowed.includes(v as T)) {
+    fail(`${what} must be ${allowed.join(" | ")}, got ${String(v)}`);
+  }
+  return v as T;
+}
+
+/** Shared duplicate detection (ticket #21): the values that appear more than once. */
+function duplicates(values: string[]): string[] {
+  return values.filter((v, i) => values.indexOf(v) !== i);
+}
+
+/** A closed [from, to] year window, parsed from a bundle's "YYYY-YYYY" string. */
+export interface Window {
+  from: number;
+  to: number;
+}
+
+/**
+ * Own the "YYYY-YYYY" window-string parsing (ticket #21): every window split
+ * in the dashboard goes through here, so the format is checked in one place.
+ */
+export function parseWindow(w: string, what: string): Window {
+  const [from, to] = w.split("-").map((x) => Number(x));
+  if (!Number.isInteger(from) || !Number.isInteger(to) || from > to) {
+    fail(`${what} must be a "YYYY-YYYY" window with from <= to, got ${String(w)}`);
+  }
+  return { from, to };
+}
+
+/**
+ * Counting-basis discipline: the window is embedded in the series_id, so a
+ * mixed-basis series cannot be constructed silently. Shared by the national
+ * and macro series parsers (ticket #21).
+ */
+function requireSeriesIdEmbedsWindow(seriesId: string, window: string, where: string): void {
+  if (!seriesId.includes(window.replace("-", "_"))) {
+    fail(`${where}: series_id must embed its window ${window}`);
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Canonical JSON — byte-compatible with the Python emitter's
 // json.dumps(sort_keys=True, separators=(",", ":"), ensure_ascii=False).
@@ -308,12 +354,7 @@ function parseObservation(v: unknown, where: string): Observation {
   if (revision !== undefined) out.revision_flag = revision;
   const status = v.revision_status;
   if (status !== undefined && status !== null) {
-    if (
-      status !== "final" && status !== "revised" && status !== "preliminary"
-    ) {
-      fail(`${where}: revision_status must be final | revised | preliminary, got ${String(status)}`);
-    }
-    out.revision_status = status;
+    out.revision_status = oneOf(status, ["final", "revised", "preliminary"] as const, `${where}.revision_status`);
   }
   return out;
 }
@@ -324,14 +365,8 @@ function parseSeries(v: unknown, index: number): Series {
   const seriesId = asString(v.series_id, `${where}.series_id`);
   const w = `${where} (${seriesId})`;
   const measure = asString(v.measure, `${w}.measure`);
-  const basis = v.basis;
-  if (basis !== "visitor" && basis !== "tourist" && basis !== "excursionist") {
-    fail(`${w}: basis must be visitor | tourist | excursionist, got ${String(basis)}`);
-  }
-  const unit = v.unit;
-  if (unit !== "persons" && unit !== "rm_million" && unit !== "percent") {
-    fail(`${w}: unit must be persons | rm_million | percent, got ${String(unit)}`);
-  }
+  const basis = oneOf(v.basis, ["visitor", "tourist", "excursionist"] as const, `${w}.basis`);
+  const unit = oneOf(v.unit, ["persons", "rm_million", "percent"] as const, `${w}.unit`);
   const window = asString(v.window, `${w}.window`);
 
   const src = v.source;
@@ -355,12 +390,7 @@ function parseSeries(v: unknown, index: number): Series {
     }
   }
 
-  // Counting-basis discipline: the window is embedded in the series_id, so a
-  // mixed-basis series cannot be constructed silently.
-  const norm = window.replace("-", "_");
-  if (!seriesId.includes(norm)) {
-    fail(`${w}: series_id must embed its window ${window}`);
-  }
+  requireSeriesIdEmbedsWindow(seriesId, window, w);
 
   return {
     series_id: seriesId,
@@ -403,8 +433,7 @@ export function loadBundleFromString(raw: string): Bundle {
   }
 
   const series = national.series.map(parseSeries);
-  const ids = series.map((s) => s.series_id);
-  const dupes = ids.filter((id, i) => ids.indexOf(id) !== i);
+  const dupes = duplicates(series.map((s) => s.series_id));
   if (dupes.length > 0) {
     fail(`duplicate series_id: ${[...new Set(dupes)].join(", ")}`);
   }
@@ -438,10 +467,7 @@ function parseSimulatorMarket(v: unknown, where: string): SimulatorMarket {
   if (!isObject(v)) fail(`${where} must be an object`);
   const market = asString(v.market, `${where}.market`);
   const w = `${where} (${market})`;
-  const coverage = v.coverage;
-  if (coverage !== "both" && coverage !== "residual") {
-    fail(`${w}: coverage must be "both" | "residual", got ${String(coverage)}`);
-  }
+  const coverage = oneOf(v.coverage, ["both", "residual"] as const, `${w}.coverage`);
   const yieldReal = v.yield_2024_real_2019_rm_per_visitor;
   if (typeof yieldReal !== "number") {
     fail(`${w}: yield_2024_real_2019_rm_per_visitor must be a number`);
@@ -814,10 +840,7 @@ function parseSourceMarketFragment(v: unknown): SourceMarketFragment | undefined
   const markets: SourceMarketRow[] = v.markets.map((m, i) => {
     const w = `${where}.markets[${i}]`;
     if (!isObject(m)) fail(`${w} must be an object`);
-    const coverage = m.coverage;
-    if (coverage !== "both" && coverage !== "arrivals_only" && coverage !== "receipts_only") {
-      fail(`${w}.coverage must be both | arrivals_only | receipts_only, got ${String(coverage)}`);
-    }
+    const coverage = oneOf(m.coverage, ["both", "arrivals_only", "receipts_only"] as const, `${w}.coverage`);
     if (!Array.isArray(m.observations) || m.observations.length === 0) {
       fail(`${w}.observations must be a non-empty array`);
     }
@@ -827,8 +850,7 @@ function parseSourceMarketFragment(v: unknown): SourceMarketFragment | undefined
       observations: m.observations.map((o, j) => parseMarketObservation(o, `${w}.observations[${j}]`)),
     };
   });
-  const names = markets.map((m) => m.market);
-  const dupes = names.filter((n, i) => names.indexOf(n) !== i);
+  const dupes = duplicates(markets.map((m) => m.market));
   if (dupes.length > 0) fail(`${where}: duplicate source market ${[...new Set(dupes)].join(", ")}`);
   return {
     source_receipts: parseTextSourceRef(v.source_receipts, `${where}.source_receipts`),
@@ -861,9 +883,7 @@ function parseMacroSeriesFragment(v: unknown): MacroSeriesFragment | undefined {
       if (s.unit !== "index") fail(`${w}.unit must be "index"`);
       const window = asString(s.window, `${w}.window`);
       const seriesId = asString(s.series_id, `${w}.series_id`);
-      if (window.replace("-", "_") && !seriesId.includes(window.replace("-", "_"))) {
-        fail(`${w}: series_id must embed its window ${window}`);
-      }
+      requireSeriesIdEmbedsWindow(seriesId, window, w);
       if (!Array.isArray(s.values) || s.values.length === 0) fail(`${w}.values must be a non-empty array`);
       return {
         series_id: seriesId,
@@ -892,10 +912,9 @@ function parseMissingBillionsFragment(v: unknown): MissingBillionsFragment | und
       if (typeof y[k] !== "number") fail(`${w}.${k} must be a number`);
       return y[k] as number;
     };
-    const status = y.revision_status ?? "final";
-    if (status !== "final" && status !== "revised" && status !== "preliminary") {
-      fail(`${w}.revision_status must be final | revised | preliminary, got ${String(status)}`);
-    }
+    const status: RevisionStatus = y.revision_status === undefined || y.revision_status === null
+      ? "final"
+      : oneOf(y.revision_status, ["final", "revised", "preliminary"] as const, `${w}.revision_status`);
     return {
       year: num("year"),
       visitor_arrivals: num("visitor_arrivals"),
@@ -945,9 +964,9 @@ function parseMissingBillionsFragment(v: unknown): MissingBillionsFragment | und
     );
   }
   // headline value must equal the sum of its own window's rows (revision policy)
-  const [hFrom, hTo] = headline.window.split("-").map((x) => Number(x));
+  const headlineWindow = parseWindow(headline.window, `${where}.headline.window`);
   const headlineSum = years
-    .filter((y) => y.year >= hFrom && y.year <= hTo)
+    .filter((y) => y.year >= headlineWindow.from && y.year <= headlineWindow.to)
     .reduce((s, y) => s + y.gap_2019_prices_rm_million, 0);
   if (Math.abs(headlineSum - headline.cumulative_gap_rm_million) > 1e-6) {
     fail(
@@ -1016,11 +1035,9 @@ function parseSegmentationFragment(v: unknown): SegmentationFragment | undefined
   const markets: MarketSegment[] = v.markets.map((m, i) => {
     const w = `${where}.markets[${i}]`;
     if (!isObject(m)) fail(`${w} must be an object`);
-    const tier = m.yield_tier;
-    if (tier !== null && tier !== undefined && tier !== "top_quartile" && tier !== "upper_middle" &&
-        tier !== "lower_middle" && tier !== "bottom_quartile") {
-      fail(`${w}.yield_tier must be a valid quartile tier or null, got ${String(tier)}`);
-    }
+    const tier: YieldTier | null = m.yield_tier === undefined || m.yield_tier === null
+      ? null
+      : oneOf(m.yield_tier, ["top_quartile", "upper_middle", "lower_middle", "bottom_quartile"] as const, `${w}.yield_tier`);
     const out: MarketSegment = {
       market: asString(m.market, `${w}.market`),
       clustered: m.clustered === true,
@@ -1141,11 +1158,12 @@ function parseRegionalBenchmarkFragment(v: unknown): RegionalBenchmarkFragment |
   const countries: RegionalCountry[] = v.countries.map((c, i) => {
     const w = `${where}.countries[${i}] (${String(c && typeof c === "object" ? (c as { country?: unknown }).country : c)})`;
     if (!isObject(c)) fail(`${w} must be an object`);
-    const basis = c.receipts_basis;
-    if (basis !== "survey" && basis !== "balance_of_payments" && basis !== "administrative_aggregate") {
-      fail(`${w}.receipts_basis must be survey | balance_of_payments | administrative_aggregate, got ${String(basis)}`);
-    }
-    if (c.role !== "baseline" && c.role !== "comparator") fail(`${w}.role must be baseline | comparator`);
+    const basis = oneOf(
+      c.receipts_basis,
+      ["survey", "balance_of_payments", "administrative_aggregate"] as const,
+      `${w}.receipts_basis`,
+    );
+    const role = oneOf(c.role, ["baseline", "comparator"] as const, `${w}.role`);
     if (!Array.isArray(c.source_urls) || c.source_urls.length === 0) fail(`${w}.source_urls must be a non-empty array`);
     const r = c.receipts_2024;
     if (!isObject(r)) fail(`${w}.receipts_2024 must be an object`);
@@ -1158,7 +1176,7 @@ function parseRegionalBenchmarkFragment(v: unknown): RegionalBenchmarkFragment |
     }
     return {
       country: asString(c.country, `${w}.country`),
-      role: c.role,
+      role,
       receipts_basis: basis,
       receipts_basis_note: asString(c.receipts_basis_note, `${w}.receipts_basis_note`),
       arrivals_2024: c.arrivals_2024,
