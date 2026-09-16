@@ -50,7 +50,7 @@ export function SpecChart({ spec }: { spec: ChartSpec }) {
                   />
                   <Tooltip
                     formatter={(value) => formatTooltipValue(trace.unit, value as number | null)}
-                    labelFormatter={(label) => `${label}${/p$/.test(String(label)) ? " (preliminary)" : ""}`}
+                    labelFormatter={(label) => String(label)}
                   />
                   <Line
                     type="monotone"
