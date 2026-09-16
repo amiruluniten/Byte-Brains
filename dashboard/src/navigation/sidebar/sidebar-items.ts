@@ -1,6 +1,7 @@
 import {
   type LucideIcon,
   Home,
+  SlidersHorizontal,
 } from "lucide-react";
 
 export type NavBadge = "new" | "soon";
@@ -55,6 +56,12 @@ export const sidebarItems: NavGroup[] = [
         title: "Home",
         url: "/",
         icon: Home,
+      },
+      {
+        id: "simulator",
+        title: "Simulator",
+        url: "/simulator",
+        icon: SlidersHorizontal,
       },
     ],
   },
