@@ -1,12 +1,13 @@
 {
   "bundle_version": 1,
-  "schema_version": "1.0.0",
-  "generated_utc": "2026-09-13T07:27:42Z",
+  "schema_version": "1.1.0",
+  "generated_utc": "2026-09-16T05:32:16Z",
   "sources": {
     "tourism_2023.xlsx": "5b0b1b6a136f5e65dc118612c7bee5694e88f1b27c3a211484da38611498eacb",
     "tourism_2024.xlsx": "eac7cea293cfb2bbb53174c67e0602670a42462a6896c73df06a7d495b5af2e8",
     "inbrief2024.txt": "f762f9c16dbe91801961d50a8f70fed48812b623711bf656ecb6efa2e26e7229",
     "cpi_headline.csv": "7035d4692dfeaa33021c2e1ae82e812fe025ee90c454f851604087d818edf6c5",
+    "tourism_2025.xlsx": "050bfd6a0723a1706bb60d588d714e8b208288052ada65172ee8e976a8d1d77a",
     "WEF_TTDI.csv": "e66fae84a4fd7775e4840092512f5c6ecddd7fa67923d58ef6fd9cf0998d7dea"
   },
   "fragments": {
@@ -28,47 +29,56 @@
             {
               "year": 2015,
               "value": 25721251.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2016,
               "value": 26757392.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2017,
               "value": 25948459.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2018,
               "value": 25832354.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2019,
               "value": 26100784.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2020,
               "value": 4332722.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2021,
               "value": 134728.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2022,
               "value": 10070964.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2023,
               "value": 20141846.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             }
           ]
         },
@@ -88,32 +98,38 @@
             {
               "year": 2019,
               "value": 35045625.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2020,
               "value": 6101378.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2021,
               "value": 399865.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2022,
               "value": 14267416.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2023,
               "value": 28964308.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2024,
               "value": 37961485.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             }
           ]
         },
@@ -133,32 +149,38 @@
             {
               "year": 2019,
               "value": 26100784.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2020,
               "value": 4332722.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2021,
               "value": 134728.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2022,
               "value": 10070964.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2023,
               "value": 20141846.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2024,
               "value": 25016698.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             }
           ]
         },
@@ -178,32 +200,38 @@
             {
               "year": 2019,
               "value": 8944841.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2020,
               "value": 1768656.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2021,
               "value": 265137.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2022,
               "value": 4196452.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2023,
               "value": 8822462.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2024,
               "value": 12944787.0,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             }
           ]
         },
@@ -223,52 +251,314 @@
             {
               "year": 2015,
               "value": 72592.5,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2016,
               "value": 79325.9,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2017,
               "value": 82921.5,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2018,
               "value": 84929.9,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2019,
               "value": 86706.5,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2020,
               "value": 13157.3,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2021,
               "value": 389.8,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2022,
               "value": 32473.3,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2023,
               "value": 72992.8,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2024,
               "value": 102815.3,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
+            }
+          ]
+        },
+        {
+          "series_id": "arrivals_visitor_2019_2025",
+          "measure": "arrivals",
+          "basis": "visitor",
+          "unit": "persons",
+          "window": "2019-2025",
+          "source": {
+            "file": "tourism_2025.xlsx",
+            "sheet": "Indicator Inbound",
+            "row_label": "A1. Ketibaan pelawat ke Malaysia dari negara terpilih Visitor arrivals to Malaysia from selected countries",
+            "row": 7
+          },
+          "values": [
+            {
+              "year": 2019,
+              "value": 35045625.0,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2020,
+              "value": 6101378.0,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2021,
+              "value": 399865.0,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2022,
+              "value": 14267416.0,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2023,
+              "value": 28964308.0,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2024,
+              "value": 37961485.0,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2025,
+              "value": 42196892.0,
+              "revision_flag": null,
+              "revision_status": "preliminary"
+            }
+          ]
+        },
+        {
+          "series_id": "arrivals_tourist_2019_2025",
+          "measure": "arrivals",
+          "basis": "tourist",
+          "unit": "persons",
+          "window": "2019-2025",
+          "source": {
+            "file": "tourism_2025.xlsx",
+            "sheet": "Indicator Inbound",
+            "row_label": "A2. Ketibaan pelancong ke Malaysia Tourist arrivals to Malaysia",
+            "row": 26
+          },
+          "values": [
+            {
+              "year": 2019,
+              "value": 26100784.0,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2020,
+              "value": 4332722.0,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2021,
+              "value": 134728.0,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2022,
+              "value": 10070964.0,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2023,
+              "value": 20141846.0,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2024,
+              "value": 25016698.0,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2025,
+              "value": 26613597.0,
+              "revision_flag": null,
+              "revision_status": "preliminary"
+            }
+          ]
+        },
+        {
+          "series_id": "arrivals_excursionist_2019_2025",
+          "measure": "arrivals",
+          "basis": "excursionist",
+          "unit": "persons",
+          "window": "2019-2025",
+          "source": {
+            "file": "tourism_2025.xlsx",
+            "sheet": "Indicator Inbound",
+            "row_label": "A3. Ketibaan pelawat harian ke Malaysia Excursionist arrivals to Malaysia",
+            "row": 27
+          },
+          "values": [
+            {
+              "year": 2019,
+              "value": 8944841.0,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2020,
+              "value": 1768656.0,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2021,
+              "value": 265137.0,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2022,
+              "value": 4196452.0,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2023,
+              "value": 8822462.0,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2024,
+              "value": 12944787.0,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2025,
+              "value": 15583295.0,
+              "revision_flag": null,
+              "revision_status": "preliminary"
+            }
+          ]
+        },
+        {
+          "series_id": "inbound_consumption_tourist_2015_2025",
+          "measure": "inbound_tourism_consumption",
+          "basis": "tourist",
+          "unit": "rm_million",
+          "window": "2015-2025",
+          "source": {
+            "file": "tourism_2025.xlsx",
+            "sheet": "Jad 1A",
+            "row_label": "Jumlah Total",
+            "row": 14
+          },
+          "values": [
+            {
+              "year": 2015,
+              "value": 72592.5,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2016,
+              "value": 79325.9,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2017,
+              "value": 82921.5,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2018,
+              "value": 84929.9,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2019,
+              "value": 86706.5,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2020,
+              "value": 13157.3,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2021,
+              "value": 389.8,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2022,
+              "value": 32473.3,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2023,
+              "value": 72992.8,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2024,
+              "value": 102931.3,
+              "revision_flag": null,
+              "revision_status": "revised"
+            },
+            {
+              "year": 2025,
+              "value": 119312.0,
+              "revision_flag": "p",
+              "revision_status": "preliminary"
             }
           ]
         }
@@ -808,52 +1098,143 @@
             {
               "year": 2015,
               "value": 112.808333,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2016,
               "value": 115.15,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2017,
               "value": 119.525,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2018,
               "value": 120.683333,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2019,
               "value": 121.483333,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2020,
               "value": 120.1,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2021,
               "value": 123.075,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2022,
               "value": 127.233333,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2023,
               "value": 130.4,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
             },
             {
               "year": 2024,
               "value": 132.791667,
-              "revision_flag": null
+              "revision_flag": null,
+              "revision_status": "final"
+            }
+          ]
+        },
+        {
+          "series_id": "cpi_national_overall_2015_2025",
+          "measure": "cpi",
+          "unit": "index",
+          "window": "2015-2025",
+          "source": {
+            "dataset_id": "cpi_headline",
+            "title": "Monthly CPI by Division (2-digit), overall",
+            "url": "https://storage.dosm.gov.my/cpi/cpi_2d.csv",
+            "fetched_utc": "2026-09-13T00:00:00Z",
+            "index_base": "2010=100"
+          },
+          "values": [
+            {
+              "year": 2015,
+              "value": 112.808333,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2016,
+              "value": 115.15,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2017,
+              "value": 119.525,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2018,
+              "value": 120.683333,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2019,
+              "value": 121.483333,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2020,
+              "value": 120.1,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2021,
+              "value": 123.075,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2022,
+              "value": 127.233333,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2023,
+              "value": 130.4,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2024,
+              "value": 132.791667,
+              "revision_flag": null,
+              "revision_status": "final"
+            },
+            {
+              "year": 2025,
+              "value": 134.625,
+              "revision_flag": null,
+              "revision_status": "final"
             }
           ]
         }
@@ -862,11 +1243,11 @@
     "missing_billions": {
       "anchor_year": 2019,
       "prices": "constant_2019_rm",
-      "receipts_series_id": "inbound_consumption_tourist_2015_2024",
-      "arrivals_series_id": "arrivals_visitor_2019_2024",
-      "cpi_series_id": "cpi_national_overall_2015_2024",
+      "receipts_series_id": "inbound_consumption_tourist_2015_2025",
+      "arrivals_series_id": "arrivals_visitor_2019_2025",
+      "cpi_series_id": "cpi_national_overall_2015_2025",
       "deflator": {
-        "series_id": "cpi_national_overall_2015_2024",
+        "series_id": "cpi_national_overall_2015_2025",
         "description": "Malaysia national CPI (all items), annual mean of the monthly index — the deflator for the constant-2019-prices counterfactual",
         "anchor_year": 2019,
         "anchor_index": 121.483333,
@@ -891,7 +1272,8 @@
           "actual_receipts_2019_prices_rm_million": 86706.5,
           "counterfactual_receipts_2019_prices_rm_million": 86706.5,
           "gap_2019_prices_rm_million": 0.0,
-          "naive_nominal_gap_rm_million": 0.0
+          "naive_nominal_gap_rm_million": 0.0,
+          "revision_status": "final"
         },
         {
           "year": 2020,
@@ -904,7 +1286,8 @@
           "actual_receipts_2019_prices_rm_million": 13308.8481039209,
           "counterfactual_receipts_2019_prices_rm_million": 15095.440060121626,
           "gap_2019_prices_rm_million": 1786.5919562007257,
-          "naive_nominal_gap_rm_million": 1938.1400601216264
+          "naive_nominal_gap_rm_million": 1938.1400601216264,
+          "revision_status": "final"
         },
         {
           "year": 2021,
@@ -917,7 +1300,8 @@
           "actual_receipts_2019_prices_rm_million": 384.75891288563884,
           "counterfactual_receipts_2019_prices_rm_million": 989.3073564103935,
           "gap_2019_prices_rm_million": 604.5484435247547,
-          "naive_nominal_gap_rm_million": 599.5073564103934
+          "naive_nominal_gap_rm_million": 599.5073564103934,
+          "revision_status": "final"
         },
         {
           "year": 2022,
@@ -930,7 +1314,8 @@
           "actual_receipts_2019_prices_rm_million": 31005.748450438692,
           "counterfactual_receipts_2019_prices_rm_million": 35299.062447994576,
           "gap_2019_prices_rm_million": 4293.313997555884,
-          "naive_nominal_gap_rm_million": 2825.762447994577
+          "naive_nominal_gap_rm_million": 2825.762447994577,
+          "revision_status": "final"
         },
         {
           "year": 2023,
@@ -943,20 +1328,36 @@
           "actual_receipts_2019_prices_rm_million": 68001.59991566258,
           "counterfactual_receipts_2019_prices_rm_million": 71660.6929282043,
           "gap_2019_prices_rm_million": 3659.0930125417217,
-          "naive_nominal_gap_rm_million": -1332.1070717957045
+          "naive_nominal_gap_rm_million": -1332.1070717957045,
+          "revision_status": "final"
         },
         {
           "year": 2024,
           "visitor_arrivals": 37961485.0,
-          "receipts_nominal_rm_million": 102815.3,
-          "per_visitor_nominal_rm": 2708.4109064753393,
+          "receipts_nominal_rm_million": 102931.3,
+          "per_visitor_nominal_rm": 2711.4666351961732,
           "cpi_index": 132.791667,
           "cpi_ratio_to_anchor": 1.0930854770011948,
-          "per_visitor_real_2019_rm": 2477.766801829331,
-          "actual_receipts_2019_prices_rm_million": 94059.70728114212,
+          "per_visitor_real_2019_rm": 2480.562309394958,
+          "actual_receipts_2019_prices_rm_million": 94165.82889966205,
           "counterfactual_receipts_2019_prices_rm_million": 93920.63914261764,
-          "gap_2019_prices_rm_million": -139.0681385244825,
-          "naive_nominal_gap_rm_million": -8894.660857382361
+          "gap_2019_prices_rm_million": -245.18975704441254,
+          "naive_nominal_gap_rm_million": -9010.660857382361,
+          "revision_status": "revised"
+        },
+        {
+          "year": 2025,
+          "visitor_arrivals": 42196892.0,
+          "receipts_nominal_rm_million": 119312.0,
+          "per_visitor_nominal_rm": 2827.5068220664216,
+          "cpi_index": 134.625,
+          "cpi_ratio_to_anchor": 1.1081767076640876,
+          "per_visitor_real_2019_rm": 2551.494542803096,
+          "actual_receipts_2019_prices_rm_million": 107665.13966125163,
+          "counterfactual_receipts_2019_prices_rm_million": 104399.4740056141,
+          "gap_2019_prices_rm_million": -3265.6656556375237,
+          "naive_nominal_gap_rm_million": -14912.525994385898,
+          "revision_status": "preliminary"
         }
       ],
       "volume_trap": {
@@ -965,6 +1366,18 @@
         "excursionist_share_change_pp": 8.6,
         "land_mode_share_2024_pct": 66.1,
         "land_mode_share_source": "Tourism Malaysia Statistics in Brief 2024, mode of arrival (land 25,080,202 of 37,961,485 visitor arrivals, 2024)"
+      },
+      "headline": {
+        "window": "2020-2024",
+        "prices": "constant_2019_rm",
+        "cumulative_gap_rm_million": 10204.479271298604,
+        "pre_registered": true,
+        "basis_note": "Pre-registered headline: window fixed before the TSA 2025 release was examined (no result-shopping), constant 2019 prices. Computed from the TSA 2024 edition receipts the headline was registered on; the year rows above recompute from the latest official workbook."
+      },
+      "supplementary": {
+        "window": "2020-2025",
+        "label": "Supplementary only: cumulative real gap 2020-2025 includes the preliminary 2025 year — never quote it as the headline",
+        "cumulative_gap_rm_million": 6938.81361566108
       }
     },
     "simulator": {
@@ -972,7 +1385,7 @@
       "anchor_year": 2019,
       "mix_year": 2024,
       "comparison_year": 2023,
-      "cpi_series_id": "cpi_national_overall_2015_2024",
+      "cpi_series_id": "cpi_national_overall_2015_2025",
       "cpi_ratio_to_anchor_mix_year": 1.0930854770011948,
       "visitor_arrivals_2024": 37961485,
       "visitor_arrivals_2023": 28964308,
@@ -1162,7 +1575,7 @@
           "market": "Other markets (residual)",
           "coverage": "residual",
           "yield_2024_nominal_rm_per_visitor": null,
-          "yield_2024_real_2019_rm_per_visitor": 2704.2261741181896,
+          "yield_2024_real_2019_rm_per_visitor": 2761.4993078153107,
           "arrivals_2024_persons": 1852904,
           "arrivals_2023_persons": 1486465,
           "share_of_arrivals_2024": 0.04881010318748068,
@@ -2036,5 +2449,5 @@
       }
     }
   },
-  "checksum": "ad9523c82ebaf162f5c88dcf87c2e60102770342835d2376017cca183ca30bbe"
+  "checksum": "e0ee5919eca3dd5be236e92fb77d1e25f017d81bd6b40acfffdfea30e452d0b1"
 }

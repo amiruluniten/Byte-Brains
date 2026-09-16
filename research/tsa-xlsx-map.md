@@ -69,6 +69,23 @@ Structure per sheet: year header in row 3; rows 6–14 values; row 15 annual % c
 - **No footnotes at sheet bottoms**; last rows are empty padding.
 - **No quarter/month data anywhere** — all series are annual.
 
+## TSA 2025 edition (ticket #13, verified 2026-09-16)
+
+`data/raw/tourism_2025.xlsx` (TSA 2025, "2025p" preliminary release, 13 sheets,
+same `Jad N` naming as 2024). Layout is unchanged from the 2024 edition:
+
+- **Anchors unchanged**: `Indicator Inbound` A1/A2/A3 at rows 7/26/27; `Jad 1A`
+  `Jumlah/Total` at row 14; year header in row 3. Blank spacer rows between
+  sections (rows 8, 25, 28–29, 35) — the anchor/label-prefix search skips them.
+- **New year column**: `Indicator Inbound` gains 2025 (visitor arrivals
+  42,196,892; A2 tourists 26,613,597; A3 excursionists 15,583,295).
+- **2024 REVISED**: the 2025 workbook restates 2024 Jad 1A total consumption as
+  RM102,931.3m (the 2024 edition printed RM102,815.3m). Every other overlapping
+  year matches the 2024 edition exactly (checked at emission).
+- **Preliminary marker**: the Jad table year headers carry `2025p`; 2025 Jad 1A
+  consumption = RM119,312.0m. The `Indicator Inbound` year header prints plain
+  `2025` without the suffix — the release-level "2025p" marker still applies.
+
 ## Parsing difficulty: 2/5
 Fixed, repeating layout; modest merges; main work is section detection within sheets, bilingual label stripping, and handling the 2023-vs-2024 sheet renames and indicator restructure.
 

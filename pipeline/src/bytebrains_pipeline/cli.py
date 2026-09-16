@@ -23,7 +23,13 @@ HEADERS = [
     "Excursionist arrivals",
     "Inbound consumption, RM m (Jad 1A, 2015-2024)",
 ]
-WIDTHS = [len(h) + 1 for h in HEADERS]
+# ticket #13: the additive TSA 2025 edition series (shown when in the bundle)
+HEADERS_2025 = [
+    "Visitor arrivals (2019-2025)",
+    "Tourist arrivals (2019-2025)",
+    "Same-day visitors (2019-2025)",
+    "Inbound consumption, RM m (Jad 1A, 2015-2025)",
+]
 
 
 def _cell(series_by_id, series_id, year):
@@ -39,19 +45,29 @@ def _cell(series_by_id, series_id, year):
 def render_table(bundle) -> str:
     frag = bundle.fragments["national_series"]
     by_id = {s.series_id: s for s in frag.series}
+    has_2025 = "arrivals_visitor_2019_2025" in by_id
+    headers = HEADERS + (HEADERS_2025 if has_2025 else [])
+    widths = [len(h) + 1 for h in headers]
     years = sorted({o.year for s in frag.series for o in s.values})
-    widths = WIDTHS
-    lines = [" | ".join(h.ljust(w) for h, w in zip(HEADERS, widths))]
+    lines = [" | ".join(h.ljust(w) for h, w in zip(headers, widths))]
     lines.append("-+-".join("-" * w for w in widths))
+    base_cells = [
+        "arrivals_visitor_2019_2024",
+        "arrivals_tourist_2015_2023",
+        "arrivals_tourist_2019_2024",
+        "arrivals_excursionist_2019_2024",
+        "inbound_consumption_tourist_2015_2024",
+    ]
+    cells_2025 = [
+        "arrivals_visitor_2019_2025",
+        "arrivals_tourist_2019_2025",
+        "arrivals_excursionist_2019_2025",
+        "inbound_consumption_tourist_2015_2025",
+    ]
     for year in years:
-        row = [
-            str(year),
-            _cell(by_id, "arrivals_visitor_2019_2024", year),
-            _cell(by_id, "arrivals_tourist_2015_2023", year),
-            _cell(by_id, "arrivals_tourist_2019_2024", year),
-            _cell(by_id, "arrivals_excursionist_2019_2024", year),
-            _cell(by_id, "inbound_consumption_tourist_2015_2024", year),
-        ]
+        row = [str(year)] + [_cell(by_id, sid, year) for sid in base_cells]
+        if has_2025:
+            row += [_cell(by_id, sid, year) for sid in cells_2025]
         lines.append(" | ".join(c.ljust(w) for c, w in zip(row, widths)))
     lines.append("")
     lines.append("Basis note: tourist-basis series (2015-2023) and visitor-basis series (2019-2024)")
@@ -107,6 +123,19 @@ def render_missing_billions_table(frag) -> list[str]:
         "Sign convention: real gap = counterfactual - actual in 2019 prices; "
         "positive = missing billions."
     )
+    # ticket #13: the pre-registered headline (guarded to 2020-2024) and, when
+    # the fragment reaches beyond it, the clearly-labelled supplementary figure.
+    h = frag.headline
+    lines.append(
+        f"Headline (pre-registered): RM{h.cumulative_gap_rm_million:,.1f}m "
+        f"({h.window}, constant 2019 prices) — the window is guarded, never result-shopped."
+    )
+    if frag.supplementary is not None:
+        sup = frag.supplementary
+        lines.append(
+            f"Supplementary (labelled, NEVER the headline): RM{sup.cumulative_gap_rm_million:,.1f}m "
+            f"({sup.window}, includes the preliminary latest year)."
+        )
     lines.append(
         "The naive nominal gap compares ringgit of different years and is flagged "
         "INVALID: per the data it shows a false 'surplus' (nominal per-visitor "
@@ -173,6 +202,10 @@ def main(argv=None):
     for line in bundle._ground_truth_report:  # type: ignore[attr-defined]
         print(line)
     for line in bundle._cross_file_report:  # type: ignore[attr-defined]
+        print(line)
+    for line in bundle._cpi_report:  # type: ignore[attr-defined]
+        print(line)
+    for line in getattr(bundle, "_edition_2025_report", []):  # type: ignore[attr-defined]
         print(line)
     for line in bundle._market_ground_truth_report:  # type: ignore[attr-defined]
         print(line)

@@ -25,11 +25,18 @@ from __future__ import annotations
 from .bundle import (
     CounterfactualYear,
     DeflatorMeta,
+    HeadlineGap,
     MacroSeries,
     MissingBillionsFragment,
     Series,
+    SupplementaryCumulative,
     VolumeTrap,
 )
+
+# The pre-registered headline window (fixed before the TSA 2025 release was
+# examined — ticket #13). The model layer rejects any other headline window.
+HEADLINE_WINDOW = "2020-2024"
+HEADLINE_YEARS = range(2020, 2025)
 
 LAND_MODE_SHARE_2024_PCT = 66.1
 LAND_MODE_SOURCE = (
@@ -48,6 +55,23 @@ def _value(series: Series | MacroSeries, year: int) -> float:
 def _per_visitor_nominal(receipts: Series, arrivals: Series, year: int) -> float:
     receipts_rm = _value(receipts, year) * 1_000_000.0  # rm_million -> rm
     return receipts_rm / _value(arrivals, year)
+
+
+_REVISION_RANK = {"final": 0, "revised": 1, "preliminary": 2}
+
+
+def _row_revision_status(year: int, *series: "Series | MacroSeries") -> str:
+    """The counterfactual row inherits the most provisional status of the data
+    behind it (ticket #13): a year whose receipts were revised by a later
+    workbook is "revised"; a year the release marks preliminary is
+    "preliminary" — never silently presented as final."""
+    statuses = [
+        obs.revision_status
+        for s in series
+        for obs in s.values
+        if obs.year == year and obs.revision_status != "final"
+    ]
+    return max(statuses, key=lambda s: _REVISION_RANK[s], default="final")
 
 
 def _year_row(
@@ -83,6 +107,7 @@ def _year_row(
         counterfactual_receipts_2019_prices_rm_million=counterfactual,
         gap_2019_prices_rm_million=counterfactual - actual_real,
         naive_nominal_gap_rm_million=naive_nominal,
+        revision_status=_row_revision_status(year, receipts, arrivals, cpi),
     )
 
 
@@ -93,9 +118,22 @@ def compute_missing_billions(
     excursionist_arrivals: Series | None,
     land_mode_share_2024_pct: float | None,
     anchor_year: int = 2019,
+    headline_basis_receipts: Series | None = None,
 ) -> MissingBillionsFragment:
     """Compute the constant-2019-prices counterfactual over the shared years of the
-    three series (the anchor year through the latest arrivals year)."""
+    three series (the anchor year through the latest arrivals year).
+
+    Ticket #13: the emitted fragment always carries the PRE-REGISTERED headline
+    (2020-2024, constant 2019 prices). By default the headline is the sum of the
+    fragment's own 2020-2024 rows. When the receipts series carries a LATER
+    workbook's revision of a headline year (the TSA 2025 workbook restates 2024),
+    pass the ORIGINAL workbook's series as `headline_basis_receipts`: the
+    headline is then computed from the figures it was pre-registered on and
+    frozen, while the year rows above recompute from the latest official data.
+    When the fragment extends beyond 2024, the cumulative through the latest
+    year is also emitted as a clearly-labelled SUPPLEMENTARY figure — never the
+    headline (the headline guard rejects any other headline window).
+    """
     arrival_years = {o.year for o in arrivals.values}
     receipt_years = {o.year for o in receipts.values if o.value is not None}
     cpi_years = {o.year for o in cpi.values}
@@ -133,6 +171,45 @@ def compute_missing_billions(
 
     volume_trap = _volume_trap(arrivals, excursionist_arrivals, land_mode_share_2024_pct)
 
+    # ticket #13: the pre-registered headline. When a headline-basis receipts
+    # series is given (the workbook the headline was pre-registered on), the
+    # headline years are recomputed against THAT series and frozen; the year
+    # rows above carry the latest official (possibly revised) figures.
+    if headline_basis_receipts is not None:
+        headline_rows = [
+            _year_row(y, headline_basis_receipts, arrivals, cpi, anchor_year, per_visitor_real_anchor)
+            for y in HEADLINE_YEARS
+        ]
+    else:
+        headline_rows = [y for y in years if y.year in HEADLINE_YEARS]
+    headline_gap = sum(r.gap_2019_prices_rm_million for r in headline_rows)
+    headline = HeadlineGap(
+        window=HEADLINE_WINDOW,
+        prices="constant_2019_rm",
+        cumulative_gap_rm_million=headline_gap,
+        pre_registered=True,
+        basis_note=(
+            "Pre-registered headline: window fixed before the TSA 2025 release was "
+            "examined (no result-shopping), constant 2019 prices. Computed from the "
+            "TSA 2024 edition receipts the headline was registered on; the year rows "
+            "above recompute from the latest official workbook."
+        ),
+    )
+
+    # ticket #13: the cumulative through the latest (preliminary) year may appear
+    # only as a clearly-labelled supplementary figure — never as the headline.
+    latest = years[-1]
+    supplementary = None
+    if latest.year > 2024:
+        supplementary = SupplementaryCumulative(
+            window=f"2020-{latest.year}",
+            label=(
+                f"Supplementary only: cumulative real gap 2020-{latest.year} includes the "
+                f"preliminary {latest.year} year — never quote it as the headline"
+            ),
+            cumulative_gap_rm_million=headline_gap + latest.gap_2019_prices_rm_million,
+        )
+
     return MissingBillionsFragment(
         anchor_year=anchor_year,
         prices="constant_2019_rm",
@@ -142,6 +219,8 @@ def compute_missing_billions(
         deflator=deflator,
         years=years,
         volume_trap=volume_trap,
+        headline=headline,
+        supplementary=supplementary,
     )
 
 

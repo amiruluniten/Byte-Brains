@@ -24,10 +24,21 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 BUNDLE_VERSION = 1
-SCHEMA_VERSION = "1.0.0"
+# Ticket #13 (issue #13): 1.0.0 -> 1.1.0, ADDITIVE ONLY. New in 1.1.0:
+# Observation.revision_status (final/preliminary/revised), the revised-2024 and
+# preliminary-2025 observations they flag, the counterfactual fragment's
+# pre-registered headline guard and its labelled supplementary cumulative.
+# No existing field changed meaning; a 1.0.0 bundle still validates.
+SCHEMA_VERSION = "1.1.0"
 
 Basis = Literal["visitor", "tourist", "excursionist"]
 Unit = Literal["persons", "rm_million", "percent"]
+
+# Ticket #13: how current an observation is, judged from the latest official
+# workbook. "final" = matches the workbook it was first published in and has not
+# been restated; "revised" = a later official workbook restates the year;
+# "preliminary" = the release itself marks the year provisional ("2025p").
+RevisionStatus = Literal["final", "preliminary", "revised"]
 
 
 class StrictModel(BaseModel):
@@ -46,7 +57,8 @@ class SourceRef(StrictModel):
 class Observation(StrictModel):
     year: int
     value: float | None  # None only where DOSM prints a footnote (n.a) instead of a number
-    revision_flag: str | None = None  # e.g. "p" from a "2024p" year header
+    revision_flag: str | None = None  # e.g. "p" from a "2025p" year header
+    revision_status: RevisionStatus = "final"  # ticket #13: final / preliminary / revised
 
 
 class Series(StrictModel):
@@ -168,6 +180,62 @@ class CounterfactualYear(StrictModel):
     counterfactual_receipts_2019_prices_rm_million: float  # arrivals × 2019 real per-visitor
     gap_2019_prices_rm_million: float
     naive_nominal_gap_rm_million: float  # INVALID comparison, kept for the decomposition
+    revision_status: RevisionStatus = "final"  # ticket #13: 2025 row is "preliminary"
+
+
+# ---------------------------------------------------------------------------
+# Ticket #13: the pre-registered headline guard and the labelled supplementary
+# cumulative. The headline window (2020-2024) was fixed BEFORE the TSA 2025
+# release — and its 2024 revision — were examined, so it must not move now
+# (no result-shopping). The model rejects any other headline window; the
+# 2020-2025 cumulative may appear only as a clearly-labelled supplementary
+# figure. Values are pinned by validate.py's ground truths at emission.
+# ---------------------------------------------------------------------------
+
+PRE_REGISTERED_HEADLINE_WINDOW = "2020-2024"
+
+
+class HeadlineGap(StrictModel):
+    """The Missing Billions headline: the pre-registered cumulative real gap
+    2020-2024, constant 2019 prices. Guarded: a fragment claiming any other
+    headline window fails validation (result-shopping guard, ticket #13)."""
+
+    window: str
+    prices: Literal["constant_2019_rm"]
+    cumulative_gap_rm_million: float
+    pre_registered: Literal[True]
+    basis_note: str
+
+    @model_validator(mode="after")
+    def _check_pre_registered_window(self):
+        if self.window != PRE_REGISTERED_HEADLINE_WINDOW:
+            raise ValueError(
+                f"headline window {self.window!r} violates the pre-registered contract: "
+                f"the Missing Billions headline is {PRE_REGISTERED_HEADLINE_WINDOW} "
+                "(RM10.2 billion, constant 2019 prices); a different headline window is "
+                "result-shopping and fails the fragment contract (ticket #13)"
+            )
+        return self
+
+
+class SupplementaryCumulative(StrictModel):
+    """A cumulative gap window BEYOND the pre-registered headline (e.g. the
+    2020-2025 cumulative including the preliminary 2025 year). Clearly labelled
+    supplementary — it must never pose as the headline, and its window must
+    differ from the headline's."""
+
+    window: str
+    label: str  # must contain "supplementary"
+    cumulative_gap_rm_million: float
+
+    @model_validator(mode="after")
+    def _check_labelled_supplementary(self):
+        if "supplementary" not in self.label.lower():
+            raise ValueError(
+                f"supplementary cumulative must be clearly labelled supplementary, got "
+                f"label {self.label!r} (ticket #13: it may never pose as the headline)"
+            )
+        return self
 
 
 class VolumeTrap(StrictModel):
@@ -199,6 +267,28 @@ class MissingBillionsFragment(StrictModel):
     deflator: DeflatorMeta
     years: list[CounterfactualYear] = Field(min_length=1)
     volume_trap: VolumeTrap
+    headline: HeadlineGap  # ticket #13: the pre-registered, window-guarded headline
+    supplementary: SupplementaryCumulative | None = None  # ticket #13: labelled, never the headline
+
+    @model_validator(mode="after")
+    def _check_supplementary_never_poses_as_headline(self):
+        sup = self.supplementary
+        if sup is None:
+            return self
+        if sup.window == self.headline.window:
+            raise ValueError(
+                f"supplementary window {sup.window!r} equals the headline window — a "
+                "supplementary figure must extend beyond the pre-registered headline "
+                "(ticket #13: it may never pose as the headline)"
+            )
+        latest = max(y.year for y in self.years)
+        sup_end = int(sup.window.split("-")[-1])
+        if sup_end != latest:
+            raise ValueError(
+                f"supplementary window must end at the latest fragment year ({latest}), "
+                f"got {sup.window!r}"
+            )
+        return self
 
     @model_validator(mode="after")
     def _check_naive_nominal_is_loudly_negative(self):

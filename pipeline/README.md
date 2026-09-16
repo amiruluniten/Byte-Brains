@@ -8,6 +8,12 @@ Current fragments:
 - `national_series` (ticket T1) — visitor, tourist, and same-day visitor
   (excursionist) arrivals plus inbound tourism consumption (Jad 1A totals),
   2015–2024, extracted from the DOSM Tourism Satellite Account workbooks.
+  Ticket #13 adds the TSA 2025 edition ADDITIVELY (schema 1.0.0 → 1.1.0):
+  arrivals 2019–2025 and consumption 2015–2025 as new labelled series from
+  `tourism_2025.xlsx`, with the workbook's revised 2024 consumption
+  (RM102,931.3m, `revision_status: "revised"`) and its preliminary 2025 column
+  (`revision_status: "preliminary"`, the workbook's own "2025p" marker).
+  Existing series identifiers and windows are unchanged.
 - `source_market` (ticket T3) — visitor receipts and visitor arrivals by source
   market (top-20 tables, 2024 and 2023) with derived per-market yield, from the
   Tourism Malaysia *Statistics in Brief 2024* PDF. Extraction path:
@@ -20,13 +26,21 @@ Current fragments:
 - `macro_series` (ticket T4) — the national CPI deflator (DOSM OpenDOSM dataset
   `cpi_headline`, overall division, 2010=100, annual mean of the monthly index),
   downloaded with `tools/dosm-cli` and recorded as `data/raw/cpi_headline.csv`
-  (committed test fixture: `tests/fixtures/cpi_headline.fixture.csv`).
+  (committed test fixture: `tests/fixtures/cpi_headline.fixture.csv`). Ticket #13
+  adds the additive extended window `cpi_national_overall_2015_2025` when the
+  2025 workbook is in scope (the 2015–2024 series stays unchanged).
 - `missing_billions` (ticket T4) — the headline counterfactual: actual receipts vs
   receipts at 2019's real per-visitor expenditure, in CONSTANT 2019 PRICES ONLY,
   deflated by the national CPI. Also emits the naive nominal twin, flagged invalid
   and asserted negative at the latest year (per the data it shows a false "surplus":
   nominal per-visitor expenditure rose), plus the Volume Trap indicators
   (excursionist share 25.5% 2019 → 34.1% 2024, land-mode share 66.1% in 2024).
+  Ticket #13: with the 2025 workbook in scope the fragment recomputes from the
+  latest official data (revised 2024, preliminary 2025 — real gap −RM3,265.7m, a
+  surplus) and carries the PRE-REGISTERED headline, guarded to the 2020–2024
+  window (RM10,204.5m, constant 2019 prices — the model rejects any other
+  headline window). The 2020–2025 cumulative (RM6,938.8m) is emitted only as a
+  clearly-labelled supplementary figure, never the headline.
 
 - `source_segmentation` (ticket T5) — unsupervised segmentation of the top-20
   source markets, emitted as named clusters plus yield quartile tiers. Built by

@@ -47,9 +47,11 @@ def build_bundle(data_dir: Path, wef_csv: Path | None = None) -> Bundle:
     """Extract the national series from the raw TSA workbooks and build the bundle."""
     file_2023 = data_dir / "tourism_2023.xlsx"
     file_2024 = data_dir / "tourism_2024.xlsx"
+    file_2025 = data_dir / "tourism_2025.xlsx"  # ticket #13: TSA 2025 ("2025p")
     file_inbrief = _inbrief_text(data_dir)
     wb23 = load_workbook(file_2023, data_only=True)
     wb24 = load_workbook(file_2024, data_only=True)
+    wb25 = load_workbook(file_2025, data_only=True) if file_2025.exists() else None
 
     fragment = NationalSeriesFragment(
         series=[
@@ -60,6 +62,18 @@ def build_bundle(data_dir: Path, wef_csv: Path | None = None) -> Bundle:
             tsa_national.extract_inbound_consumption(wb24),
         ]
     )
+    # ticket #13: the TSA 2025 edition enters ADDITIVELY — new series with their
+    # own windows, existing series ids/windows unchanged. Later official
+    # workbook wins for the counterfactual (its 2024 receipts are revised).
+    if wb25 is not None:
+        fragment.series.extend(
+            [
+                tsa_national.extract_visitor_arrivals_2025(wb25),
+                tsa_national.extract_tourist_arrivals_2025(wb25),
+                tsa_national.extract_excursionist_arrivals_2025(wb25),
+                tsa_national.extract_inbound_consumption_2025(wb25),
+            ]
+        )
 
     # cross-file consistency: 2023 edition table 1A vs 2024 edition Jad 1A
     legacy = tsa_national.extract_inbound_consumption(wb23)
@@ -76,16 +90,36 @@ def build_bundle(data_dir: Path, wef_csv: Path | None = None) -> Bundle:
             f"{file_cpi} missing; re-fetch with: dosm download cpi_headline"
         )
     cpi_series = cpi.extract_cpi(file_cpi)
-    macro_series = MacroSeriesFragment(series=[cpi_series])
+    macro_series_series = [cpi_series]
+    # ticket #13: when the 2025 workbook is in scope, the CPI deflator extends
+    # to 2025 as an ADDITIVE series (existing series id/window unchanged); the
+    # extension fails loudly if the recorded CSV lacks 2025 — re-fetch it.
+    if wb25 is not None:
+        macro_series_series.append(cpi.extract_cpi(file_cpi, window_end=2025))
+    macro_series = MacroSeriesFragment(series=macro_series_series)
 
     national_by_id = {s.series_id: s for s in fragment.series}
-    missing_billions = compute_missing_billions(
-        receipts=national_by_id["inbound_consumption_tourist_2015_2024"],
-        arrivals=national_by_id["arrivals_visitor_2019_2024"],
-        cpi=cpi_series,
-        excursionist_arrivals=national_by_id["arrivals_excursionist_2019_2024"],
-        land_mode_share_2024_pct=LAND_MODE_SHARE_2024_PCT,
-    )
+    if wb25 is not None:
+        # ticket #13: the counterfactual recomputes from the latest official
+        # workbook (revised 2024 + preliminary 2025); the pre-registered
+        # headline stays computed from the TSA 2024 edition receipts it was
+        # registered on — frozen, never result-shopped.
+        missing_billions = compute_missing_billions(
+            receipts=national_by_id["inbound_consumption_tourist_2015_2025"],
+            arrivals=national_by_id["arrivals_visitor_2019_2025"],
+            cpi=next(s for s in macro_series_series if s.series_id == "cpi_national_overall_2015_2025"),
+            excursionist_arrivals=national_by_id["arrivals_excursionist_2019_2025"],
+            land_mode_share_2024_pct=LAND_MODE_SHARE_2024_PCT,
+            headline_basis_receipts=national_by_id["inbound_consumption_tourist_2015_2024"],
+        )
+    else:
+        missing_billions = compute_missing_billions(
+            receipts=national_by_id["inbound_consumption_tourist_2015_2024"],
+            arrivals=national_by_id["arrivals_visitor_2019_2024"],
+            cpi=cpi_series,
+            excursionist_arrivals=national_by_id["arrivals_excursionist_2019_2024"],
+            land_mode_share_2024_pct=LAND_MODE_SHARE_2024_PCT,
+        )
 
     # ticket T7: simulator coefficients from the source-market yields + the
     # Missing Billions deflator (additive fragment; never re-extracts anything).
@@ -115,6 +149,7 @@ def build_bundle(data_dir: Path, wef_csv: Path | None = None) -> Bundle:
             file_2024.name: file_sha256(file_2024),
             file_inbrief.name: file_sha256(file_inbrief),
             file_cpi.name: file_sha256(file_cpi),
+            **({file_2025.name: file_sha256(file_2025)} if wb25 is not None else {}),
             **({wef_path.name: file_sha256(wef_path)} if wef_path.exists() else {}),
         },
         fragments={
@@ -137,6 +172,23 @@ def build_bundle(data_dir: Path, wef_csv: Path | None = None) -> Bundle:
     )
 
     bundle._ground_truth_report = check_ground_truths(bundle)  # type: ignore[attr-defined]
+    from .validate import check_cpi_ground_truths
+
+    bundle._cpi_report = check_cpi_ground_truths(bundle)  # type: ignore[attr-defined]
+    if wb25 is not None:
+        from .validate import check_2025_edition_consistency
+
+        current_2024_series = {
+            s.series_id: s
+            for s in fragment.series
+            if s.series_id in {
+                "arrivals_visitor_2019_2024", "arrivals_tourist_2019_2024",
+                "arrivals_excursionist_2019_2024", "inbound_consumption_tourist_2015_2024",
+            }
+        }
+        bundle._edition_2025_report = check_2025_edition_consistency(
+            bundle, current_2024_series
+        )  # type: ignore[attr-defined]
     bundle._cross_file_report = check_cross_file_consistency(bundle, legacy)  # type: ignore[attr-defined]
     bundle._market_ground_truth_report = check_market_ground_truths(bundle)  # type: ignore[attr-defined]
     bundle._missing_billions_report = check_missing_billions(bundle)  # type: ignore[attr-defined]

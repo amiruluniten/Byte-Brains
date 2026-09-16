@@ -22,6 +22,7 @@ from bytebrains_pipeline.bundle import (
     VolumeTrap,
     CounterfactualYear,
     DeflatorMeta,
+    HeadlineGap,
 )
 
 
@@ -81,6 +82,19 @@ def make_counterfactual_year(**overrides):
     return CounterfactualYear(**defaults)
 
 
+def make_headline(**overrides):
+    """Ticket #13: the pre-registered, window-guarded headline."""
+    defaults = dict(
+        window="2020-2024",
+        prices="constant_2019_rm",
+        cumulative_gap_rm_million=10_204.5,
+        pre_registered=True,
+        basis_note="Pre-registered headline (test fixture).",
+    )
+    defaults.update(overrides)
+    return HeadlineGap(**defaults)
+
+
 def make_volume_trap(**overrides):
     defaults = dict(
         excursionist_share_2019_pct=25.5,
@@ -103,6 +117,7 @@ def make_missing_billions(**overrides):
         deflator=make_deflator(),
         years=[make_counterfactual_year()],
         volume_trap=make_volume_trap(),
+        headline=make_headline(),
     )
     defaults.update(overrides)
     return MissingBillionsFragment(**defaults)

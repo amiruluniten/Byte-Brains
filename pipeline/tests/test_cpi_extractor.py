@@ -44,6 +44,28 @@ def test_source_documents_dataset_and_fetch_date():
     assert src.index_base == "2010=100"
 
 
+def test_extended_2025_window_is_additive():
+    # ticket #13: window_end=2025 emits the additive extended series; the
+    # default call still reproduces the 2015-2024 series exactly.
+    extended = cpi.extract_cpi(FIXTURE, window_end=2025)
+    assert extended.series_id == "cpi_national_overall_2015_2025"
+    assert extended.window == "2015-2025"
+    assert [o.year for o in extended.values] == list(range(2015, 2026))
+    by_year = {o.year: o.value for o in extended.values}
+    assert by_year[2025] == pytest.approx(134.625, abs=1e-5)  # annual mean, 12 months
+    # the pre-2025 years are unchanged by the extension
+    base = cpi.extract_cpi(FIXTURE)
+    assert extended.values[:-1] == base.values
+
+
+def test_extended_window_fails_loudly_when_2025_missing(tmp_path):
+    partial = tmp_path / "cpi.csv"
+    lines = FIXTURE.read_text().splitlines()
+    partial.write_text("\n".join(l for l in lines if not l.startswith("2025")) + "\n")
+    with pytest.raises(ValueError, match="2025"):
+        cpi.extract_cpi(partial, window_end=2025)
+
+
 def test_non_overall_divisions_are_ignored():
     series = cpi.extract_cpi(FIXTURE)
     assert all(o.value is not None for o in series.values)

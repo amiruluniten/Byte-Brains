@@ -26,21 +26,29 @@ DATASET_URL = "https://storage.dosm.gov.my/cpi/cpi_2d.csv"
 INDEX_BASE = "2010=100"
 DIVISION = "overall"
 
-# Window matches the TSA series the counterfactual deflates (2015-2024).
+# Default window matches the TSA series the counterfactual deflates. Ticket #13
+# extends the window to 2025 for the 2025-edition bundle: pass window_end=2025
+# to get the additive extended series (existing series ids/windows unchanged).
 WINDOW_START, WINDOW_END = 2015, 2024
 
 
-def extract_cpi(csv_path: Path) -> MacroSeries:
-    """Annual-mean national CPI series from a recorded OpenDOSM cpi_headline CSV."""
+def extract_cpi(csv_path: Path, window_end: int = WINDOW_END) -> MacroSeries:
+    """Annual-mean national CPI series from a recorded OpenDOSM cpi_headline CSV.
+
+    The default window (2015-2024) reproduces the pre-2025 series exactly;
+    window_end=2025 emits the additive extended series
+    `cpi_national_overall_2015_2025` (ticket #13). Raises loudly when any year
+    in the window is missing — a coverage gap is never shrunk silently.
+    """
     by_year: dict[int, list[float]] = defaultdict(list)
     with open(csv_path, newline="", encoding="utf-8") as f:
         for row in csv.DictReader(f):
             if row["division"].strip() != DIVISION:
                 continue
             year = int(row["date"][:4])
-            if WINDOW_START <= year <= WINDOW_END:
+            if WINDOW_START <= year <= window_end:
                 by_year[year].append(float(row["index"]))
-    missing = [y for y in range(WINDOW_START, WINDOW_END + 1) if y not in by_year]
+    missing = [y for y in range(WINDOW_START, window_end + 1) if y not in by_year]
     if missing:
         raise ValueError(f"CPI CSV {csv_path.name}: missing years {missing}; re-fetch with dosm-cli")
     values = [
@@ -55,10 +63,10 @@ def extract_cpi(csv_path: Path) -> MacroSeries:
         index_base=INDEX_BASE,
     )
     return MacroSeries(
-        series_id=f"cpi_national_{DIVISION}_{WINDOW_START}_{WINDOW_END}",
+        series_id=f"cpi_national_{DIVISION}_{WINDOW_START}_{window_end}",
         measure="cpi",
         unit="index",
-        window=f"{WINDOW_START}-{WINDOW_END}",
+        window=f"{WINDOW_START}-{window_end}",
         source=source,
         values=values,
     )

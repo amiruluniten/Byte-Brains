@@ -100,7 +100,9 @@ class TestAdditiveSchema:
     def test_bundle_accepts_the_fragment_in_its_union(self, offline_data_dir):
         bundle = build_bundle(offline_data_dir)
         assert "regional_benchmark" in bundle.fragments
-        assert bundle.schema_version == "1.0.0"  # additive: schema unchanged
+        # additive schema discipline: tickets T5-T7 kept 1.0.0; ticket #13's
+        # additive 2025 extension is what moved the schema, to 1.1.0
+        assert bundle.schema_version == "1.1.0"
         reloaded = Bundle.model_validate_json(bundle.to_json())
         assert reloaded.checksum == bundle.checksum
 

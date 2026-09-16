@@ -111,6 +111,78 @@ def table_1a_2023(wb):
     ws["C15"] = 9.3
 
 
+def indicator_inbound_2025(wb):
+    """Visitor basis (2019-2025), TSA 2025 edition layout (ticket #13).
+
+    Mirrors the real 2025 export: same anchors (A1/A2/A3), year header in row 3,
+    blank spacer rows between sections, and a plain "2025" year header — the
+    release marks 2025 preliminary via the "2025p" headers in the Jad tables.
+    """
+    ws = wb.create_sheet("Indicator Inbound")
+    ws["A3"] = "Tahun\n Year"
+    for col, year in zip("CDEFGHI", ["2019", "2020", 2021, 2022, "2023", "2024", "2025"]):
+        ws[f"{col}3"] = year
+    ws.merge_cells("A5:B5")
+    ws["A5"] = "A. Ketibaan Pelawat\n    VIsitor arrivals"
+    ws["D5"] = "Bilangan orang\nNumber of persons"
+
+    ws["B7"] = "A1. Ketibaan pelawat ke Malaysia dari negara terpilih\n      Visitor arrivals to Malaysia from selected countries"
+    for col, v in zip("CDEFGHI", [35045625, 6101378, 399865, 14267416, 28964308, 37961485, 42196892]):
+        ws[f"{col}7"] = v
+    ws["B9"] = "Singapore"
+    for col, v in zip("CDEFGHI", [17033066, 2871340, 16729, 8399088, 14828553, 18855680, 21076783]):
+        ws[f"{col}9"] = v
+
+    ws["B26"] = "A2. Ketibaan pelancong ke Malaysia\n      Tourist arrivals to Malaysia"
+    for col, v in zip("CDEFGHI", [26100784, 4332722, 134728, 10070964, 20141846, 25016698, 26613597]):
+        ws[f"{col}26"] = v
+    ws["B27"] = "A3. Ketibaan pelawat harian ke Malaysia\n      Excursionist arrivals to Malaysia"
+    for col, v in zip("CDEFGHI", [8944841, 1768656, 265137, 4196452, 8822462, 12944787, 15583295]):
+        ws[f"{col}27"] = v
+
+    ws["A42"] = "Purata bilangan hari menginap / Average length of stay (ALOS)"
+    ws["C42"] = 7.4
+    ws["D42"] = "4.1*"  # asterisk footnote
+    ws["E42"] = "n.a"  # not available
+    add_phantom_column(ws)
+
+
+def jad_1a_2025(wb):
+    """Inbound tourism consumption (tourists), RM million, 2015-2025 (ticket #13).
+
+    Mirrors the real 2025 export: the 2024 column is REVISED (RM102,931.3m vs
+    the TSA 2024 edition's RM102,815.3m) and the 2025 column carries the
+    workbook's own "2025p" preliminary marker.
+    """
+    ws = wb.create_sheet("Jad 1A")
+    for col, year in zip(
+        "BCDEFGHIJKL",
+        ["2015", "2016", "2017", "2018", "2019", 2020, 2021, 2022, "2023", "2024", "2025p"],
+    ):
+        ws[f"{col}3"] = year
+    ws["A5"] = "Produk\n  Products"
+    ws["B5"] = "RM Juta\nRM Million"
+    ws["A14"] = "Jumlah\nTotal"
+    for col, v in zip("BCDEFGHIJK", [72592.5, 79325.9, 82921.5, 84929.9, 86706.5, 13157.3, 389.8, 32473.3, 72992.8, 102931.3]):
+        ws[f"{col}14"] = v
+    ws["L14"] = 119312  # 2025p preliminary year
+    ws["A15"] = "Perubahan peratusan tahunan (%)\nAnnual percentage change (%)"
+    ws["B15"] = ".."
+    ws["C15"] = 9.3
+    ws.merge_cells("B17:L17")
+    ws["B17"] = "Peratus sumbangan (%)\nPercentage share (%)"
+    ws["A26"] = "Jumlah\nTotal"  # second block total (share block)
+    for col in "BCDEFGHIJKL":
+        ws[f"{col}26"] = 100
+    add_phantom_column(ws)
+
+
+wb25 = Workbook()
+wb25.remove(wb25.active)
+indicator_inbound_2025(wb25)
+jad_1a_2025(wb25)
+wb25.save(HERE / "tourism_2025.fixture.xlsx")
+
 wb24 = Workbook()
 wb24.remove(wb24.active)
 indicator_inbound_2024(wb24)

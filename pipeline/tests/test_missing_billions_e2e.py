@@ -120,6 +120,97 @@ def test_corrupted_cpi_is_loud(tmp_path, fixtures_dir):
         main(["--data-dir", str(corrupt), "--out", str(tmp_path / "bundle.json")])
 
 
+class TestTsa2025EndToEnd:
+    """Ticket #13: the pipeline run against the TSA 2025 workbook (offline
+    fixtures) emits the schema-1.1.0 bundle with the revised 2024, the
+    preliminary 2025, and the guarded headline."""
+
+    @pytest.fixture
+    def offline_2025_data_dir(self, tmp_path, fixtures_dir):
+        d = tmp_path / "data2025"
+        d.mkdir()
+        for name in [
+            "tourism_2023.fixture.xlsx", "tourism_2024.fixture.xlsx",
+            "tourism_2025.fixture.xlsx", "cpi_headline.fixture.csv",
+            "inbrief2024.fixture.txt",
+        ]:
+            shutil.copy(fixtures_dir / name, d / name.replace(".fixture", ""))
+        return d
+
+    def test_bundle_carries_the_2025_edition_series(self, offline_2025_data_dir, tmp_path):
+        out = tmp_path / "bundle.json"
+        main(["--data-dir", str(offline_2025_data_dir), "--out", str(out)])
+        bundle = Bundle.model_validate_json(out.read_text())
+        assert bundle.schema_version == "1.1.0"
+        frag = bundle.fragments["national_series"]
+        assert len(frag.series) == 9  # 5 pre-existing + 4 additive 2025-edition series
+        ids = {s.series_id for s in frag.series}
+        # existing series ids/windows unchanged (additive only)
+        assert {
+            "arrivals_tourist_2015_2023", "arrivals_visitor_2019_2024",
+            "arrivals_tourist_2019_2024", "arrivals_excursionist_2019_2024",
+            "inbound_consumption_tourist_2015_2024",
+        } <= ids
+        assert {
+            "arrivals_visitor_2019_2025", "arrivals_tourist_2019_2025",
+            "arrivals_excursionist_2019_2025", "inbound_consumption_tourist_2015_2025",
+        } <= ids
+        consumption = next(s for s in frag.series if s.series_id == "inbound_consumption_tourist_2015_2025")
+        by_year = {o.year: o for o in consumption.values}
+        assert by_year[2024].value == 102931.3 and by_year[2024].revision_status == "revised"
+        assert by_year[2025].value == 119312.0 and by_year[2025].revision_status == "preliminary"
+        arrivals = next(s for s in frag.series if s.series_id == "arrivals_visitor_2019_2025")
+        assert arrivals.values[-1].value == 42196892
+        assert arrivals.values[-1].revision_status == "preliminary"
+
+    def test_missing_billions_gains_2025_and_the_guard(self, offline_2025_data_dir, tmp_path):
+        out = tmp_path / "bundle.json"
+        main(["--data-dir", str(offline_2025_data_dir), "--out", str(out)])
+        bundle = Bundle.model_validate_json(out.read_text())
+        frag = bundle.fragments["missing_billions"]
+        assert [y.year for y in frag.years] == list(range(2019, 2026))
+        y2025 = frag.years[-1]
+        assert y2025.revision_status == "preliminary"
+        assert y2025.gap_2019_prices_rm_million == pytest.approx(-3265.665656, abs=0.5)
+        assert y2025.naive_nominal_gap_rm_million == pytest.approx(-14912.525994, abs=0.5)
+        assert y2025.per_visitor_real_2019_rm == pytest.approx(2551.494543, abs=0.01)
+        # the pre-registered headline stays 2020-2024, RM10.2 billion
+        assert frag.headline.window == "2020-2024"
+        assert frag.headline.cumulative_gap_rm_million == pytest.approx(10204.479271, abs=0.05)
+        sup = frag.supplementary
+        assert sup is not None and sup.window == "2020-2025"
+        assert "supplementary" in sup.label.lower()
+        assert sup.cumulative_gap_rm_million == pytest.approx(6938.813616, abs=0.05)
+        # deflator metadata: 2025 overall CPI ratio vs 2019
+        assert frag.deflator.series_id == "cpi_national_overall_2015_2025"
+        assert y2025.cpi_ratio_to_anchor == pytest.approx(134.625 / 121.483333, abs=1e-6)
+
+    def test_2025_workbook_is_hashed_into_the_sources(self, offline_2025_data_dir, tmp_path):
+        import hashlib
+        out = tmp_path / "bundle.json"
+        main(["--data-dir", str(offline_2025_data_dir), "--out", str(out)])
+        bundle = Bundle.model_validate_json(out.read_text())
+        raw = (offline_2025_data_dir / "tourism_2025.xlsx").read_bytes()
+        assert bundle.sources["tourism_2025.xlsx"] == hashlib.sha256(raw).hexdigest()
+
+    def test_cli_prints_headline_and_supplementary(self, offline_2025_data_dir, tmp_path, capsys):
+        out = tmp_path / "bundle.json"
+        main(["--data-dir", str(offline_2025_data_dir), "--out", str(out)])
+        captured = capsys.readouterr().out
+        assert "Headline (pre-registered): RM10,204.5m (2020-2024, constant 2019 prices)" in captured
+        assert "Supplementary (labelled, NEVER the headline): RM6,938.8m (2020-2025" in captured
+        assert "42,196,892" in captured and "119,312.0" in captured and "102,931.3" in captured
+
+    def test_2025_rerun_is_deterministic(self, offline_2025_data_dir, tmp_path):
+        out1, out2 = tmp_path / "a.json", tmp_path / "b.json"
+        main(["--data-dir", str(offline_2025_data_dir), "--out", str(out1)])
+        main(["--data-dir", str(offline_2025_data_dir), "--out", str(out2)])
+        b1 = Bundle.model_validate_json(out1.read_text())
+        b2 = Bundle.model_validate_json(out2.read_text())
+        assert b1.checksum == b2.checksum
+        assert b1.fragments == b2.fragments
+
+
 def test_cli_prints_counterfactual(offline_data_dir, tmp_path, capsys):
     out = tmp_path / "bundle.json"
     main(["--data-dir", str(offline_data_dir), "--out", str(out)])
