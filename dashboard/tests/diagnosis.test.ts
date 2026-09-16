@@ -4,12 +4,19 @@ import { join } from "node:path";
 import { loadBundleFromString, type Bundle } from "../src/lib/bundle";
 import {
   buildDecomposition,
+  buildMarketRanking,
+  buildNaiveNominalGapSeries,
   buildRegionalComparison,
   buildMarketMapData,
   buildMethodIndex,
   cumulativeMissingBillions,
+  flagNaiveNominalGap,
+  flagNominalFigure,
+  nominalSeriesNotice,
+  yieldShade,
   yearLabel,
 } from "../src/lib/diagnosis";
+import { WORLD_MAP_HEIGHT, WORLD_MAP_WIDTH, WORLD_PATHS } from "../src/lib/world-paths.generated";
 
 const raw = readFileSync(join(__dirname, "..", "data", "bundle.json"), "utf8");
 const bundle: Bundle = loadBundleFromString(raw);
@@ -224,5 +231,141 @@ describe("buildMethodIndex", () => {
       expect(s.label).toMatch(/sheet "/);
       expect(s.label).toMatch(/row \d+/);
     }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Honesty flags (ticket #18 — watch items from the #16 review)
+// ---------------------------------------------------------------------------
+
+describe("nominal honesty flags (ticket #18)", () => {
+  const mb = bundle.fragments.missing_billions!;
+
+  it("flags the naive nominal gap INVALID wherever it is shown", () => {
+    const row2024 = mb.years.find((y) => y.year === 2024)!;
+    const fig = flagNaiveNominalGap(row2024);
+    expect(fig.flag).toMatch(/INVALID/);
+    expect(fig.flag).toMatch(/nominal/);
+    expect(fig.notice).toMatch(/INVALID/);
+    expect(fig.notice).toMatch(/not comparable|false surplus/);
+    expect(fig.display).toContain(fmtRm(row2024.naive_nominal_gap_rm_million));
+    // the flagged figure IS the bundle's parsed naive_nominal_gap field
+    expect(fig.display).toContain(
+      row2024.naive_nominal_gap_rm_million.toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+    );
+  });
+
+  it("labels a preliminary row 2025p in the flagged naive figure", () => {
+    const row2025 = mb.years.find((y) => y.year === 2025)!;
+    const fig = flagNaiveNominalGap(row2025);
+    expect(fig.notice).toContain("2025p");
+  });
+
+  it("the flagged naive-nominal series carries the flag and every bundle year", () => {
+    const series = buildNaiveNominalGapSeries(mb);
+    expect(series.flag).toMatch(/INVALID/);
+    expect(series.notice).toMatch(/false surplus/);
+    expect(series.points.map((p) => p[0]).sort()).toEqual(mb.years.map((y) => y.year).sort());
+    for (const y of mb.years) {
+      const pt = series.points.find((p) => p[0] === y.year)!;
+      expect(pt[1]).toBe(y.naive_nominal_gap_rm_million);
+    }
+  });
+
+  it("the nominal index series carries an explicit nominal-vs-real label (not a gap, not price-adjusted)", () => {
+    const spec = buildDecomposition(mb);
+    const nominalIndex = spec.indexed.find((t) => t.name === "Receipts, nominal RM (value — intensive side)")!;
+    const notice = nominalSeriesNotice(nominalIndex);
+    expect(notice).not.toBeNull();
+    expect(notice!).toMatch(/NOMINAL/);
+    expect(notice!).toMatch(/not price-adjusted/);
+    expect(notice!).toMatch(/intensive side/);
+    expect(notice!).toMatch(/not a gap/);
+    expect(notice!).toMatch(/INVALID/);
+  });
+
+  it("real-terms traces carry NO nominal flag", () => {
+    const spec = buildDecomposition(mb);
+    for (const t of [...spec.indexed, ...spec.perVisitor]) {
+      expect(nominalSeriesNotice(t) === null).toBe(!/nominal/i.test(t.name));
+    }
+  });
+
+  it("the nominal per-visitor series is flagged too", () => {
+    const spec = buildDecomposition(mb);
+    const nominalPv = spec.perVisitor.find((t) => /nominal/.test(t.name))!;
+    expect(nominalSeriesNotice(nominalPv)).toMatch(/NOMINAL/);
+  });
+
+  it("flagNominalFigure produces the INVALID treatment for any nominal figure", () => {
+    const fig = flagNominalFigure(1234.5, "Some receipts figure");
+    expect(fig.flag).toMatch(/INVALID/);
+    expect(fig.display).toContain("1,234.5");
+    expect(fig.notice).toContain("Some receipts figure");
+  });
+});
+
+function fmtRm(v: number): string {
+  return Math.abs(v).toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+}
+
+// ---------------------------------------------------------------------------
+// Source-market ranking + shading + geometry (ticket #18)
+// ---------------------------------------------------------------------------
+
+describe("source-market ranking, shading and geometry (ticket #18)", () => {
+  const sm = bundle.fragments.source_market!;
+  const seg = bundle.fragments.source_segmentation;
+  const mapData = buildMarketMapData(sm, seg);
+
+  it("ranks markets by 2024 yield, highest first, nulls last", () => {
+    const ranked = buildMarketRanking(mapData);
+    const yields = ranked.map((m) => m.yieldRmPerVisitor);
+    const known = yields.filter((y) => y !== null);
+    expect([...known]).toEqual([...known].sort((a, b) => b! - a!));
+    // every null-yield market sits after every known yield
+    const firstNull = yields.indexOf(null);
+    for (let i = firstNull; i < yields.length; i++) expect(yields[i]).toBeNull();
+    // ranks are 1..n over the known yields
+    const ranks = ranked.map((m) => m.rank).filter((r) => r !== null);
+    expect(ranks).toEqual(known.map((_, i) => i + 1));
+    expect(ranked[0].yieldRmPerVisitor).toBe(Math.max(...known));
+  });
+
+  it("shades from the pipeline's own yield tiers", () => {
+    for (const m of mapData.markets) {
+      const shade = yieldShade(m);
+      if (m.tier === "top_quartile") expect(shade).toBe("tier_top");
+      else if (m.tier === "upper_middle") expect(shade).toBe("tier_upper");
+      else if (m.tier === "lower_middle") expect(shade).toBe("tier_lower");
+      else if (m.tier === "bottom_quartile") expect(shade).toBe("tier_bottom");
+      else if (m.yieldRmPerVisitor === null) expect(shade).toBe("no_yield");
+      else expect(shade).toBe("unclustered");
+    }
+    expect(mapData.markets.every((m) => yieldShade(m) !== undefined)).toBe(true);
+  });
+
+  it("the committed generated paths cover the world geometry exactly", () => {
+    const geo = JSON.parse(readFileSync(join(__dirname, "..", "public", "geo", "world.json"), "utf8"));
+    const geoNames = geo.features.map((f: { properties: { name: string } }) => f.properties.name);
+    expect(WORLD_PATHS.map((p) => p.name).sort()).toEqual([...geoNames].sort());
+    for (const p of WORLD_PATHS) {
+      expect(p.d.startsWith("M")).toBe(true);
+      expect(p.d).toMatch(/Z$/);
+    }
+  });
+
+  it("every market shades on the generated paths (no missing geometry)", () => {
+    const names = new Set(WORLD_PATHS.map((p) => p.name));
+    const missing = mapData.markets.filter((m) => !names.has(m.geoName));
+    expect(missing).toEqual([]);
+  });
+
+  it("pins the projection: the first Afghanistan point matches the equirectangular map", () => {
+    // world.json first ring, first point: [61.210817, 35.650072]
+    const af = WORLD_PATHS.find((p) => p.name === "Afghanistan")!;
+    const x = Math.round(((61.210817 + 180) / 360) * WORLD_MAP_WIDTH * 10) / 10;
+    const y = Math.round(((84 - 35.650072) / (84 + 58)) * WORLD_MAP_HEIGHT * 10) / 10;
+    expect(af.d.startsWith(`M${x} ${y}`)).toBe(true);
   });
 });

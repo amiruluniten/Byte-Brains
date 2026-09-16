@@ -10,6 +10,7 @@
  */
 import type {
   Bundle,
+  CounterfactualYear,
   MarketSegment,
   MissingBillionsFragment,
   Observation,
@@ -464,4 +465,126 @@ export function buildMethodIndex(bundle: Bundle): {
     checksum: bundle.checksum,
     entries,
   };
+}
+
+// ---------------------------------------------------------------------------
+// Honesty flags (ticket #18 — watch items carried from the #16 review)
+// ---------------------------------------------------------------------------
+
+/** The flag every nominal (non-price-adjusted) figure renders with. */
+export const NOMINAL_FLAG = "INVALID — nominal (not price-adjusted)";
+
+export interface FlaggedNominalFigure {
+  /** The formatted figure itself (RM million, one decimal). */
+  display: string;
+  /** The flag text the page MUST render next to the figure. */
+  flag: string;
+  /** Why this figure is flagged — rendered with it, never stripped. */
+  notice: string;
+}
+
+function fmtRmMillion(v: number): string {
+  return `${v >= 0 ? "+" : ""}${v.toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} RM million`;
+}
+
+/**
+ * Flag an arbitrary nominal figure. Honesty rule: wherever a nominal figure
+ * appears, it renders with an explicit INVALID/flagged treatment — this
+ * builder produces the flag so a page cannot forget it.
+ */
+export function flagNominalFigure(value: number, what: string): FlaggedNominalFigure {
+  return {
+    display: fmtRmMillion(value),
+    flag: NOMINAL_FLAG,
+    notice: `${what} is NOMINAL — ringgit of different years are not comparable, so it is flagged INVALID and is never a real-terms gap or comparison.`,
+  };
+}
+
+/**
+ * Ticket #18 watch item: `naive_nominal_gap_rm_million` is parsed from the
+ * bundle and shows a false surplus (volume + inflation flatter it). It may
+ * appear on a page ONLY through this builder, which carries the INVALID flag
+ * and the false-surplus warning in its output.
+ */
+export function flagNaiveNominalGap(year: CounterfactualYear): FlaggedNominalFigure {
+  const fig = flagNominalFigure(
+    year.naive_nominal_gap_rm_million,
+    `The naive nominal gap for ${yearLabel(year)}`
+  );
+  return {
+    ...fig,
+    notice: `The naive nominal gap for ${yearLabel(year)} (${fig.display}) is INVALID: it compares nominal ringgit across years. Inflation and visitor volume flatter it — per the bundle it shows a false surplus where the real (constant-2019-prices) gap is missing billions. Never read it as a comparison.`,
+  };
+}
+
+/** The full naive-nominal twin series, for display in a flagged INVALID card. */
+export function buildNaiveNominalGapSeries(frag: MissingBillionsFragment): {
+  flag: string;
+  notice: string;
+  unit: string;
+  points: [number, number | null][];
+} {
+  const years = [...frag.years].sort((a, b) => a.year - b.year);
+  return {
+    flag: NOMINAL_FLAG,
+    notice:
+      "The naive nominal gap — receipts minus receipts at 2019's NOMINAL per-visitor yield, in ringgit of each year — is INVALID as a value measure: inflation and visitor volume flatter it, and per the data it shows a false surplus where the real (constant-2019-prices) headline shows missing billions. Shown flagged so the error is visible, never as a comparison.",
+    unit: "RM million (INVALID — nominal)",
+    points: years.map((y) => [y.year, y.naive_nominal_gap_rm_million] as [number, number | null]),
+  };
+}
+
+/**
+ * Ticket #18 watch item: a nominal index/per-visitor series (e.g. "Receipts,
+ * nominal RM (value — intensive side)") carries an explicit nominal-vs-real
+ * label wherever it renders. Returns the label text, or null for real-terms
+ * traces (which need no flag).
+ */
+export function nominalSeriesNotice(trace: Pick<DecompositionTrace, "name" | "kind" | "unit">): string | null {
+  if (!/nominal/i.test(trace.name)) return null;
+  if (trace.kind === "index") {
+    return `${trace.name} — explicitly NOMINAL, not price-adjusted: an index of the intensive side in ringgit of each year. It is not a gap and not comparable against the real-2019 series (INVALID as a value measure).`;
+  }
+  return `${trace.name} — explicitly NOMINAL, not price-adjusted: ringgit of different years are not comparable (INVALID as a value measure). Read the real-2019 series for what a visitor is worth in 2019 money.`;
+}
+
+// ---------------------------------------------------------------------------
+// Source-market ranking + shading (ticket #18)
+// ---------------------------------------------------------------------------
+
+/** Markets ranked by 2024 tourism yield (highest first); null yields last. */
+export function buildMarketRanking(data: MarketMapData): MapMarket[] {
+  return [...data.markets]
+    .sort((a, b) => (b.yieldRmPerVisitor ?? -Infinity) - (a.yieldRmPerVisitor ?? -Infinity))
+    .map((m, i) => ({ ...m, rank: m.yieldRmPerVisitor === null ? null : i + 1 }));
+}
+
+/** The ranked row type: `rank` is null exactly when the yield is null. */
+export type RankedMarket = MapMarket & { rank: number | null };
+
+export type YieldShade =
+  | "tier_top"
+  | "tier_upper"
+  | "tier_lower"
+  | "tier_bottom"
+  | "unclustered"
+  | "no_yield";
+
+/**
+ * Map shade from the pipeline's own yield tier (quartiles of the emitted 2024
+ * yields — the same tiers the report cites). Markets with a yield but no
+ * segmentation row shade "unclustered"; no yield means no shade.
+ */
+export function yieldShade(market: MapMarket): YieldShade {
+  switch (market.tier) {
+    case "top_quartile":
+      return "tier_top";
+    case "upper_middle":
+      return "tier_upper";
+    case "lower_middle":
+      return "tier_lower";
+    case "bottom_quartile":
+      return "tier_bottom";
+  }
+  return market.yieldRmPerVisitor === null ? "no_yield" : "unclustered";
 }
