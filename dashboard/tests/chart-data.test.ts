@@ -5,6 +5,7 @@ import { loadBundleFromString } from "../src/lib/bundle";
 import {
   buildArrivalsChart,
   buildReceiptsChart,
+  buildVisitorSplitChart,
   type ChartSpec,
 } from "../src/lib/chart-data";
 
@@ -96,5 +97,52 @@ describe("buildReceiptsChart", () => {
       expect(s.name).toMatch(/inbound consumption/i);
       expect(s.name).not.toMatch(/arrivals/i);
     }
+  });
+});
+
+describe("buildVisitorSplitChart (ticket #17: tourist vs same-day visitor)", () => {
+  const spec: ChartSpec = buildVisitorSplitChart(bundle);
+
+  it("has a title naming the split", () => {
+    expect(spec.title).toMatch(/tourist/i);
+    expect(spec.title).toMatch(/same-day/i);
+  });
+
+  it("frames the split as the Volume Trap evidence", () => {
+    expect(spec.subtitle).toMatch(/Volume Trap/i);
+  });
+
+  it("carries the tourist vs same-day visitor split side by side (2019-2024)", () => {
+    const tourist = spec.series.find((s) => s.basis === "tourist" && s.window === "2019-2024")!;
+    const excursionist = spec.series.find(
+      (s) => s.basis === "excursionist" && s.window === "2019-2024"
+    )!;
+    // bundle ground truth (DOSM TSA): 2024 tourist vs excursionist arrivals
+    expect(tourist.points.find((p) => p[0] === 2024)?.[1]).toBe(25016698);
+    expect(excursionist.points.find((p) => p[0] === 2024)?.[1]).toBe(12944787);
+    expect(tourist.unit).toBe("persons");
+    expect(excursionist.unit).toBe("persons");
+  });
+
+  it("uses CONTEXT.md vocabulary: same-day visitor, never bare excursionist", () => {
+    for (const s of spec.series.filter((s) => s.basis === "excursionist")) {
+      expect(s.name).toMatch(/Same-day visitor/i);
+      expect(s.name).not.toMatch(/^Excursionist/);
+    }
+  });
+
+  it("labels bases and windows; 2025 window traces are preliminary-labelled", () => {
+    for (const s of spec.series) {
+      expect(s.basisLabel).toMatch(/basis/i);
+      expect(s.basisLabel).toContain(s.window);
+    }
+    for (const s of spec.series.filter((s) => s.window === "2019-2025")) {
+      expect(s.name).toMatch(/2025p/);
+    }
+    // both bases have the preliminary 2025 window alongside the final one
+    expect(spec.series.filter((s) => s.window === "2019-2025").map((s) => s.basis)).toEqual([
+      "excursionist",
+      "tourist",
+    ]);
   });
 });

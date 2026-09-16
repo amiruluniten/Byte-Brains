@@ -93,3 +93,24 @@ export function buildReceiptsChart(bundle: Bundle): ChartSpec {
     series: series.map(toTrace),
   };
 }
+
+/**
+ * Ticket #17: the tourist vs same-day visitor split — the Volume Trap made
+ * visible. Same-day visitors (excursionists) count in arrivals but generate
+ * low yield, so the arrivals KPI over-rewards them. Bases stay labelled and
+ * never merged, exactly like every other chart built from the bundle.
+ */
+export function buildVisitorSplitChart(bundle: Bundle): ChartSpec {
+  const series = bundle.fragments.national_series.series
+    .filter((s) => s.measure === "arrivals" && s.basis !== "visitor")
+    .sort((a, b) => a.series_id.localeCompare(b.series_id));
+  if (series.length === 0) {
+    throw new Error("bundle has no tourist / same-day visitor arrivals series");
+  }
+  return {
+    title: "Who visits: tourists vs same-day visitors",
+    subtitle:
+      "Same-day visitors count in arrivals but generate low yield — the Volume Trap. Bases are labelled, never merged.",
+    series: series.map(toTrace),
+  };
+}
