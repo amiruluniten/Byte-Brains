@@ -185,19 +185,25 @@ class CounterfactualYear(StrictModel):
 
 # ---------------------------------------------------------------------------
 # Ticket #13: the pre-registered headline guard and the labelled supplementary
-# cumulative. The headline window (2020-2024) was fixed BEFORE the TSA 2025
-# release — and its 2024 revision — were examined, so it must not move now
-# (no result-shopping). The model rejects any other headline window; the
-# 2020-2025 cumulative may appear only as a clearly-labelled supplementary
-# figure. Values are pinned by validate.py's ground truths at emission.
+# cumulative. What was pre-registered — and therefore must not move — is the
+# headline WINDOW (2020-2024): it was fixed BEFORE the TSA 2025 release was
+# examined (no result-shopping). The headline VALUE follows the revision
+# policy (later official workbook wins): it is recomputed from the latest
+# official receipts, so the headline always equals the sum of the fragment's
+# own 2020-2024 rows (checked at emission). The model rejects any other
+# headline window; the 2020-2025 cumulative may appear only as a
+# clearly-labelled supplementary figure.
 # ---------------------------------------------------------------------------
 
 PRE_REGISTERED_HEADLINE_WINDOW = "2020-2024"
 
 
 class HeadlineGap(StrictModel):
-    """The Missing Billions headline: the pre-registered cumulative real gap
-    2020-2024, constant 2019 prices. Guarded: a fragment claiming any other
+    """The Missing Billions headline: the pre-registered window (2020-2024),
+    constant 2019 prices, with the cumulative real gap RECOMPUTED from the
+    latest official receipts (revision policy: later official workbook wins —
+    the headline equals the sum of the fragment's own 2020-2024 rows, checked
+    in validate.py at emission). Guarded: a fragment claiming any other
     headline window fails validation (result-shopping guard, ticket #13)."""
 
     window: str
@@ -211,9 +217,10 @@ class HeadlineGap(StrictModel):
         if self.window != PRE_REGISTERED_HEADLINE_WINDOW:
             raise ValueError(
                 f"headline window {self.window!r} violates the pre-registered contract: "
-                f"the Missing Billions headline is {PRE_REGISTERED_HEADLINE_WINDOW} "
-                "(RM10.2 billion, constant 2019 prices); a different headline window is "
-                "result-shopping and fails the fragment contract (ticket #13)"
+                f"the pre-registered Missing Billions headline window is "
+                f"{PRE_REGISTERED_HEADLINE_WINDOW} (constant 2019 prices); a different "
+                "headline window is result-shopping and fails the fragment contract "
+                "(ticket #13)"
             )
         return self
 

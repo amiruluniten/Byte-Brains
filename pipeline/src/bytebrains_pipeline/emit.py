@@ -101,16 +101,16 @@ def build_bundle(data_dir: Path, wef_csv: Path | None = None) -> Bundle:
     national_by_id = {s.series_id: s for s in fragment.series}
     if wb25 is not None:
         # ticket #13: the counterfactual recomputes from the latest official
-        # workbook (revised 2024 + preliminary 2025); the pre-registered
-        # headline stays computed from the TSA 2024 edition receipts it was
-        # registered on — frozen, never result-shopped.
+        # workbook (revised 2024 + preliminary 2025). The pre-registered headline
+        # window (2020-2024) stays guarded; its VALUE recomputes the same way
+        # (revision policy: later official workbook wins), so the headline
+        # equals the sum of the fragment's own 2020-2024 rows.
         missing_billions = compute_missing_billions(
             receipts=national_by_id["inbound_consumption_tourist_2015_2025"],
             arrivals=national_by_id["arrivals_visitor_2019_2025"],
             cpi=next(s for s in macro_series_series if s.series_id == "cpi_national_overall_2015_2025"),
             excursionist_arrivals=national_by_id["arrivals_excursionist_2019_2025"],
             land_mode_share_2024_pct=LAND_MODE_SHARE_2024_PCT,
-            headline_basis_receipts=national_by_id["inbound_consumption_tourist_2015_2024"],
         )
     else:
         missing_billions = compute_missing_billions(

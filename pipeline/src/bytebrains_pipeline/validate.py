@@ -296,14 +296,21 @@ MISSING_BILLIONS_CHECKS_2025 = [
     ("2025 naive nominal gap (invalid twin)", 2025, "naive_nominal_gap_rm_million", -14912.525994, 0.5),
 ]
 
-# Ticket #13: the pre-registered headline (window fixed before the TSA 2025
-# release was examined) and its value, computed from the TSA 2024 edition
-# receipts the headline was registered on. The 2024 revision moves the 2024
-# ROW, never the headline (no result-shopping); the 2020-2025 cumulative
-# appears only as the labelled supplementary figure.
-HEADLINE_EXPECTED = {"window": "2020-2024", "cumulative_gap_rm_million": 10204.5}
+# Ticket #13: the pre-registered headline. What was pre-registered — and is
+# guarded — is the WINDOW (2020-2024, fixed before the TSA 2025 release was
+# examined). The VALUE follows the revision policy (later official workbook
+# wins): it is recomputed from the TSA 2025 revised receipts and must equal the
+# sum of the fragment's own 2020-2024 rows, i.e. RM10,098.4m for the 2025
+# bundle. The 2020-2025 cumulative appears only as the labelled supplementary
+# figure (RM6,832.7m).
+HEADLINE_EXPECTED_WINDOW = "2020-2024"
 HEADLINE_TOLERANCE = 0.05
-SUPPLEMENTARY_2025_EXPECTED = 6938.8  # headline + the 2025 preliminary gap
+# Recomputed headline value, per receipts basis: with the TSA 2025 workbook the
+# receipts are the revised ones (RM102,931.3m -> RM10,098.4m); without it the
+# 2024 edition's receipts stand (RM102,815.3m -> RM10,204.5m).
+HEADLINE_EXPECTED_REVISED_RM_M = 10098.4
+HEADLINE_EXPECTED_ORIGINAL_RM_M = 10204.5
+SUPPLEMENTARY_2025_EXPECTED = 6832.7  # headline + the 2025 preliminary gap
 
 VOLUME_TRAP_EXPECTED = {
     "excursionist_share_2019_pct": (25.5, 0.05),
@@ -367,24 +374,40 @@ def check_missing_billions(bundle: Bundle) -> list[str]:
         passed.append(f"OK  {description}: {actual:,.4f}")
 
     # ticket #13: the pre-registered headline — the window is guarded in the
-    # model; here the VALUE is pinned to the pre-registered RM10,204.5m (2020-
-    # 2024, constant 2019 prices, computed from the TSA 2024 edition receipts).
+    # model; the VALUE is the recomputed sum of the fragment's own 2020-2024
+    # rows (revision policy: later official workbook wins). The headline must
+    # equal its own table — pinned to RM10,098.4m AND reconciled against the
+    # year rows, so it can never drift from the table it summarizes.
     headline = frag.headline
-    if abs(headline.cumulative_gap_rm_million - HEADLINE_EXPECTED["cumulative_gap_rm_million"]) > HEADLINE_TOLERANCE:
-        raise GroundTruthError(
-            f"ground-truth check failed: pre-registered headline: expected "
-            f"RM{HEADLINE_EXPECTED['cumulative_gap_rm_million']:,.1f}m over "
-            f"{HEADLINE_EXPECTED['window']}, got RM{headline.cumulative_gap_rm_million:,.4f}m"
-        )
     years_covered = {y.year for y in frag.years}
     if not set(range(2020, 2025)) <= years_covered:
         raise GroundTruthError(
             "ground-truth check failed: the headline window 2020-2024 must be fully "
             f"covered by the fragment's year rows, got {sorted(years_covered)}"
         )
+    recomputed = sum(
+        y.gap_2019_prices_rm_million for y in frag.years if 2020 <= y.year <= 2024
+    )
+    if abs(headline.cumulative_gap_rm_million - recomputed) > 1e-9:
+        raise GroundTruthError(
+            f"ground-truth check failed: headline {headline.cumulative_gap_rm_million} "
+            f"does not equal the sum of its own 2020-2024 rows ({recomputed}) — the "
+            "headline must recompute with the table (revision policy, ticket #13)"
+        )
+    headline_expected = (
+        HEADLINE_EXPECTED_REVISED_RM_M if has_2025 else HEADLINE_EXPECTED_ORIGINAL_RM_M
+    )
+    if abs(headline.cumulative_gap_rm_million - headline_expected) > HEADLINE_TOLERANCE:
+        raise GroundTruthError(
+            f"ground-truth check failed: pre-registered headline ({HEADLINE_EXPECTED_WINDOW}, "
+            f"recomputed from the {'revised' if has_2025 else 'TSA 2024 edition'} receipts): "
+            f"expected RM{headline_expected:,.1f}m, got "
+            f"RM{headline.cumulative_gap_rm_million:,.4f}m"
+        )
     passed.append(
         f"OK  pre-registered headline: RM{headline.cumulative_gap_rm_million:,.1f}m "
-        f"({headline.window}, constant 2019 prices) — window guarded, value pinned"
+        f"({headline.window}, constant 2019 prices) — window guarded, value recomputed "
+        "with the table (revised receipts)"
     )
     if has_2025:
         sup = frag.supplementary

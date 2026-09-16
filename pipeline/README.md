@@ -38,9 +38,11 @@ Current fragments:
   Ticket #13: with the 2025 workbook in scope the fragment recomputes from the
   latest official data (revised 2024, preliminary 2025 — real gap −RM3,265.7m, a
   surplus) and carries the PRE-REGISTERED headline, guarded to the 2020–2024
-  window (RM10,204.5m, constant 2019 prices — the model rejects any other
-  headline window). The 2020–2025 cumulative (RM6,938.8m) is emitted only as a
-  clearly-labelled supplementary figure, never the headline.
+  window (the model rejects any other headline window). Per the revision policy
+  (later official workbook wins) the headline VALUE recomputes with the table:
+  RM10,098.4m from the revised receipts. The 2020–2025 cumulative (RM6,832.7m)
+  is emitted only as a clearly-labelled supplementary figure, never the
+  headline.
 
 - `source_segmentation` (ticket T5) — unsupervised segmentation of the top-20
   source markets, emitted as named clusters plus yield quartile tiers. Built by

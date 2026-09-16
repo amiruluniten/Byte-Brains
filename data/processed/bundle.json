@@ -1,7 +1,7 @@
 {
   "bundle_version": 1,
   "schema_version": "1.1.0",
-  "generated_utc": "2026-09-16T05:32:16Z",
+  "generated_utc": "2026-09-16T05:43:14Z",
   "sources": {
     "tourism_2023.xlsx": "5b0b1b6a136f5e65dc118612c7bee5694e88f1b27c3a211484da38611498eacb",
     "tourism_2024.xlsx": "eac7cea293cfb2bbb53174c67e0602670a42462a6896c73df06a7d495b5af2e8",
@@ -1370,14 +1370,14 @@
       "headline": {
         "window": "2020-2024",
         "prices": "constant_2019_rm",
-        "cumulative_gap_rm_million": 10204.479271298604,
+        "cumulative_gap_rm_million": 10098.357652778674,
         "pre_registered": true,
-        "basis_note": "Pre-registered headline: window fixed before the TSA 2025 release was examined (no result-shopping), constant 2019 prices. Computed from the TSA 2024 edition receipts the headline was registered on; the year rows above recompute from the latest official workbook."
+        "basis_note": "Pre-registered headline: the window (2020-2024) was fixed before the TSA 2025 release was examined (no result-shopping); constant 2019 prices. The value is recomputed from the TSA 2025 revised receipts per the revision policy (later official workbook wins), so it equals the sum of the fragment's own 2020-2024 rows."
       },
       "supplementary": {
         "window": "2020-2025",
         "label": "Supplementary only: cumulative real gap 2020-2025 includes the preliminary 2025 year — never quote it as the headline",
-        "cumulative_gap_rm_million": 6938.81361566108
+        "cumulative_gap_rm_million": 6832.69199714115
       }
     },
     "simulator": {
@@ -2449,5 +2449,5 @@
       }
     }
   },
-  "checksum": "e0ee5919eca3dd5be236e92fb77d1e25f017d81bd6b40acfffdfea30e452d0b1"
+  "checksum": "338e1b3464f87b37507d8142263d3432395de2b943facb51928d24316bcfb20a"
 }

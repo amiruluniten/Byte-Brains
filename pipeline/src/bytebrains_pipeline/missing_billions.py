@@ -33,8 +33,11 @@ from .bundle import (
     VolumeTrap,
 )
 
-# The pre-registered headline window (fixed before the TSA 2025 release was
+# The pre-registered headline WINDOW (fixed before the TSA 2025 release was
 # examined — ticket #13). The model layer rejects any other headline window.
+# The headline VALUE is recomputed from the latest official receipts (revision
+# policy: later official workbook wins), so it always equals the sum of the
+# fragment's own 2020-2024 rows.
 HEADLINE_WINDOW = "2020-2024"
 HEADLINE_YEARS = range(2020, 2025)
 
@@ -118,21 +121,18 @@ def compute_missing_billions(
     excursionist_arrivals: Series | None,
     land_mode_share_2024_pct: float | None,
     anchor_year: int = 2019,
-    headline_basis_receipts: Series | None = None,
 ) -> MissingBillionsFragment:
     """Compute the constant-2019-prices counterfactual over the shared years of the
     three series (the anchor year through the latest arrivals year).
 
     Ticket #13: the emitted fragment always carries the PRE-REGISTERED headline
-    (2020-2024, constant 2019 prices). By default the headline is the sum of the
-    fragment's own 2020-2024 rows. When the receipts series carries a LATER
-    workbook's revision of a headline year (the TSA 2025 workbook restates 2024),
-    pass the ORIGINAL workbook's series as `headline_basis_receipts`: the
-    headline is then computed from the figures it was pre-registered on and
-    frozen, while the year rows above recompute from the latest official data.
-    When the fragment extends beyond 2024, the cumulative through the latest
-    year is also emitted as a clearly-labelled SUPPLEMENTARY figure — never the
-    headline (the headline guard rejects any other headline window).
+    window (2020-2024, constant 2019 prices). The headline VALUE is the sum of
+    the fragment's own 2020-2024 rows — recomputed from the latest official
+    receipts, because the revision policy (later official workbook wins) applies
+    to the headline value just like the year table. When the fragment extends
+    beyond 2024, the cumulative through the latest year is also emitted as a
+    clearly-labelled SUPPLEMENTARY figure — never the headline (the headline
+    guard rejects any other headline window).
     """
     arrival_years = {o.year for o in arrivals.values}
     receipt_years = {o.year for o in receipts.values if o.value is not None}
@@ -171,17 +171,11 @@ def compute_missing_billions(
 
     volume_trap = _volume_trap(arrivals, excursionist_arrivals, land_mode_share_2024_pct)
 
-    # ticket #13: the pre-registered headline. When a headline-basis receipts
-    # series is given (the workbook the headline was pre-registered on), the
-    # headline years are recomputed against THAT series and frozen; the year
-    # rows above carry the latest official (possibly revised) figures.
-    if headline_basis_receipts is not None:
-        headline_rows = [
-            _year_row(y, headline_basis_receipts, arrivals, cpi, anchor_year, per_visitor_real_anchor)
-            for y in HEADLINE_YEARS
-        ]
-    else:
-        headline_rows = [y for y in years if y.year in HEADLINE_YEARS]
+    # ticket #13: the pre-registered headline. The window (2020-2024) was fixed
+    # before the TSA 2025 release was examined; the VALUE is recomputed from the
+    # latest official receipts (revision policy: later official workbook wins),
+    # so the headline always equals the sum of the fragment's own 2020-2024 rows.
+    headline_rows = [y for y in years if y.year in HEADLINE_YEARS]
     headline_gap = sum(r.gap_2019_prices_rm_million for r in headline_rows)
     headline = HeadlineGap(
         window=HEADLINE_WINDOW,
@@ -189,10 +183,11 @@ def compute_missing_billions(
         cumulative_gap_rm_million=headline_gap,
         pre_registered=True,
         basis_note=(
-            "Pre-registered headline: window fixed before the TSA 2025 release was "
-            "examined (no result-shopping), constant 2019 prices. Computed from the "
-            "TSA 2024 edition receipts the headline was registered on; the year rows "
-            "above recompute from the latest official workbook."
+            "Pre-registered headline: the window (2020-2024) was fixed before the TSA "
+            "2025 release was examined (no result-shopping); constant 2019 prices. The "
+            "value is recomputed from the TSA 2025 revised receipts per the revision "
+            "policy (later official workbook wins), so it equals the sum of the "
+            "fragment's own 2020-2024 rows."
         ),
     )
 

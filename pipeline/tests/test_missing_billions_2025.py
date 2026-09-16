@@ -7,15 +7,14 @@ In-memory series fixtures following the existing missing-billions test style
 - receipts: Jad 1A totals — 2019-2023 from the TSA 2024 edition, 2024 REVISED to
   RM102,931.3m and 2025 preliminary RM119,312.0m from the TSA 2025 edition;
 - arrivals: visitor basis 2019-2025 (2025 = 42,196,892, preliminary);
-- CPI: overall annual means, 2025 = 134.625 (2010=100);
-- headline basis: the ORIGINAL TSA 2024 edition receipts (2024 = RM102,815.3m),
-  the figures the 2020-2024 headline was pre-registered on.
+- CPI: overall annual means, 2025 = 134.625 (2010=100).
 
 Expected values are hand-computed (same arithmetic as the calculator):
 - 2025 real per-visitor = RM2,551.49 (+3.1% vs the 2019 anchor RM2,474.10);
 - 2025 real gap = counterfactual - actual = -RM3,265.7m (negative = surplus);
-- headline (2020-2024, frozen on the pre-revision basis) = RM10,204.5m;
-- supplementary 2020-2025 = headline + 2025 gap = RM6,938.8m.
+- headline (2020-2024, RECOMPUTED from the revised receipts — the pre-registered
+  WINDOW is guarded, the value follows the revision policy) = RM10,098.4m;
+- supplementary 2020-2025 = headline + 2025 gap = RM6,832.7m.
 """
 import pytest
 from pydantic import ValidationError
@@ -38,6 +37,8 @@ RECEIPTS_REVISED_2025 = [
     (2019, 86_706.5), (2020, 13_157.3), (2021, 389.8), (2022, 32_473.3),
     (2023, 72_992.8), (2024, 102_931.3), (2025, 119_312.0),
 ]
+# The original TSA 2024 edition receipts (2024 = RM102,815.3m) — the no-revision
+# baseline used by the no-supplementary test.
 RECEIPTS_ORIGINAL_2024 = [
     (2015, 72_592.5), (2016, 79_325.9), (2017, 82_921.5), (2018, 84_929.9),
     (2019, 86_706.5), (2020, 13_157.3), (2021, 389.8), (2022, 32_473.3),
@@ -94,16 +95,11 @@ def frag_2025():
         unit="rm_million", basis="tourist", measure="inbound_tourism_consumption",
         revision_status_by_year={2024: "revised", 2025: "preliminary"},
     )
-    headline_basis = make_series(
-        "inbound_consumption_tourist_2015_2024", RECEIPTS_ORIGINAL_2024,
-        unit="rm_million", basis="tourist", measure="inbound_tourism_consumption",
-    )
     cpi = make_cpi()
     excursionists = make_series("arrivals_excursionist_2019_2025", EXCURSIONISTS, basis="excursionist")
     return compute_missing_billions(
         receipts=receipts, arrivals=arrivals, cpi=cpi,
         excursionist_arrivals=excursionists, land_mode_share_2024_pct=66.1,
-        headline_basis_receipts=headline_basis,
     )
 
 
@@ -160,12 +156,26 @@ class TestHeadlineGuard:
         assert frag.headline.prices == "constant_2019_rm"
         assert frag.headline.pre_registered is True
 
-    def test_headline_is_frozen_on_the_pre_revision_basis(self):
-        # RM10,204.5m: computed from the ORIGINAL TSA 2024 edition receipts
-        # (2024 = RM102,815.3m) the headline was pre-registered on — the 2024
-        # revision moves the fragment's 2024 ROW (-RM245.2m), not the headline.
+    def test_headline_recomputes_from_the_revised_receipts(self):
+        # Revision policy (later official workbook wins) applies to the headline
+        # VALUE, not just the table: with the revised 2024 receipts
+        # (RM102,931.3m, gap -RM245.2m) the 2020-2024 headline is RM10,098.4m.
+        # What was pre-registered — and guarded — is the WINDOW, not the value.
         frag = frag_2025()
-        assert frag.headline.cumulative_gap_rm_million == pytest.approx(10_204.479271, abs=0.05)
+        assert frag.headline.cumulative_gap_rm_million == pytest.approx(10_098.357654, abs=0.05)
+
+    def test_headline_equals_the_sum_of_its_own_table(self):
+        # the headline must never drift from the rows it summarizes
+        frag = frag_2025()
+        table_sum = sum(
+            y.gap_2019_prices_rm_million for y in frag.years if 2020 <= y.year <= 2024
+        )
+        assert frag.headline.cumulative_gap_rm_million == pytest.approx(table_sum, abs=1e-9)
+
+    def test_basis_note_states_the_revision_policy(self):
+        note = frag_2025().headline.basis_note.lower()
+        assert "pre-registered" in note and "2020-2024" in note
+        assert "revised" in note and "later official workbook wins" in note
 
     def test_supplementary_2020_2025_is_labelled_and_separate(self):
         frag = frag_2025()
@@ -173,8 +183,8 @@ class TestHeadlineGuard:
         assert sup is not None
         assert sup.window == "2020-2025"
         assert "supplementary" in sup.label.lower()
-        # headline (frozen) + the 2025 preliminary gap, ~RM6.9 billion
-        assert sup.cumulative_gap_rm_million == pytest.approx(6938.813616, abs=0.05)
+        # headline (recomputed) + the 2025 preliminary gap, ~RM6.8 billion
+        assert sup.cumulative_gap_rm_million == pytest.approx(6832.691999, abs=0.05)
 
     def test_no_supplementary_without_a_year_beyond_2024(self):
         arrivals = make_series("arrivals_visitor_2019_2024", ARRIVALS[:-1])
@@ -194,7 +204,8 @@ class TestHeadlineGuard:
             excursionist_arrivals=excursionists, land_mode_share_2024_pct=66.1,
         )
         assert frag.supplementary is None
-        # without a revision, the headline is the fragment's own 2020-2024 sum
+        # without the 2025 workbook the receipts are the original TSA 2024
+        # edition's, so the recomputed headline is RM10,204.5m
         assert frag.headline.cumulative_gap_rm_million == pytest.approx(10_204.479271, abs=0.05)
 
     def test_model_rejects_any_other_headline_window(self):
@@ -203,14 +214,14 @@ class TestHeadlineGuard:
         frag = frag_2025()
         payload = frag.model_dump(mode="json")
         payload["headline"]["window"] = "2020-2025"
-        payload["headline"]["cumulative_gap_rm_million"] = 6938.813616
+        payload["headline"]["cumulative_gap_rm_million"] = 6832.691999
         with pytest.raises(ValidationError, match="2020-2024"):
             MissingBillionsFragment.model_validate(payload)
 
     def test_supplementary_cannot_pose_as_the_headline(self):
         frag = frag_2025()
         payload = frag.model_dump(mode="json")
-        payload["headline"]["cumulative_gap_rm_million"] = 6938.813616  # moved headline
+        payload["headline"]["cumulative_gap_rm_million"] = 6832.691999  # moved headline
         payload["supplementary"]["window"] = "2020-2024"  # same window as "headline"
         with pytest.raises(ValidationError, match="headline"):
             MissingBillionsFragment.model_validate(payload)

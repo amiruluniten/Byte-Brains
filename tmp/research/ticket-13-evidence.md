@@ -42,21 +42,23 @@ applied from the Jad tables and recorded as `revision_status: "preliminary"`.
 
 ## Guarded headline
 
-- Headline (pre-registered): **RM10,204.5m, window 2020–2024, constant 2019
-  prices** — computed from the TSA 2024 edition receipts the headline was
-  registered on (2024 = RM102,815.3m) and frozen; `HeadlineGap` rejects any
-  other headline window at emission AND reload (model guard + `validate.py`
-  ground truth pinning the value).
+- Headline (pre-registered WINDOW): **2020–2024, constant 2019 prices** — the
+  window was pre-registered before the TSA 2025 release was examined and
+  `HeadlineGap` rejects any other headline window at emission AND reload.
+- Headline VALUE (revision policy, later official workbook wins): recomputed
+  from the TSA 2025 revised receipts, **RM10,098.4m** — exactly the sum of the
+  fragment's own 2020–2024 rows (reconciliation checked at emission, so the
+  headline can never drift from its table).
 - Supplementary (clearly labelled, never the headline): 2020–2025 cumulative =
-  RM6,938.8m (frozen headline + the 2025 preliminary gap).
+  RM6,832.7m (headline + the 2025 preliminary gap).
 - Honesty rules (ADR-0002) hold: the nominal twin is emitted per year and
   flagged invalid; only constant-2019-prices gaps are quotable.
 
 ## Determinism + tests
 
 - Real pipeline run twice: fragments and checksum identical (only
-  `generated_utc` differs). Bundle checksum:
-  `e0ee5919eca3dd5be236e92fb77d1e25f017d81bd6b40acfffdfea30e452d0b1`
+  `generated_utc` differs). Bundle checksum (amended: recomputed headline):
+  `338e1b3464f87b37507d8142263d3432395de2b943facb51928d24316bcfb20a`
   (schema 1.1.0, `tourism_2025.xlsx` sha256 recorded in `sources`).
 - Full pipeline suite: 168 passed, 2 errors — the two pre-existing
   dashboard-blocked failures (`tests/test_simulator_fragment.py`

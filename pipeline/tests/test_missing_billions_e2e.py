@@ -174,13 +174,14 @@ class TestTsa2025EndToEnd:
         assert y2025.gap_2019_prices_rm_million == pytest.approx(-3265.665656, abs=0.5)
         assert y2025.naive_nominal_gap_rm_million == pytest.approx(-14912.525994, abs=0.5)
         assert y2025.per_visitor_real_2019_rm == pytest.approx(2551.494543, abs=0.01)
-        # the pre-registered headline stays 2020-2024, RM10.2 billion
+        # the pre-registered headline stays 2020-2024; its VALUE recomputes from
+        # the revised receipts (later official workbook wins) -> RM10,098.4m
         assert frag.headline.window == "2020-2024"
-        assert frag.headline.cumulative_gap_rm_million == pytest.approx(10204.479271, abs=0.05)
+        assert frag.headline.cumulative_gap_rm_million == pytest.approx(10098.357654, abs=0.05)
         sup = frag.supplementary
         assert sup is not None and sup.window == "2020-2025"
         assert "supplementary" in sup.label.lower()
-        assert sup.cumulative_gap_rm_million == pytest.approx(6938.813616, abs=0.05)
+        assert sup.cumulative_gap_rm_million == pytest.approx(6832.691999, abs=0.05)
         # deflator metadata: 2025 overall CPI ratio vs 2019
         assert frag.deflator.series_id == "cpi_national_overall_2015_2025"
         assert y2025.cpi_ratio_to_anchor == pytest.approx(134.625 / 121.483333, abs=1e-6)
@@ -197,8 +198,8 @@ class TestTsa2025EndToEnd:
         out = tmp_path / "bundle.json"
         main(["--data-dir", str(offline_2025_data_dir), "--out", str(out)])
         captured = capsys.readouterr().out
-        assert "Headline (pre-registered): RM10,204.5m (2020-2024, constant 2019 prices)" in captured
-        assert "Supplementary (labelled, NEVER the headline): RM6,938.8m (2020-2025" in captured
+        assert "Headline (pre-registered): RM10,098.4m (2020-2024, constant 2019 prices)" in captured
+        assert "Supplementary (labelled, NEVER the headline): RM6,832.7m (2020-2025" in captured
         assert "42,196,892" in captured and "119,312.0" in captured and "102,931.3" in captured
 
     def test_2025_rerun_is_deterministic(self, offline_2025_data_dir, tmp_path):

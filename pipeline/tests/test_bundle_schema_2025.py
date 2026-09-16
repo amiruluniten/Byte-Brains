@@ -48,7 +48,7 @@ def make_headline(**overrides):
     defaults = dict(
         window="2020-2024",
         prices="constant_2019_rm",
-        cumulative_gap_rm_million=10_204.5,
+        cumulative_gap_rm_million=10_098.4,
         pre_registered=True,
         basis_note="Pre-registered before the TSA 2025 release was examined.",
     )
@@ -173,7 +173,7 @@ class TestSupplementaryGuard:
         sup = SupplementaryCumulative(
             window="2020-2025",
             label="Supplementary only: includes the preliminary 2025 year — never the headline",
-            cumulative_gap_rm_million=6938.813616,
+            cumulative_gap_rm_million=6832.691999,
         )
         assert "supplementary" in sup.label.lower()
 
@@ -182,7 +182,7 @@ class TestSupplementaryGuard:
             SupplementaryCumulative(
                 window="2020-2025",
                 label="cumulative gap",
-                cumulative_gap_rm_million=6938.813616,
+                cumulative_gap_rm_million=6832.691999,
             )
 
     def test_supplementary_window_must_differ_from_the_headline(self):
@@ -191,7 +191,7 @@ class TestSupplementaryGuard:
                 supplementary=SupplementaryCumulative(
                     window="2020-2024",
                     label="supplementary",
-                    cumulative_gap_rm_million=10_204.5,
+                    cumulative_gap_rm_million=10_098.4,
                 )
             )
 
@@ -201,7 +201,7 @@ class TestSupplementaryGuard:
                 supplementary=SupplementaryCumulative(
                     window="2020-2026",
                     label="supplementary, includes preliminary 2025",
-                    cumulative_gap_rm_million=6938.813616,
+                    cumulative_gap_rm_million=6832.691999,
                 )
             )
 
@@ -234,7 +234,7 @@ class TestFragmentWith2025:
             supplementary=SupplementaryCumulative(
                 window="2020-2025",
                 label="Supplementary only: includes the preliminary 2025 year — never the headline",
-                cumulative_gap_rm_million=6938.813616,
+                cumulative_gap_rm_million=6832.691999,
             )
         )
         assert frag.years[-1].year == 2025
