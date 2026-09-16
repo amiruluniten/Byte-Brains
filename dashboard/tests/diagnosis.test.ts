@@ -167,6 +167,7 @@ describe("buildMarketMapData", () => {
     expect(singapore.segmentName).toBe("Volume Traps");
     expect(singapore.tier).toBe("bottom_quartile");
     expect(singapore.yieldRmPerVisitor).not.toBeNull();
+    expect(singapore.yieldYear).toBe(2024);
     const named = new Set(seg!.clusters.map((c) => c.segment_name));
     for (const m of data.markets) {
       if (m.segmentName) expect(named.has(m.segmentName)).toBe(true);

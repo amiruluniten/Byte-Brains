@@ -270,7 +270,9 @@ export const GEO_NAME_OVERRIDES: Record<string, string> = {
 export interface MapMarket {
   market: string;
   geoName: string;
-  yieldRmPerVisitor: number | null; // 2024; null where the market has no yield
+  yieldRmPerVisitor: number | null; // null where the market has no yield
+  /** The year the yield/arrivals pair was read at (2024 in the current bundle). */
+  yieldYear: number | null;
   arrivals2024: number | null;
   coverage: SourceMarketFragment["markets"][number]["coverage"];
   clustered: boolean;
@@ -307,6 +309,7 @@ export function buildMarketMapData(
       market: row.market,
       geoName: GEO_NAME_OVERRIDES[row.market] ?? row.market,
       yieldRmPerVisitor: obs2024?.yield_rm_per_visitor ?? null,
+      yieldYear: obs2024?.year ?? null,
       arrivals2024: obs2024?.arrivals_persons ?? null,
       coverage: row.coverage,
       clustered: seg?.clustered ?? false,
@@ -553,7 +556,7 @@ export function nominalSeriesNotice(trace: Pick<DecompositionTrace, "name" | "ki
 // ---------------------------------------------------------------------------
 
 /** Markets ranked by 2024 tourism yield (highest first); null yields last. */
-export function buildMarketRanking(data: MarketMapData): MapMarket[] {
+export function buildMarketRanking(data: MarketMapData): RankedMarket[] {
   return [...data.markets]
     .sort((a, b) => (b.yieldRmPerVisitor ?? -Infinity) - (a.yieldRmPerVisitor ?? -Infinity))
     .map((m, i) => ({ ...m, rank: m.yieldRmPerVisitor === null ? null : i + 1 }));
