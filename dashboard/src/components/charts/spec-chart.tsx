@@ -6,25 +6,11 @@
  * draws arrives as props from a server component that read the synced bundle.
  * Null points keep their gaps (preliminary/mixed windows are never joined).
  */
-import {
-  CartesianGrid,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import type { ChartSpec } from "@/lib/chart-data";
 
-const CHART_COLORS = [
-  "var(--chart-1)",
-  "var(--chart-2)",
-  "var(--chart-3)",
-  "var(--chart-4)",
-  "var(--chart-5)",
-];
+const CHART_COLORS = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"];
 
 function formatAxisValue(unit: string, v: number): string {
   if (unit === "persons") {
@@ -38,7 +24,8 @@ function formatAxisValue(unit: string, v: number): string {
 
 function formatTooltipValue(unit: string, v: number | null): string {
   if (v === null) return "no data";
-  const suffix = unit === "persons" ? "" : unit === "rm_million" ? " RM million" : "";
+  let suffix = "";
+  if (unit === "rm_million") suffix = " RM million";
   return `${new Intl.NumberFormat("en-US").format(v)}${suffix}`;
 }
 
@@ -51,8 +38,8 @@ export function SpecChart({ spec }: { spec: ChartSpec }) {
         const data = trace.points.map(([year, value]) => ({ year: String(year), value }));
         return (
           <div key={trace.name} className="flex flex-col gap-1">
-            <p className="text-sm font-medium">{trace.name}</p>
-            <p className="text-xs text-muted-foreground">{trace.basisLabel}</p>
+            <p className="font-medium text-sm">{trace.name}</p>
+            <p className="text-muted-foreground text-xs">{trace.basisLabel}</p>
             <div className="h-56 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 8 }}>

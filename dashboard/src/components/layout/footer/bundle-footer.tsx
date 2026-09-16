@@ -8,12 +8,11 @@ import type { Bundle } from "@/lib/bundle";
  */
 export function BundleFooter({ bundle }: { bundle: Bundle }) {
   return (
-    <footer className="flex flex-col gap-1 border-t pt-4 text-xs text-muted-foreground">
+    <footer className="flex flex-col gap-1 border-t pt-4 text-muted-foreground text-xs">
       <span>{APP_CONFIG.copyright}</span>
       <span>
         Data bundle v{bundle.bundle_version} &middot; schema {bundle.schema_version} &middot; sha256{" "}
-        <code className="break-all">{bundle.checksum}</code> &middot; generated{" "}
-        {bundle.generated_utc}
+        <code className="break-all">{bundle.checksum}</code> &middot; generated {bundle.generated_utc}
       </span>
     </footer>
   );
