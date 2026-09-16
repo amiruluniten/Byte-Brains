@@ -1,31 +1,23 @@
 "use client";
 
 import { useMemo, useState } from "react";
+
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { fmt1 } from "@/lib/format";
 import { PRESCRIPTION_LABELS, type PrescriptionsData } from "@/lib/prescriptions";
-import { shares2023, shares2024, type SimulatorFragment } from "@/lib/simulator";
-import {
-  buildSimulatorView,
-  clampWeights,
-  weightsFromShares,
-  type SimulatorViewRow,
-} from "@/lib/simulator-view";
+import { type SimulatorFragment, shares2023, shares2024 } from "@/lib/simulator";
+import { buildSimulatorView, clampWeights, type SimulatorViewRow, weightsFromShares } from "@/lib/simulator-view";
 
-const fmt1 = (v: number) =>
-  v.toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+/** Stable recharts data key for the receipts Bar — the display label is
+ * interpolated separately, so the key cannot drift from the data object
+ * (ticket #21 review: the hardcoded "2019" prose key vs the anchor year). */
+const RECEIPTS_DATA_KEY = "receiptsRmMillion";
 
 const PRESCRIPTION_BADGE_VARIANT: Record<string, "default" | "secondary" | "outline"> = {
   grow: "default",
@@ -77,7 +69,7 @@ export function SimulatorClient({
   const gapPositive = view.result.gap_2019_prices_rm_million >= 0;
   const chartData = view.rows.map((r) => ({
     market: r.market,
-    "Receipts (RM million, 2019 prices)": r.contributionRmMillion,
+    [RECEIPTS_DATA_KEY]: r.contributionRmMillion,
   }));
 
   return (
@@ -85,9 +77,8 @@ export function SimulatorClient({
       <section className="flex flex-col gap-1">
         <h1 className="text-2xl font-semibold tracking-tight">Market-mix simulator</h1>
         <p className="text-sm text-muted-foreground">
-          Move the sliders to change the mix of visitor source markets. Every
-          outcome below recomputes instantly. All figures are in constant{" "}
-          {frag.anchor_year} prices — gaps are quoted in {frag.anchor_year} prices only.
+          Move the sliders to change the mix of visitor source markets. Every outcome below recomputes instantly. All
+          figures are in constant {frag.anchor_year} prices — gaps are quoted in {frag.anchor_year} prices only.
         </p>
       </section>
 
@@ -114,13 +105,9 @@ export function SimulatorClient({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-semibold tracking-tight">
-              RM{fmt1(view.result.gap_2019_prices_rm_million)}m
-            </p>
+            <p className="text-2xl font-semibold tracking-tight">RM{fmt1(view.result.gap_2019_prices_rm_million)}m</p>
             <p className="mt-1 text-xs text-muted-foreground">
-              {gapPositive
-                ? "This mix underperforms the 2019 anchor"
-                : "This mix outperforms the 2019 anchor"}
+              {gapPositive ? "This mix underperforms the 2019 anchor" : "This mix outperforms the 2019 anchor"}
               {" · constant "}
               {frag.anchor_year} prices
             </p>
@@ -150,8 +137,7 @@ export function SimulatorClient({
                   <span className="font-medium">{m.market}</span>
                   <span className="text-muted-foreground">
                     {view.rows[i].sharePct.toFixed(1)}% of visitors · RM
-                    {fmt1(m.yield_2024_real_2019_rm_per_visitor)} per visitor (
-                    {frag.anchor_year} prices)
+                    {fmt1(m.yield_2024_real_2019_rm_per_visitor)} per visitor ({frag.anchor_year} prices)
                   </span>
                 </div>
                 <Slider
@@ -165,9 +151,8 @@ export function SimulatorClient({
               </div>
             ))}
             <p className="text-xs text-muted-foreground">
-              Sliders are weights, not percentages: the mix always renormalises,
-              so pushing one market up lowers the others. All the way down on
-              every slider gives a uniform mix.
+              Sliders are weights, not percentages: the mix always renormalises, so pushing one market up lowers the
+              others. All the way down on every slider gives a uniform mix.
             </p>
           </CardContent>
         </Card>
@@ -183,16 +168,17 @@ export function SimulatorClient({
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} layout="vertical" margin={{ left: 60 }}>
                   <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                  <XAxis
-                    type="number"
-                    tickFormatter={(v: number) => fmt1(v)}
-                    fontSize={12}
-                  />
+                  <XAxis type="number" tickFormatter={(v: number) => fmt1(v)} fontSize={12} />
                   <YAxis type="category" dataKey="market" width={90} fontSize={12} />
                   <Tooltip
                     formatter={(v) => [`RM${fmt1(Number(v))} million`, `Receipts (${frag.anchor_year} prices)`]}
                   />
-                  <Bar dataKey={`Receipts (RM million, ${frag.anchor_year} prices)`} fill="var(--primary)" radius={[0, 4, 4, 0]} />
+                  <Bar
+                    dataKey={RECEIPTS_DATA_KEY}
+                    name={`Receipts (RM million, ${frag.anchor_year} prices)`}
+                    fill="var(--primary)"
+                    radius={[0, 4, 4, 0]}
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -202,9 +188,7 @@ export function SimulatorClient({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">
-            Per-market outcomes and prescriptions
-          </CardTitle>
+          <CardTitle className="text-base">Per-market outcomes and prescriptions</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
@@ -212,12 +196,8 @@ export function SimulatorClient({
               <TableRow>
                 <TableHead>Source market</TableHead>
                 <TableHead className="text-right">Share of visitors</TableHead>
-                <TableHead className="text-right">
-                  Yield per visitor ({frag.anchor_year} RM)
-                </TableHead>
-                <TableHead className="text-right">
-                  Receipts (RM million, {frag.anchor_year} prices)
-                </TableHead>
+                <TableHead className="text-right">Yield per visitor ({frag.anchor_year} RM)</TableHead>
+                <TableHead className="text-right">Receipts (RM million, {frag.anchor_year} prices)</TableHead>
                 <TableHead>Prescription</TableHead>
               </TableRow>
             </TableHeader>
@@ -243,12 +223,10 @@ export function SimulatorClient({
           </Table>
           {prescriptions.available && (
             <p className="mt-3 text-xs text-muted-foreground">
-              Prescriptions come from the machine-learning segmentation of
-              source markets (clustered by yield and growth):{" "}
-              <strong>Grow</strong> high-yield or fast-growing segments,{" "}
-              <strong>Coast</strong> steady low-yield segments, and{" "}
-              <strong>reduce reliance</strong> on the low-yield, high-volume
-              same-day traffic the arrivals count over-rewards.
+              Prescriptions come from the machine-learning segmentation of source markets (clustered by yield and
+              growth): <strong>Grow</strong> high-yield or fast-growing segments, <strong>Coast</strong> steady
+              low-yield segments, and <strong>reduce reliance</strong> on the low-yield, high-volume same-day traffic
+              the arrivals count over-rewards.
             </p>
           )}
         </CardContent>

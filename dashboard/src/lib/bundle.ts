@@ -13,8 +13,9 @@
  * Any failure raises BundleLoadError with a message a maintainer can act on.
  * A corrupt or missing bundle must fail loudly, never render a blank page.
  */
-import { createHash } from "node:crypto";
+
 import type { SimulatorFragment, SimulatorMarket } from "./simulator";
+import { createHash } from "node:crypto";
 
 export const BUNDLE_VERSION = 1;
 export const SCHEMA_VERSION = "1.1.0";
@@ -345,12 +346,10 @@ function verifyChecksum(raw: string, recorded: unknown): void {
       ["fragments", pick("fragments")],
     ],
   };
-  const computed = createHash("sha256")
-    .update(canonical(payload), "utf8")
-    .digest("hex");
+  const computed = createHash("sha256").update(canonical(payload), "utf8").digest("hex");
   if (computed !== recorded) {
     fail(
-      `checksum mismatch: recorded ${recorded}, computed ${computed} — the bundle is corrupted or was tampered with`
+      `checksum mismatch: recorded ${recorded}, computed ${computed} — the bundle is corrupted or was tampered with`,
     );
   }
 }
@@ -432,9 +431,7 @@ export function loadBundleFromString(raw: string): Bundle {
   if (!isObject(parsed)) fail("data bundle must be a JSON object");
 
   if (parsed.bundle_version !== BUNDLE_VERSION) {
-    fail(
-      `unsupported bundle_version ${String(parsed.bundle_version)} (expected ${BUNDLE_VERSION})`
-    );
+    fail(`unsupported bundle_version ${String(parsed.bundle_version)} (expected ${BUNDLE_VERSION})`);
   }
   const schemaVersion = asString(parsed.schema_version, "schema_version");
   if (!/^\d+\.\d+\.\d+$/.test(schemaVersion)) {
@@ -543,10 +540,7 @@ function parseSimulatorFragment(v: unknown): SimulatorFragment | undefined {
     fail(`${where}: simulator years are (anchor, comparison, mix) = (2019, 2023, 2024) by contract`);
   }
   const ratio = asNumber(v.cpi_ratio_to_anchor_mix_year, `${where}.cpi_ratio_to_anchor_mix_year`);
-  const anchorYield = asNumber(
-    v.anchor_per_visitor_real_2019_rm,
-    `${where}.anchor_per_visitor_real_2019_rm`
-  );
+  const anchorYield = asNumber(v.anchor_per_visitor_real_2019_rm, `${where}.anchor_per_visitor_real_2019_rm`);
   const visitors24 = asPositiveInt(v.visitor_arrivals_2024, `${where}.visitor_arrivals_2024`);
   const visitors23 = asPositiveInt(v.visitor_arrivals_2023, `${where}.visitor_arrivals_2023`);
   if (!Array.isArray(v.markets) || v.markets.length < 2) {
@@ -565,7 +559,7 @@ function parseSimulatorFragment(v: unknown): SimulatorFragment | undefined {
     if (arrivalsSum !== visitors) {
       fail(
         `${where}: ${year} market arrivals must sum exactly to the national visitor arrivals ` +
-          `(${arrivalsSum} != ${visitors})`
+          `(${arrivalsSum} != ${visitors})`,
       );
     }
     const shareSum = markets.reduce((sum, m) => sum + m[shareKey], 0);
@@ -595,7 +589,6 @@ function parseSimulatorFragment(v: unknown): SimulatorFragment | undefined {
     markets,
   };
 }
-
 
 // ---------------------------------------------------------------------------
 // The optional fragments. The emitter may not include every
@@ -931,9 +924,10 @@ function parseMissingBillionsFragment(v: unknown): MissingBillionsFragment | und
       if (typeof y[k] !== "number") fail(`${w}.${k} must be a number`);
       return y[k] as number;
     };
-    const status: RevisionStatus = y.revision_status === undefined || y.revision_status === null
-      ? "final"
-      : oneOf(y.revision_status, ["final", "revised", "preliminary"] as const, `${w}.revision_status`);
+    const status: RevisionStatus =
+      y.revision_status === undefined || y.revision_status === null
+        ? "final"
+        : oneOf(y.revision_status, ["final", "revised", "preliminary"] as const, `${w}.revision_status`);
     return {
       year: num("year"),
       visitor_arrivals: num("visitor_arrivals"),
@@ -971,7 +965,7 @@ function parseMissingBillionsFragment(v: unknown): MissingBillionsFragment | und
     prices: "constant_2019_rm",
     cumulative_gap_rm_million: asNumber(
       headlineV.cumulative_gap_rm_million,
-      `${where}.headline.cumulative_gap_rm_million`
+      `${where}.headline.cumulative_gap_rm_million`,
     ),
     pre_registered: true,
     basis_note: asString(headlineV.basis_note, `${where}.headline.basis_note`),
@@ -979,7 +973,7 @@ function parseMissingBillionsFragment(v: unknown): MissingBillionsFragment | und
   if (headline.window !== PRE_REGISTERED_HEADLINE_WINDOW) {
     fail(
       `${where}: headline window ${headline.window} violates the pre-registered contract ` +
-        `(expected ${PRE_REGISTERED_HEADLINE_WINDOW}) — result-shopping guard`
+        `(expected ${PRE_REGISTERED_HEADLINE_WINDOW}) — result-shopping guard`,
     );
   }
   // headline value must equal the sum of its own window's rows (revision policy)
@@ -990,7 +984,7 @@ function parseMissingBillionsFragment(v: unknown): MissingBillionsFragment | und
   if (Math.abs(headlineSum - headline.cumulative_gap_rm_million) > 1e-6) {
     fail(
       `${where}: headline cumulative gap ${headline.cumulative_gap_rm_million} does not equal ` +
-        `the sum of the fragment's ${headline.window} rows (${headlineSum})`
+        `the sum of the fragment's ${headline.window} rows (${headlineSum})`,
     );
   }
   // ticket #13: the supplementary cumulative is labelled, and never the headline
@@ -1003,7 +997,7 @@ function parseMissingBillionsFragment(v: unknown): MissingBillionsFragment | und
       label: asString(sup.label, `${where}.supplementary.label`),
       cumulative_gap_rm_million: asNumber(
         sup.cumulative_gap_rm_million,
-        `${where}.supplementary.cumulative_gap_rm_million`
+        `${where}.supplementary.cumulative_gap_rm_million`,
       ),
     };
     if (!supplementary.label.toLowerCase().includes("supplementary")) {
@@ -1054,9 +1048,14 @@ function parseSegmentationFragment(v: unknown): SegmentationFragment | undefined
   const markets: MarketSegment[] = v.markets.map((m, i) => {
     const w = `${where}.markets[${i}]`;
     if (!isObject(m)) fail(`${w} must be an object`);
-    const tier: YieldTier | null = m.yield_tier === undefined || m.yield_tier === null
-      ? null
-      : oneOf(m.yield_tier, ["top_quartile", "upper_middle", "lower_middle", "bottom_quartile"] as const, `${w}.yield_tier`);
+    const tier: YieldTier | null =
+      m.yield_tier === undefined || m.yield_tier === null
+        ? null
+        : oneOf(
+            m.yield_tier,
+            ["top_quartile", "upper_middle", "lower_middle", "bottom_quartile"] as const,
+            `${w}.yield_tier`,
+          );
     const out: MarketSegment = {
       market: asString(m.market, `${w}.market`),
       clustered: m.clustered === true,
@@ -1064,13 +1063,11 @@ function parseSegmentationFragment(v: unknown): SegmentationFragment | undefined
       arrivals_persons_2024: optNum(m.arrivals_persons_2024, `${w}.arrivals_persons_2024`),
       arrivals_growth_pct: optNum(m.arrivals_growth_pct, `${w}.arrivals_growth_pct`),
       cluster_id: optNum(m.cluster_id, `${w}.cluster_id`),
-      segment_name: m.segment_name === undefined || m.segment_name === null
-        ? null
-        : asString(m.segment_name, `${w}.segment_name`),
+      segment_name:
+        m.segment_name === undefined || m.segment_name === null ? null : asString(m.segment_name, `${w}.segment_name`),
       yield_tier: tier ?? null,
-      tier_label: m.tier_label === undefined || m.tier_label === null
-        ? null
-        : asString(m.tier_label, `${w}.tier_label`),
+      tier_label:
+        m.tier_label === undefined || m.tier_label === null ? null : asString(m.tier_label, `${w}.tier_label`),
     };
     if (m.wef_indicators !== undefined) {
       if (!isObject(m.wef_indicators)) fail(`${w}.wef_indicators must be an object`);
@@ -1096,9 +1093,10 @@ function parseSegmentationFragment(v: unknown): SegmentationFragment | undefined
       out.wef_ref_years = yrs;
     }
     if (m.excluded_reason !== undefined) {
-      out.excluded_reason = m.excluded_reason === undefined || m.excluded_reason === null
-        ? null
-        : asString(m.excluded_reason, `${w}.excluded_reason`);
+      out.excluded_reason =
+        m.excluded_reason === undefined || m.excluded_reason === null
+          ? null
+          : asString(m.excluded_reason, `${w}.excluded_reason`);
     }
     return out;
   });
@@ -1190,7 +1188,10 @@ function parseRegionalBenchmarkFragment(v: unknown): RegionalBenchmarkFragment |
     if (typeof c.arrivals_2024 !== "number") fail(`${w}.arrivals_2024 must be a number`);
     // reconciliation: yield vs receipts/arrivals (the pipeline's validator, mirrored)
     const implied = (r.usd_billion * 1e9) / c.arrivals_2024;
-    if (typeof c.yield_2024_usd_per_visitor !== "number" || Math.abs(c.yield_2024_usd_per_visitor - implied) > implied * 0.01) {
+    if (
+      typeof c.yield_2024_usd_per_visitor !== "number" ||
+      Math.abs(c.yield_2024_usd_per_visitor - implied) > implied * 0.01
+    ) {
       fail(`${w}: yield_2024_usd_per_visitor does not reconcile with receipts/arrivals`);
     }
     return {
@@ -1201,9 +1202,10 @@ function parseRegionalBenchmarkFragment(v: unknown): RegionalBenchmarkFragment |
       arrivals_2024: c.arrivals_2024,
       receipts_2024: {
         local_amount_billion: optNum(r.local_amount_billion, `${w}.receipts_2024.local_amount_billion`),
-        local_currency: r.local_currency === undefined || r.local_currency === null
-          ? null
-          : asString(r.local_currency, `${w}.receipts_2024.local_currency`),
+        local_currency:
+          r.local_currency === undefined || r.local_currency === null
+            ? null
+            : asString(r.local_currency, `${w}.receipts_2024.local_currency`),
         usd_billion: r.usd_billion,
         usd_note: asString(r.usd_note, `${w}.receipts_2024.usd_note`),
       },
@@ -1212,7 +1214,7 @@ function parseRegionalBenchmarkFragment(v: unknown): RegionalBenchmarkFragment |
       yield_change_2024_vs_2019_pct: asNumber(c.yield_change_2024_vs_2019_pct, `${w}.yield_change_2024_vs_2019_pct`),
       yield_multiple_of_malaysia_2024: optNum(
         c.yield_multiple_of_malaysia_2024,
-        `${w}.yield_multiple_of_malaysia_2024`
+        `${w}.yield_multiple_of_malaysia_2024`,
       ),
       source_urls: c.source_urls.map((u, j) => asString(u, `${w}.source_urls[${j}]`)),
     };
@@ -1239,8 +1241,5 @@ function parseRegionalBenchmarkFragment(v: unknown): RegionalBenchmarkFragment |
 
 /** Find series by measure and counting basis. Basis-labelled, never merged. */
 export function seriesFor(bundle: Bundle, measure: string, basis: Basis): Series[] {
-  return bundle.fragments.national_series.series.filter(
-    (s) => s.measure === measure && s.basis === basis
-  );
+  return bundle.fragments.national_series.series.filter((s) => s.measure === measure && s.basis === basis);
 }
-

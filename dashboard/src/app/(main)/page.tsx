@@ -1,8 +1,9 @@
 import { SpecChart } from "@/components/charts/spec-chart";
 import { BundleFooter } from "@/components/layout/footer/bundle-footer";
-import type { MissingBillionsFragment } from "@/lib/bundle";
+import { type MissingBillionsFragment, yearLabel } from "@/lib/bundle";
 import { buildArrivalsChart, buildReceiptsChart, buildVisitorSplitChart } from "@/lib/chart-data";
 import { buildDecomposition } from "@/lib/diagnosis";
+import { fmt1, fmt2 } from "@/lib/format";
 import { ErrorNotice, loadBundleForPages } from "@/lib/server-bundle";
 
 /**
@@ -25,10 +26,10 @@ export default function Home() {
     );
   }
   const decomp = buildDecomposition(mb);
-  const headlineGap = fmt(mb.headline.cumulative_gap_rm_million);
+  const headlineGap = fmt1(mb.headline.cumulative_gap_rm_million);
   const supplementary = mb.supplementary;
   // 2025 rows are preliminary: label them "2025p", never quote them as final.
-  const preliminaryYears = mb.years.filter((y) => y.revision_status === "preliminary").map((y) => `${y.year}p`);
+  const preliminaryYears = mb.years.filter((y) => y.revision_status === "preliminary").map(yearLabel);
 
   return (
     <main className="mx-auto flex w-full max-w-6xl flex-col gap-10 py-10">
@@ -63,11 +64,8 @@ export default function Home() {
         {supplementary && (
           <p>
             {supplementary.label} (RM
-            {supplementary.cumulative_gap_rm_million.toLocaleString("en-US", {
-              minimumFractionDigits: 1,
-              maximumFractionDigits: 1,
-            })}{" "}
-            million, {supplementary.window}) — supplementary only, never the headline.
+            {fmt1(supplementary.cumulative_gap_rm_million)} million, {supplementary.window}) — supplementary only, never
+            the headline.
           </p>
         )}
       </section>
@@ -75,11 +73,6 @@ export default function Home() {
       <BundleFooter bundle={bundle} />
     </main>
   );
-}
-
-/** Format an RM-million figure with one decimal, thousands separators. */
-function fmt(v: number): string {
-  return v.toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 }
 
 function HeadlineSection({
@@ -111,16 +104,8 @@ function HeadlineSection({
         <p className="font-medium">The stagnation line</p>
         <p className="text-muted-foreground">
           By {stagnation.latestYear}, each visitor was worth what a 2019 visitor was worth: RM
-          {stagnation.latestPerVisitorRealRm.toLocaleString("en-US", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}{" "}
-          real per visitor against the 2019 anchor of RM
-          {stagnation.anchorPerVisitorRealRm.toLocaleString("en-US", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}{" "}
-          ({changePct >= 0 ? "+" : ""}
+          {fmt2(stagnation.latestPerVisitorRealRm)} real per visitor against the 2019 anchor of RM
+          {fmt2(stagnation.anchorPerVisitorRealRm)} ({changePct >= 0 ? "+" : ""}
           {changePct.toFixed(2)}%, constant 2019 prices). The recovery added visitors and prices — not value per
           visitor.
         </p>

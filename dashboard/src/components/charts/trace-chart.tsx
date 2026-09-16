@@ -10,6 +10,7 @@
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { Badge } from "@/components/ui/badge";
+import { fmtNum } from "@/lib/format";
 
 const CHART_COLORS = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"];
 
@@ -23,10 +24,16 @@ export interface TraceSpec {
   invalid?: boolean;
 }
 
+/** The one index-unit predicate (ticket #21): an "index …" unit renders as a
+ * bare rounded number on the axis and an unsuffixed tooltip value. */
+function isIndexUnit(unit: string): boolean {
+  return /^index/.test(unit);
+}
+
 function formatTooltipValue(unit: string, v: number | null): string {
   if (v === null) return "no data";
-  const num = new Intl.NumberFormat("en-US").format(v);
-  if (/^index/.test(unit)) return num;
+  const num = fmtNum(v);
+  if (isIndexUnit(unit)) return num;
   return `${num} ${unit}`;
 }
 
@@ -35,7 +42,7 @@ export function TraceChart({ traces }: { traces: TraceSpec[] }) {
     <div className="flex flex-col gap-4">
       {traces.map((trace, i) => {
         const data = trace.points.map(([year, value]) => ({ year: String(year), value }));
-        const indexed = /^index/.test(trace.unit);
+        const indexed = isIndexUnit(trace.unit);
         return (
           <div key={trace.name} className="flex flex-col gap-1">
             <div className="flex flex-wrap items-center gap-2">
@@ -65,10 +72,8 @@ export function TraceChart({ traces }: { traces: TraceSpec[] }) {
                         : new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 }).format(v)
                     }
                   />
-                  <Tooltip
-                    formatter={(value) => formatTooltipValue(trace.unit, value as number | null)}
-                    labelFormatter={(label) => `${label}${/p$/.test(String(label)) ? " (preliminary)" : ""}`}
-                  />
+                  {/* x-keys are plain years, so no preliminary-suffix handling here. */}
+                  <Tooltip formatter={(value) => formatTooltipValue(trace.unit, value as number | null)} />
                   <Line
                     type="monotone"
                     dataKey="value"

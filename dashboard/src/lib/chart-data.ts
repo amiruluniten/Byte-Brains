@@ -8,7 +8,7 @@
  * Preliminary years never masquerade as final data: a series whose latest
  * observation is preliminary carries "2025p" in its name and label.
  */
-import { BASIS_LABELS, type Bundle, type Series, yearLabel } from "./bundle";
+import { BASIS_LABELS, type Basis, type Bundle, type Series, yearLabel } from "./bundle";
 
 export interface ChartTrace {
   name: string; // legend label, includes basis wording
@@ -67,7 +67,7 @@ function buildChart(
     emptyError: string;
     title: string;
     subtitle: string;
-  }
+  },
 ): ChartSpec {
   const series = bundle.fragments.national_series.series
     .filter(opts.filter)
@@ -95,8 +95,7 @@ export function buildReceiptsChart(bundle: Bundle): ChartSpec {
     sortKey: (s) => s.window,
     emptyError: "bundle has no inbound tourism consumption series",
     title: "Intensive side: tourism receipts (inbound consumption)",
-    subtitle:
-      "Growth from more value per visitor. Inbound tourism consumption, RM million, tourist basis.",
+    subtitle: "Growth from more value per visitor. Inbound tourism consumption, RM million, tourist basis.",
   });
 }
 

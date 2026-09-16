@@ -5,8 +5,10 @@ import {
   buildDecomposition,
   buildNaiveNominalGapSeries,
   flagNaiveNominalGap,
+  isNominalTrace,
   nominalSeriesNotice,
 } from "@/lib/diagnosis";
+import { fmt1 } from "@/lib/format";
 import { ErrorNotice, loadBundleForPages } from "@/lib/server-bundle";
 
 /**
@@ -33,19 +35,19 @@ export default function DecompositionPage() {
     unit: t.unit,
     points: t.points,
     notice: nominalSeriesNotice(t),
-    invalid: /nominal/i.test(t.name),
+    invalid: isNominalTrace(t),
   }));
   const perVisitorTraces: TraceSpec[] = decomp.perVisitor.map((t) => ({
     name: t.name,
     unit: t.unit,
     points: t.points,
     notice: nominalSeriesNotice(t),
-    invalid: /nominal/i.test(t.name),
+    invalid: isNominalTrace(t),
   }));
   const naiveSeries = buildNaiveNominalGapSeries(mb);
   const invalidFlagged: TraceSpec[] = [
     {
-      name: `${naiveSeries.unit.split(" (")[0]} by year (INVALID — shown flagged, never a comparison)`,
+      name: `${naiveSeries.title} by year (INVALID — shown flagged, never a comparison)`,
       unit: naiveSeries.unit,
       points: naiveSeries.points,
       notice: naiveSeries.notice,
@@ -73,10 +75,7 @@ export default function DecompositionPage() {
           <p className="font-medium text-sm">Headline (pre-registered, window-guarded)</p>
           <p className="font-semibold text-2xl">
             RM
-            {decomp.headline.cumulativeGapRmMillion.toLocaleString("en-US", {
-              minimumFractionDigits: 1,
-              maximumFractionDigits: 1,
-            })}
+            {fmt1(decomp.headline.cumulativeGapRmMillion)}
             &nbsp;million
           </p>
           <p className="text-muted-foreground text-sm">
@@ -89,10 +88,7 @@ export default function DecompositionPage() {
             <p className="font-medium text-sm">Supplementary only &mdash; never the headline</p>
             <p className="font-semibold text-2xl">
               RM
-              {decomp.supplementary.cumulativeGapRmMillion.toLocaleString("en-US", {
-                minimumFractionDigits: 1,
-                maximumFractionDigits: 1,
-              })}
+              {fmt1(decomp.supplementary.cumulativeGapRmMillion)}
               &nbsp;million
             </p>
             <p className="text-muted-foreground text-sm">{decomp.supplementary.label}</p>

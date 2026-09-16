@@ -9,14 +9,12 @@
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import type { ChartSpec } from "@/lib/chart-data";
+import { fmtNum } from "@/lib/format";
 
 const CHART_COLORS = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"];
 
 function formatAxisValue(unit: string, v: number): string {
-  if (unit === "persons") {
-    return new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 }).format(v);
-  }
-  if (unit === "rm_million") {
+  if (unit === "persons" || unit === "rm_million") {
     return new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 }).format(v);
   }
   return String(v);
@@ -26,7 +24,7 @@ function formatTooltipValue(unit: string, v: number | null): string {
   if (v === null) return "no data";
   let suffix = "";
   if (unit === "rm_million") suffix = " RM million";
-  return `${new Intl.NumberFormat("en-US").format(v)}${suffix}`;
+  return `${fmtNum(v)}${suffix}`;
 }
 
 export function SpecChart({ spec }: { spec: ChartSpec }) {

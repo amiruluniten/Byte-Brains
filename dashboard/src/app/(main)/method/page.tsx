@@ -2,7 +2,9 @@ import { BundleFooter } from "@/components/layout/footer/bundle-footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { Bundle } from "@/lib/bundle";
+import { yearLabel } from "@/lib/bundle";
 import { buildDecomposition, buildMethodIndex } from "@/lib/diagnosis";
+import { fmt1, fmt2 } from "@/lib/format";
 import { ErrorNotice, loadBundleForPages } from "@/lib/server-bundle";
 
 /**
@@ -61,9 +63,9 @@ function CounterfactualSection({ mb }: { mb: NonNullable<BundleFragments["missin
   const decomp = buildDecomposition(mb);
   const anchor = decomp.stagnation.anchorPerVisitorRealRm;
   const rows = [...mb.years].sort((a, b) => a.year - b.year);
-  const fmt = (v: number) => v.toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-  const fmtP = (v: number) => v.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  const preliminary = rows.filter((y) => y.revision_status === "preliminary").map((y) => `${y.year}p`);
+  const fmt = fmt1;
+  const fmtP = fmt2;
+  const preliminary = rows.filter((y) => y.revision_status === "preliminary").map(yearLabel);
   return (
     <section className="flex flex-col gap-4">
       <h2 className="font-semibold text-2xl tracking-tight">The Missing Billions counterfactual</h2>
@@ -106,7 +108,7 @@ function CounterfactualSection({ mb }: { mb: NonNullable<BundleFragments["missin
         <TableBody>
           {rows.map((y) => (
             <TableRow key={y.year}>
-              <TableCell>{y.revision_status === "preliminary" ? `${y.year}p` : y.year}</TableCell>
+              <TableCell>{yearLabel(y)}</TableCell>
               <TableCell className="text-right">{fmt(y.receipts_nominal_rm_million)}</TableCell>
               <TableCell className="text-right">{y.visitor_arrivals.toLocaleString("en-US")}</TableCell>
               <TableCell className="text-right">{fmtP(y.per_visitor_real_2019_rm)}</TableCell>

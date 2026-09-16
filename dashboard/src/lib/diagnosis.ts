@@ -8,8 +8,7 @@
  * RM10.2B cumulative 2020-2024) and the stagnation line are the headline;
  * the regional gap is supporting context, never the headline.
  */
-import { parseWindow, type Window } from "./bundle";
-import { fmt1, fmtRmMillion } from "./format";
+
 import type {
   Bundle,
   CounterfactualYear,
@@ -21,7 +20,8 @@ import type {
   SourceMarketFragment,
   YieldTier,
 } from "./bundle";
-import { yearLabel } from "./bundle";
+import { parseWindow, type Window, yearLabel } from "./bundle";
+import { fmt1, fmtRmMillion } from "./format";
 
 // ---------------------------------------------------------------------------
 // Decomposition: extensive (volume) vs intensive (value) growth
@@ -478,7 +478,8 @@ export const NOMINAL_FLAG = "INVALID — nominal (not price-adjusted)";
 
 /** The one false-surplus rationale (ticket #21): why the naive nominal gap is
  * INVALID — volume and inflation flatter it into a surplus that never existed. */
-export const FALSE_SURPLUS_RATIONALE = "Inflation and visitor volume flatter it — per the bundle it shows a false surplus where the real (constant-2019-prices) gap is missing billions.";
+export const FALSE_SURPLUS_RATIONALE =
+  "Inflation and visitor volume flatter it — per the bundle it shows a false surplus where the real (constant-2019-prices) gap is missing billions.";
 
 export interface FlaggedNominalFigure {
   /** The formatted figure itself (RM million, one decimal). */
