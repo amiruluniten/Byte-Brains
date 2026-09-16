@@ -1,4 +1,4 @@
-import { BookOpen, Home, type LucideIcon } from "lucide-react";
+import { BookOpen, Home, SlidersHorizontal, type LucideIcon } from "lucide-react";
 
 export type NavBadge = "new" | "soon";
 
@@ -58,6 +58,12 @@ export const sidebarItems: NavGroup[] = [
         title: "Method & sources",
         url: "/method",
         icon: BookOpen,
+      },
+      {
+        id: "simulator",
+        title: "Simulator",
+        url: "/simulator",
+        icon: SlidersHorizontal,
       },
     ],
   },
