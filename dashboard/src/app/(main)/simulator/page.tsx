@@ -1,5 +1,6 @@
 import { loadBundleForPages, ErrorNotice } from "@/lib/server-bundle";
 import { buildPrescriptions } from "@/lib/prescriptions";
+import { BundleFooter } from "@/components/layout/footer/bundle-footer";
 
 import { SimulatorClient } from "./simulator-client";
 
@@ -22,5 +23,10 @@ export default function SimulatorPage() {
   }
   const prescriptions = buildPrescriptions(loaded.bundle.fragments.source_segmentation);
 
-  return <SimulatorClient frag={frag} prescriptions={prescriptions} />;
+  return (
+    <>
+      <SimulatorClient frag={frag} prescriptions={prescriptions} />
+      <BundleFooter bundle={loaded.bundle} />
+    </>
+  );
 }
