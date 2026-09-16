@@ -10,6 +10,7 @@
  */
 import type {
   Bundle,
+  CounterfactualYear,
   MarketSegment,
   MissingBillionsFragment,
   Observation,
@@ -75,11 +76,7 @@ export interface DecompositionSpec {
 }
 
 /** Sum the real-terms gap (positive = missing billions) over the given years. */
-export function cumulativeMissingBillions(
-  frag: MissingBillionsFragment,
-  fromYear: number,
-  toYear: number
-): number {
+export function cumulativeMissingBillions(frag: MissingBillionsFragment, fromYear: number, toYear: number): number {
   return frag.years
     .filter((y) => y.year >= fromYear && y.year <= toYear)
     .reduce((sum, y) => sum + y.gap_2019_prices_rm_million, 0);
@@ -109,10 +106,7 @@ export function buildDecomposition(frag: MissingBillionsFragment): Decomposition
       name: "Receipts, nominal RM (value — intensive side)",
       kind: "index",
       unit: "index (2019 = 100)",
-      points: years.map((y) => [
-        y.year,
-        indexAt(y.receipts_nominal_rm_million, anchor.receipts_nominal_rm_million),
-      ]),
+      points: years.map((y) => [y.year, indexAt(y.receipts_nominal_rm_million, anchor.receipts_nominal_rm_million)]),
     },
     {
       name: "Receipts, real 2019 RM (value at 2019 prices)",
@@ -131,7 +125,7 @@ export function buildDecomposition(frag: MissingBillionsFragment): Decomposition
         y.year,
         indexAt(
           y.counterfactual_receipts_2019_prices_rm_million,
-          anchor.counterfactual_receipts_2019_prices_rm_million
+          anchor.counterfactual_receipts_2019_prices_rm_million,
         ),
       ]),
     },
@@ -184,9 +178,7 @@ export function buildDecomposition(frag: MissingBillionsFragment): Decomposition
       `Real terms: deflated by the national CPI (${frag.deflator.series_id}, ${frag.deflator.index_base}, fetched ${frag.deflator.source.fetched_utc.slice(0, 10)}) to constant ${frag.anchor_year} prices.`,
       "The naive nominal gap (comparing ringgit of different years) is INVALID — the bundle emits it flagged, and per the data it shows a false surplus.",
       `The headline is the pre-registered window ${frag.headline.window} at constant ${frag.anchor_year} prices (RM${frag.headline.cumulative_gap_rm_million.toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} million).`,
-      frag.supplementary
-        ? `Supplementary only (never the headline): ${frag.supplementary.label}`
-        : undefined,
+      frag.supplementary ? `Supplementary only (never the headline): ${frag.supplementary.label}` : undefined,
       `${lastYear.revision_status === "preliminary" ? `${lastYear.year}p` : lastYear.year}: the latest fragment year; ${lastYear.revision_status === "preliminary" ? "preliminary, labelled 2025p everywhere" : `revision status ${lastYear.revision_status}`}.`,
     ].filter((s): s is string => s !== undefined),
     stagnation: {
@@ -269,7 +261,9 @@ export const GEO_NAME_OVERRIDES: Record<string, string> = {
 export interface MapMarket {
   market: string;
   geoName: string;
-  yieldRmPerVisitor: number | null; // 2024; null where the market has no yield
+  yieldRmPerVisitor: number | null; // null where the market has no yield
+  /** The year the yield/arrivals pair was read at (2024 in the current bundle). */
+  yieldYear: number | null;
   arrivals2024: number | null;
   coverage: SourceMarketFragment["markets"][number]["coverage"];
   clustered: boolean;
@@ -293,7 +287,7 @@ export interface MarketMapData {
  */
 export function buildMarketMapData(
   sourceMarket: SourceMarketFragment,
-  segmentation: SegmentationFragment | undefined
+  segmentation: SegmentationFragment | undefined,
 ): MarketMapData {
   const segmentByMarket = new Map<string, MarketSegment>();
   if (segmentation) {
@@ -306,6 +300,7 @@ export function buildMarketMapData(
       market: row.market,
       geoName: GEO_NAME_OVERRIDES[row.market] ?? row.market,
       yieldRmPerVisitor: obs2024?.yield_rm_per_visitor ?? null,
+      yieldYear: obs2024?.year ?? null,
       arrivals2024: obs2024?.arrivals_persons ?? null,
       coverage: row.coverage,
       clustered: seg?.clustered ?? false,
@@ -324,9 +319,7 @@ export function buildMarketMapData(
 
 /** Markets whose geo entity is absent from the committed world geometry. */
 export function filterMissingFromGeometry(data: MarketMapData, geometryNames: Set<string>): string[] {
-  return data.markets
-    .filter((m) => !geometryNames.has(m.geoName))
-    .map((m) => `${m.market} (as ${m.geoName})`);
+  return data.markets.filter((m) => !geometryNames.has(m.geoName)).map((m) => `${m.market} (as ${m.geoName})`);
 }
 
 // ---------------------------------------------------------------------------
@@ -393,7 +386,12 @@ export function buildMethodIndex(bundle: Bundle): {
         fragment: "macro_series",
         ticket: "T4",
         method: `National CPI (annual mean of the monthly index), downloaded via tools/dosm-cli on ${s.source.fetched_utc.slice(0, 10)}. The deflator for the constant-2019-prices counterfactual.`,
-        sources: [{ label: `OpenDOSM dataset "${s.source.dataset_id}" — ${s.source.title} (${s.source.index_base}, fetched ${s.source.fetched_utc.slice(0, 10)})`, url: s.source.url }],
+        sources: [
+          {
+            label: `OpenDOSM dataset "${s.source.dataset_id}" — ${s.source.title} (${s.source.index_base}, fetched ${s.source.fetched_utc.slice(0, 10)})`,
+            url: s.source.url,
+          },
+        ],
         usedBy: ["/", "/diagnosis/decomposition"],
       });
     }
@@ -438,7 +436,10 @@ export function buildMethodIndex(bundle: Bundle): {
       method:
         "Derived, not modelled: every clustered source market gets exactly one verdict from its segment membership — grow (High-Yield Long-Haul or High-Growth Emerging: each extra visitor adds disproportionate value), coast (Low-Yield Steady: arrivals without matching value, so effort stays flat), reduce reliance on low-yield same-day traffic (Volume Traps). Volume Traps is a measurement critique of the arrivals KPI, not a judgement of the market. Unclustered markets get no verdict; a segment no rule covers is flagged, never guessed. The numbers behind each verdict (yield, arrivals, growth, tier) come straight from this fragment.",
       sources: [
-        { label: "Segment membership, yield tiers and 2024 figures: the source_segmentation fragment (same page, above)" },
+        {
+          label:
+            "Segment membership, yield tiers and 2024 figures: the source_segmentation fragment (same page, above)",
+        },
       ],
       usedBy: ["/diagnosis/source-markets"],
     });
@@ -451,7 +452,10 @@ export function buildMethodIndex(bundle: Bundle): {
       ticket: "T6",
       method: `2024 receipts-per-visitor for ${rb.countries.map((c) => c.country).join(", ")} vs each country's ${rb.baseline_year} WDI yield, from officially published releases. Basis caveats (survey vs balance-of-payments vs administrative) travel with every row. Supporting context only — never the headline.`,
       sources: rb.countries.flatMap((c) =>
-        c.source_urls.map((u) => ({ label: `${c.country}: officially published 2024 figures (${c.receipts_basis_note})`, url: u }))
+        c.source_urls.map((u) => ({
+          label: `${c.country}: officially published 2024 figures (${c.receipts_basis_note})`,
+          url: u,
+        })),
       ),
       usedBy: ["/diagnosis/regional"],
     });
@@ -464,4 +468,117 @@ export function buildMethodIndex(bundle: Bundle): {
     checksum: bundle.checksum,
     entries,
   };
+}
+
+// ---------------------------------------------------------------------------
+// Honesty flags (ticket #18 — watch items carried from the #16 review)
+// ---------------------------------------------------------------------------
+
+/** The flag every nominal (non-price-adjusted) figure renders with. */
+export const NOMINAL_FLAG = "INVALID — nominal (not price-adjusted)";
+
+export interface FlaggedNominalFigure {
+  /** The formatted figure itself (RM million, one decimal). */
+  display: string;
+  /** The flag text the page MUST render next to the figure. */
+  flag: string;
+  /** Why this figure is flagged — rendered with it, never stripped. */
+  notice: string;
+}
+
+function fmtRmMillion(v: number): string {
+  return `${v >= 0 ? "+" : ""}${v.toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} RM million`;
+}
+
+/**
+ * Flag an arbitrary nominal figure. Honesty rule: wherever a nominal figure
+ * appears, it renders with an explicit INVALID/flagged treatment — this
+ * builder produces the flag so a page cannot forget it.
+ */
+export function flagNominalFigure(value: number, what: string): FlaggedNominalFigure {
+  return {
+    display: fmtRmMillion(value),
+    flag: NOMINAL_FLAG,
+    notice: `${what} is NOMINAL — ringgit of different years are not comparable, so it is flagged INVALID and is never a real-terms gap or comparison.`,
+  };
+}
+
+/**
+ * Ticket #18 watch item: `naive_nominal_gap_rm_million` is parsed from the
+ * bundle and shows a false surplus (volume + inflation flatter it). It may
+ * appear on a page ONLY through this builder, which carries the INVALID flag
+ * and the false-surplus warning in its output.
+ */
+export function flagNaiveNominalGap(year: CounterfactualYear): FlaggedNominalFigure {
+  const fig = flagNominalFigure(year.naive_nominal_gap_rm_million, `The naive nominal gap for ${yearLabel(year)}`);
+  return {
+    ...fig,
+    notice: `The naive nominal gap for ${yearLabel(year)} (${fig.display}) is INVALID: it compares nominal ringgit across years. Inflation and visitor volume flatter it — per the bundle it shows a false surplus where the real (constant-2019-prices) gap is missing billions. Never read it as a comparison.`,
+  };
+}
+
+/** The full naive-nominal twin series, for display in a flagged INVALID card. */
+export function buildNaiveNominalGapSeries(frag: MissingBillionsFragment): {
+  flag: string;
+  notice: string;
+  unit: string;
+  points: [number, number | null][];
+} {
+  const years = [...frag.years].sort((a, b) => a.year - b.year);
+  return {
+    flag: NOMINAL_FLAG,
+    notice:
+      "The naive nominal gap — receipts minus receipts at 2019's NOMINAL per-visitor yield, in ringgit of each year — is INVALID as a value measure: inflation and visitor volume flatter it, and per the data it shows a false surplus where the real (constant-2019-prices) headline shows missing billions. Shown flagged so the error is visible, never as a comparison.",
+    unit: "RM million (INVALID — nominal)",
+    points: years.map((y) => [y.year, y.naive_nominal_gap_rm_million] as [number, number | null]),
+  };
+}
+
+/**
+ * Ticket #18 watch item: a nominal index/per-visitor series (e.g. "Receipts,
+ * nominal RM (value — intensive side)") carries an explicit nominal-vs-real
+ * label wherever it renders. Returns the label text, or null for real-terms
+ * traces (which need no flag).
+ */
+export function nominalSeriesNotice(trace: Pick<DecompositionTrace, "name" | "kind" | "unit">): string | null {
+  if (!/nominal/i.test(trace.name)) return null;
+  if (trace.kind === "index") {
+    return `${trace.name} — explicitly NOMINAL, not price-adjusted: an index of the intensive side in ringgit of each year. It is not a gap and not comparable against the real-2019 series (INVALID as a value measure).`;
+  }
+  return `${trace.name} — explicitly NOMINAL, not price-adjusted: ringgit of different years are not comparable (INVALID as a value measure). Read the real-2019 series for what a visitor is worth in 2019 money.`;
+}
+
+// ---------------------------------------------------------------------------
+// Source-market ranking + shading (ticket #18)
+// ---------------------------------------------------------------------------
+
+/** Markets ranked by 2024 tourism yield (highest first); null yields last. */
+export function buildMarketRanking(data: MarketMapData): RankedMarket[] {
+  return [...data.markets]
+    .sort((a, b) => (b.yieldRmPerVisitor ?? -Infinity) - (a.yieldRmPerVisitor ?? -Infinity))
+    .map((m, i) => ({ ...m, rank: m.yieldRmPerVisitor === null ? null : i + 1 }));
+}
+
+/** The ranked row type: `rank` is null exactly when the yield is null. */
+export type RankedMarket = MapMarket & { rank: number | null };
+
+export type YieldShade = "tier_top" | "tier_upper" | "tier_lower" | "tier_bottom" | "unclustered" | "no_yield";
+
+/**
+ * Map shade from the pipeline's own yield tier (quartiles of the emitted 2024
+ * yields — the same tiers the report cites). Markets with a yield but no
+ * segmentation row shade "unclustered"; no yield means no shade.
+ */
+export function yieldShade(market: MapMarket): YieldShade {
+  switch (market.tier) {
+    case "top_quartile":
+      return "tier_top";
+    case "upper_middle":
+      return "tier_upper";
+    case "lower_middle":
+      return "tier_lower";
+    case "bottom_quartile":
+      return "tier_bottom";
+  }
+  return market.yieldRmPerVisitor === null ? "no_yield" : "unclustered";
 }

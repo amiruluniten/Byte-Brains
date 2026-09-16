@@ -6,7 +6,7 @@
     "sync-bundle": "node scripts/sync-bundle.mjs",
     "predev": "npm run sync-bundle",
     "dev": "next dev",
-    "prebuild": "npm run sync-bundle",
+    "prebuild": "npm run sync-bundle && node scripts/generate-world-svg.mjs",
     "build": "next build",
     "start": "next start",
     "test": "vitest run",
