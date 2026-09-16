@@ -28,6 +28,8 @@ dashboard footer shows — the report must cite the same data the dashboard show
 | `3-source-registry.md` | every dataset and PDF used: publisher, URL, access date, what it was used for. Feed your References section from this. |
 | `4-findings-material.md` | key numbers and ready-to-adapt interpretations, structured against the official report template (Introduction → Conclusion). |
 | `5-advisor-summary.md` | one page for the academic advisor, no jargon, no code. |
+| `6-impact-app-concept.md` | the agreed product concept for the Impact & Commercial section: the AI itinerary planner, its target segment, revenue model, evidence rule, and where it appears in each deliverable. |
+| `7-q-and-a-defence.md` | the five C1 answers to expected judge questions (SDG, the 2019 anchor, k=4, the declared limitation, the study limits) — use word-for-word in Methodology and Q&A. |
 | `pinned-bundle.md` | the exact bundle version + sha256 checksum the dashboard displays — cite this in the report so the numbers match the live site. |
 | `screenshots/` | high-resolution captures of every dashboard page (from the static export) for the report's figures. |
 

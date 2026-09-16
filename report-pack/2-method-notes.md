@@ -158,7 +158,25 @@ simulator reads is already in the bundle cited above.)*
 
 ---
 
-## 2.5 One-line method summary (for the report's Methodology section)
+## 2.5 Data integration — which datasets produced which insight
+
+**Dataset types combined (structured, semi-structured, and series data):**
+
+| type | datasets |
+|---|---|
+| structured (official spreadsheets & API series) | DOSM Tourism Satellite Account workbooks (xlsx), DOSM CPI csv, WEF TTDI panel via World Bank Data360, World Bank WDI arrivals & receipts |
+| semi-structured / unstructured (published documents) | Tourism Malaysia *Statistics in Brief 2024* (PDF, parsed via text extraction), DOSM Domestic Tourism bulletins (OCR'd) |
+| derived (computed from the above) | per-market tourism yield, the constant-2019-prices counterfactual, quartile tiers |
+
+**Which integration produced which insight:**
+
+| datasets combined | insight produced |
+|---|---|
+| TSA inbound consumption × CPI series × visitor arrivals | the **Missing Billions** counterfactual and the stagnation line (§2.2) |
+| Tourism Malaysia receipts & arrivals by source market × WEF TTDI source-market traits | the **market segmentation** — which source markets carry value, which carry volume (§2.3) |
+| TSA yield × regional (Thailand, Indonesia) official statements | the **regional yield benchmark** — supporting context for the yield gap (never the headline) |
+
+## 2.6 One-line method summary (for the report's Methodology section)
 
 > Official DOSM and Tourism Malaysia publications were parsed into a versioned,
 > checksum-validated data bundle; tourism yield was computed per source market from
@@ -166,3 +184,23 @@ simulator reads is already in the bundle cited above.)*
 > (national CPI deflator) measured the value not created per visitor; k-means
 > clustering on eight standardised market traits named four actionable segments; and
 > a transparent mix-shift simulator turns the segments into prescriptions.
+
+---
+
+## 2.7 Scope & limits
+
+- **Population**: inbound international visitors to Malaysia only. Domestic visitors
+  are out of scope — the TSA inbound tables and the source-market receipts tables do
+  not cover them.
+- **Window**: 2019–2024. 2019 is the anchor year: the official pre-crisis baseline.
+  It is a measuring stick for the stagnation line, not a target to revert to.
+- **Source markets**: the top-20 markets in Tourism Malaysia's *Statistics in Brief
+  2024*. Four of the twenty are excluded from the segmentation with stated reasons
+  (no 2024 yield: Bangladesh, Myanmar; no receipts: Canada, Netherlands).
+- **Prices**: the Missing Billions exists only in constant 2019 prices; the bundle
+  emits the nominal gap flagged invalid (see §2.2).
+- **Deflation**: a single national CPI deflator is applied to all receipts; no
+  market-level price indices exist in the official series.
+- **Known limitation**: the counterfactual uses the national average per-visitor
+  yield, so it combines the change in each source market's yield with the change in
+  the market mix; separating the two effects is future work.
