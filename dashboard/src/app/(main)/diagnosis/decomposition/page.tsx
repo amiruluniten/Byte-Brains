@@ -25,9 +25,7 @@ export default function DecompositionPage() {
   const { bundle } = loaded;
   const mb = bundle.fragments.missing_billions;
   if (!mb) {
-    return (
-      <ErrorNotice message="The bundle has no missing_billions fragment — the decomposition cannot be shown." />
-    );
+    return <ErrorNotice message="The bundle has no missing_billions fragment — the decomposition cannot be shown." />;
   }
   const decomp = buildDecomposition(mb);
   const indexedTraces: TraceSpec[] = decomp.indexed.map((t) => ({
@@ -74,7 +72,12 @@ export default function DecompositionPage() {
         <div className="flex flex-col gap-2 rounded-lg border bg-muted/30 p-4">
           <p className="font-medium text-sm">Headline (pre-registered, window-guarded)</p>
           <p className="font-semibold text-2xl">
-            RM{decomp.headline.cumulativeGapRmMillion.toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}&nbsp;million
+            RM
+            {decomp.headline.cumulativeGapRmMillion.toLocaleString("en-US", {
+              minimumFractionDigits: 1,
+              maximumFractionDigits: 1,
+            })}
+            &nbsp;million
           </p>
           <p className="text-muted-foreground text-sm">
             Cumulative gap {decomp.headline.window.from}&ndash;{decomp.headline.window.to}, constant {decomp.anchorYear}{" "}
@@ -85,7 +88,12 @@ export default function DecompositionPage() {
           <div className="flex flex-col gap-2 rounded-lg border bg-muted/30 p-4">
             <p className="font-medium text-sm">Supplementary only &mdash; never the headline</p>
             <p className="font-semibold text-2xl">
-              RM{decomp.supplementary.cumulativeGapRmMillion.toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}&nbsp;million
+              RM
+              {decomp.supplementary.cumulativeGapRmMillion.toLocaleString("en-US", {
+                minimumFractionDigits: 1,
+                maximumFractionDigits: 1,
+              })}
+              &nbsp;million
             </p>
             <p className="text-muted-foreground text-sm">{decomp.supplementary.label}</p>
           </div>
@@ -94,7 +102,9 @@ export default function DecompositionPage() {
 
       <section className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
-          <h2 className="font-semibold text-2xl tracking-tight">Volume vs value, indexed ({decomp.anchorYear} = 100)</h2>
+          <h2 className="font-semibold text-2xl tracking-tight">
+            Volume vs value, indexed ({decomp.anchorYear} = 100)
+          </h2>
           <p className="text-muted-foreground text-sm">
             The extensive side is visitor arrivals; the intensive side is receipts. Bases are labelled and never merged.
           </p>
@@ -108,8 +118,8 @@ export default function DecompositionPage() {
         <div className="flex flex-col gap-1">
           <h2 className="font-semibold text-2xl tracking-tight">Per visitor: nominal vs real</h2>
           <p className="text-muted-foreground text-sm">
-            What a visitor was worth each year — in that year&rsquo;s ringgit (nominal) and in {decomp.anchorYear}{" "}
-            money (real). The stagnation line lives in the real series.
+            What a visitor was worth each year — in that year&rsquo;s ringgit (nominal) and in {decomp.anchorYear} money
+            (real). The stagnation line lives in the real series.
           </p>
         </div>
         <div className="rounded-lg border p-4">
@@ -124,9 +134,9 @@ export default function DecompositionPage() {
         </div>
         <p className="text-destructive text-sm">{latestNaive.notice}</p>
         <p className="text-muted-foreground text-sm">
-          The bundle parses the naive nominal twin of the headline ({" "}
-          <code>naive_nominal_gap_rm_million</code>) and emits it flagged INVALID. It is shown here — flagged, in the
-          INVALID treatment — only to make the false surplus visible. It is never a comparison and never a headline.
+          The bundle parses the naive nominal twin of the headline ( <code>naive_nominal_gap_rm_million</code>) and
+          emits it flagged INVALID. It is shown here — flagged, in the INVALID treatment — only to make the false
+          surplus visible. It is never a comparison and never a headline.
         </p>
         <div className="rounded-lg border p-4">
           <TraceChart traces={invalidFlagged} />

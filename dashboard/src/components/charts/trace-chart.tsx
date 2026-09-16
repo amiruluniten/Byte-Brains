@@ -60,7 +60,9 @@ export function TraceChart({ traces }: { traces: TraceSpec[] }) {
                     tick={{ fontSize: 11 }}
                     width={56}
                     tickFormatter={(v: number) =>
-                      indexed ? String(Math.round(v)) : new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 }).format(v)
+                      indexed
+                        ? String(Math.round(v))
+                        : new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 }).format(v)
                     }
                   />
                   <Tooltip

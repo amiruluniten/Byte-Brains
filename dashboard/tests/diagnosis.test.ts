@@ -1,22 +1,23 @@
 import { describe, expect, it } from "vitest";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-import { loadBundleFromString, type Bundle } from "../src/lib/bundle";
+
+import { type Bundle, loadBundleFromString } from "../src/lib/bundle";
 import {
   buildDecomposition,
+  buildMarketMapData,
   buildMarketRanking,
+  buildMethodIndex,
   buildNaiveNominalGapSeries,
   buildRegionalComparison,
-  buildMarketMapData,
-  buildMethodIndex,
   cumulativeMissingBillions,
   flagNaiveNominalGap,
   flagNominalFigure,
   nominalSeriesNotice,
-  yieldShade,
   yearLabel,
+  yieldShade,
 } from "../src/lib/diagnosis";
 import { WORLD_MAP_HEIGHT, WORLD_MAP_WIDTH, WORLD_PATHS } from "../src/lib/world-paths.generated";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
 const raw = readFileSync(join(__dirname, "..", "data", "bundle.json"), "utf8");
 const bundle: Bundle = loadBundleFromString(raw);
@@ -58,9 +59,7 @@ describe("buildDecomposition", () => {
     expect(spec.supplementary!.label.toLowerCase()).toContain("never");
     // RM6,832.7m — supplementary only; distinct from the RM10,098.4m headline
     expect(spec.supplementary!.cumulativeGapRmMillion).toBeCloseTo(6832.69199714115, 6);
-    expect(spec.supplementary!.cumulativeGapRmMillion).not.toBeCloseTo(
-      spec.headline.cumulativeGapRmMillion, 3
-    );
+    expect(spec.supplementary!.cumulativeGapRmMillion).not.toBeCloseTo(spec.headline.cumulativeGapRmMillion, 3);
     // the basis notes state the supplementary rule
     expect(spec.basisNotes.some((n) => /Supplementary only \(never the headline\)/.test(n))).toBe(true);
   });
@@ -101,9 +100,7 @@ describe("buildDecomposition", () => {
   });
 
   it("cumulativeMissingBillions is the plain filtered sum", () => {
-    const manual = mb!.years
-      .filter((y) => y.year === 2022)
-      .reduce((s, y) => s + y.gap_2019_prices_rm_million, 0);
+    const manual = mb!.years.filter((y) => y.year === 2022).reduce((s, y) => s + y.gap_2019_prices_rm_million, 0);
     expect(cumulativeMissingBillions(mb!, 2022, 2022)).toBe(manual);
   });
 });
@@ -252,7 +249,10 @@ describe("nominal honesty flags (ticket #18)", () => {
     expect(fig.display).toContain(fmtRm(row2024.naive_nominal_gap_rm_million));
     // the flagged figure IS the bundle's parsed naive_nominal_gap field
     expect(fig.display).toContain(
-      row2024.naive_nominal_gap_rm_million.toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+      row2024.naive_nominal_gap_rm_million.toLocaleString("en-US", {
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1,
+      }),
     );
   });
 

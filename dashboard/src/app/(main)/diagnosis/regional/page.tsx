@@ -32,9 +32,9 @@ export default function RegionalPage() {
         <p className="font-medium text-muted-foreground text-sm">Diagnosis</p>
         <h1 className="font-semibold text-3xl tracking-tight">Regional yield comparison</h1>
         <p className="text-muted-foreground">
-          Malaysia&rsquo;s per-visitor receipts against its neighbours&rsquo;, {comp.anchorYear} vs{" "}
-          {comp.baselineYear}. This is <strong>supporting context only &mdash; never the headline</strong>: the
-          Missing Billions counterfactual is the headline, and it is computed from Malaysia&rsquo;s own series.
+          Malaysia&rsquo;s per-visitor receipts against its neighbours&rsquo;, {comp.anchorYear} vs {comp.baselineYear}.
+          This is <strong>supporting context only &mdash; never the headline</strong>: the Missing Billions
+          counterfactual is the headline, and it is computed from Malaysia&rsquo;s own series.
         </p>
       </header>
 
@@ -44,10 +44,7 @@ export default function RegionalPage() {
           different bases, so the yields are comparable in direction, not in precision. The basis of each row travels
           with it (survey = visitor expenditure survey; balance of payments = administrative; administrative aggregate).
           {comp.caveats.map((c) => (
-            <span key={c}>
-              {" "}
-              {c}
-            </span>
+            <span key={c}> {c}</span>
           ))}
         </p>
       </section>
@@ -78,7 +75,9 @@ export default function RegionalPage() {
                   {r.changePct >= 0 ? "+" : ""}
                   {fmt(r.changePct)}%
                 </TableCell>
-                <TableCell className="text-right">{r.multipleOfMalaysia === null ? "—" : `${fmt(r.multipleOfMalaysia)}&times;`}</TableCell>
+                <TableCell className="text-right">
+                  {r.multipleOfMalaysia === null ? "—" : `${fmt(r.multipleOfMalaysia)}&times;`}
+                </TableCell>
                 <TableCell className="text-right">{r.arrivals2024.toLocaleString("en-US")}</TableCell>
                 <TableCell className="text-right">{fmt(r.usdBillion2024)}</TableCell>
                 <TableCell>

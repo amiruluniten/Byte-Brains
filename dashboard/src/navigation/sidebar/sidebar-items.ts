@@ -4,8 +4,8 @@ import {
   Globe,
   Home,
   ListOrdered,
-  SlidersHorizontal,
   type LucideIcon,
+  SlidersHorizontal,
 } from "lucide-react";
 
 export type NavBadge = "new" | "soon";

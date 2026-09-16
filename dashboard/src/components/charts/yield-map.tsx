@@ -27,7 +27,7 @@ function marketTooltip(m: MapMarket): string {
   parts.push(
     m.yieldRmPerVisitor === null
       ? "no yield in the bundle"
-      : `RM${m.yieldRmPerVisitor.toLocaleString("en-US", { maximumFractionDigits: 0 })} tourism yield per visitor (${m.yieldYear ?? "year not stated"})`
+      : `RM${m.yieldRmPerVisitor.toLocaleString("en-US", { maximumFractionDigits: 0 })} tourism yield per visitor (${m.yieldYear ?? "year not stated"})`,
   );
   if (m.tierLabel) parts.push(m.tierLabel);
   if (m.segmentName) parts.push(`segment: ${m.segmentName}`);
@@ -35,13 +35,7 @@ function marketTooltip(m: MapMarket): string {
   return parts.join(" — ");
 }
 
-export function YieldMap({
-  markets,
-  className,
-}: {
-  markets: MapMarket[];
-  className?: string;
-}) {
+export function YieldMap({ markets, className }: { markets: MapMarket[]; className?: string }) {
   const byGeoName = new Map(markets.map((m) => [m.geoName, m]));
   return (
     <figure className={className}>

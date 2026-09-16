@@ -48,8 +48,9 @@ function ringToPath(ring) {
 }
 
 function geometryToPaths(geometry) {
-  const polys =
-    geometry.type === "Polygon" ? [geometry.coordinates] : geometry.type === "MultiPolygon" ? geometry.coordinates : [];
+  let polys = [];
+  if (geometry.type === "Polygon") polys = [geometry.coordinates];
+  else if (geometry.type === "MultiPolygon") polys = geometry.coordinates;
   // One path per feature; holes render via fill-rule="evenodd".
   const d = polys.map((rings) => rings.map(ringToPath).join("")).join("");
   return d;
@@ -58,7 +59,7 @@ function geometryToPaths(geometry) {
 const world = JSON.parse(readFileSync(source, "utf8"));
 const features = [];
 for (const f of world.features) {
-  const name = f.properties && f.properties.name;
+  const name = f.properties?.name;
   if (!name) continue;
   const d = geometryToPaths(f.geometry);
   if (!d) continue;

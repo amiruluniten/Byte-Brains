@@ -76,11 +76,7 @@ export interface DecompositionSpec {
 }
 
 /** Sum the real-terms gap (positive = missing billions) over the given years. */
-export function cumulativeMissingBillions(
-  frag: MissingBillionsFragment,
-  fromYear: number,
-  toYear: number
-): number {
+export function cumulativeMissingBillions(frag: MissingBillionsFragment, fromYear: number, toYear: number): number {
   return frag.years
     .filter((y) => y.year >= fromYear && y.year <= toYear)
     .reduce((sum, y) => sum + y.gap_2019_prices_rm_million, 0);
@@ -110,10 +106,7 @@ export function buildDecomposition(frag: MissingBillionsFragment): Decomposition
       name: "Receipts, nominal RM (value — intensive side)",
       kind: "index",
       unit: "index (2019 = 100)",
-      points: years.map((y) => [
-        y.year,
-        indexAt(y.receipts_nominal_rm_million, anchor.receipts_nominal_rm_million),
-      ]),
+      points: years.map((y) => [y.year, indexAt(y.receipts_nominal_rm_million, anchor.receipts_nominal_rm_million)]),
     },
     {
       name: "Receipts, real 2019 RM (value at 2019 prices)",
@@ -132,7 +125,7 @@ export function buildDecomposition(frag: MissingBillionsFragment): Decomposition
         y.year,
         indexAt(
           y.counterfactual_receipts_2019_prices_rm_million,
-          anchor.counterfactual_receipts_2019_prices_rm_million
+          anchor.counterfactual_receipts_2019_prices_rm_million,
         ),
       ]),
     },
@@ -185,9 +178,7 @@ export function buildDecomposition(frag: MissingBillionsFragment): Decomposition
       `Real terms: deflated by the national CPI (${frag.deflator.series_id}, ${frag.deflator.index_base}, fetched ${frag.deflator.source.fetched_utc.slice(0, 10)}) to constant ${frag.anchor_year} prices.`,
       "The naive nominal gap (comparing ringgit of different years) is INVALID — the bundle emits it flagged, and per the data it shows a false surplus.",
       `The headline is the pre-registered window ${frag.headline.window} at constant ${frag.anchor_year} prices (RM${frag.headline.cumulative_gap_rm_million.toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} million).`,
-      frag.supplementary
-        ? `Supplementary only (never the headline): ${frag.supplementary.label}`
-        : undefined,
+      frag.supplementary ? `Supplementary only (never the headline): ${frag.supplementary.label}` : undefined,
       `${lastYear.revision_status === "preliminary" ? `${lastYear.year}p` : lastYear.year}: the latest fragment year; ${lastYear.revision_status === "preliminary" ? "preliminary, labelled 2025p everywhere" : `revision status ${lastYear.revision_status}`}.`,
     ].filter((s): s is string => s !== undefined),
     stagnation: {
@@ -296,7 +287,7 @@ export interface MarketMapData {
  */
 export function buildMarketMapData(
   sourceMarket: SourceMarketFragment,
-  segmentation: SegmentationFragment | undefined
+  segmentation: SegmentationFragment | undefined,
 ): MarketMapData {
   const segmentByMarket = new Map<string, MarketSegment>();
   if (segmentation) {
@@ -328,9 +319,7 @@ export function buildMarketMapData(
 
 /** Markets whose geo entity is absent from the committed world geometry. */
 export function filterMissingFromGeometry(data: MarketMapData, geometryNames: Set<string>): string[] {
-  return data.markets
-    .filter((m) => !geometryNames.has(m.geoName))
-    .map((m) => `${m.market} (as ${m.geoName})`);
+  return data.markets.filter((m) => !geometryNames.has(m.geoName)).map((m) => `${m.market} (as ${m.geoName})`);
 }
 
 // ---------------------------------------------------------------------------
@@ -397,7 +386,12 @@ export function buildMethodIndex(bundle: Bundle): {
         fragment: "macro_series",
         ticket: "T4",
         method: `National CPI (annual mean of the monthly index), downloaded via tools/dosm-cli on ${s.source.fetched_utc.slice(0, 10)}. The deflator for the constant-2019-prices counterfactual.`,
-        sources: [{ label: `OpenDOSM dataset "${s.source.dataset_id}" — ${s.source.title} (${s.source.index_base}, fetched ${s.source.fetched_utc.slice(0, 10)})`, url: s.source.url }],
+        sources: [
+          {
+            label: `OpenDOSM dataset "${s.source.dataset_id}" — ${s.source.title} (${s.source.index_base}, fetched ${s.source.fetched_utc.slice(0, 10)})`,
+            url: s.source.url,
+          },
+        ],
         usedBy: ["/", "/diagnosis/decomposition"],
       });
     }
@@ -442,7 +436,10 @@ export function buildMethodIndex(bundle: Bundle): {
       method:
         "Derived, not modelled: every clustered source market gets exactly one verdict from its segment membership — grow (High-Yield Long-Haul or High-Growth Emerging: each extra visitor adds disproportionate value), coast (Low-Yield Steady: arrivals without matching value, so effort stays flat), reduce reliance on low-yield same-day traffic (Volume Traps). Volume Traps is a measurement critique of the arrivals KPI, not a judgement of the market. Unclustered markets get no verdict; a segment no rule covers is flagged, never guessed. The numbers behind each verdict (yield, arrivals, growth, tier) come straight from this fragment.",
       sources: [
-        { label: "Segment membership, yield tiers and 2024 figures: the source_segmentation fragment (same page, above)" },
+        {
+          label:
+            "Segment membership, yield tiers and 2024 figures: the source_segmentation fragment (same page, above)",
+        },
       ],
       usedBy: ["/diagnosis/source-markets"],
     });
@@ -455,7 +452,10 @@ export function buildMethodIndex(bundle: Bundle): {
       ticket: "T6",
       method: `2024 receipts-per-visitor for ${rb.countries.map((c) => c.country).join(", ")} vs each country's ${rb.baseline_year} WDI yield, from officially published releases. Basis caveats (survey vs balance-of-payments vs administrative) travel with every row. Supporting context only — never the headline.`,
       sources: rb.countries.flatMap((c) =>
-        c.source_urls.map((u) => ({ label: `${c.country}: officially published 2024 figures (${c.receipts_basis_note})`, url: u }))
+        c.source_urls.map((u) => ({
+          label: `${c.country}: officially published 2024 figures (${c.receipts_basis_note})`,
+          url: u,
+        })),
       ),
       usedBy: ["/diagnosis/regional"],
     });
@@ -510,10 +510,7 @@ export function flagNominalFigure(value: number, what: string): FlaggedNominalFi
  * and the false-surplus warning in its output.
  */
 export function flagNaiveNominalGap(year: CounterfactualYear): FlaggedNominalFigure {
-  const fig = flagNominalFigure(
-    year.naive_nominal_gap_rm_million,
-    `The naive nominal gap for ${yearLabel(year)}`
-  );
+  const fig = flagNominalFigure(year.naive_nominal_gap_rm_million, `The naive nominal gap for ${yearLabel(year)}`);
   return {
     ...fig,
     notice: `The naive nominal gap for ${yearLabel(year)} (${fig.display}) is INVALID: it compares nominal ringgit across years. Inflation and visitor volume flatter it — per the bundle it shows a false surplus where the real (constant-2019-prices) gap is missing billions. Never read it as a comparison.`,
@@ -565,13 +562,7 @@ export function buildMarketRanking(data: MarketMapData): RankedMarket[] {
 /** The ranked row type: `rank` is null exactly when the yield is null. */
 export type RankedMarket = MapMarket & { rank: number | null };
 
-export type YieldShade =
-  | "tier_top"
-  | "tier_upper"
-  | "tier_lower"
-  | "tier_bottom"
-  | "unclustered"
-  | "no_yield";
+export type YieldShade = "tier_top" | "tier_upper" | "tier_lower" | "tier_bottom" | "unclustered" | "no_yield";
 
 /**
  * Map shade from the pipeline's own yield tier (quartiles of the emitted 2024

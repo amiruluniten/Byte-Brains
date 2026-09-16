@@ -1,8 +1,8 @@
+import { YieldMap } from "@/components/charts/yield-map";
 import { BundleFooter } from "@/components/layout/footer/bundle-footer";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { YieldMap } from "@/components/charts/yield-map";
-import { Badge } from "@/components/ui/badge";
 import { buildMarketMapData, buildMarketRanking, filterMissingFromGeometry } from "@/lib/diagnosis";
 import { ErrorNotice, loadBundleForPages } from "@/lib/server-bundle";
 import { WORLD_PATHS } from "@/lib/world-paths.generated";
@@ -42,9 +42,9 @@ export default function SourceMarketsPage() {
         <p className="font-medium text-muted-foreground text-sm">Diagnosis</p>
         <h1 className="font-semibold text-3xl tracking-tight">Source markets: who carries the value</h1>
         <p className="text-muted-foreground">
-          Top source markets ranked by tourism yield — receipts per visitor{yieldYearLabel ? `, ${yieldYearLabel}` : ""} — with the world map shaded by
-          the yield tiers from the k-means segmentation. Same-day-heavy, low-yield markets are the Volume Trap made
-          geographic.
+          Top source markets ranked by tourism yield — receipts per visitor{yieldYearLabel ? `, ${yieldYearLabel}` : ""}{" "}
+          — with the world map shaded by the yield tiers from the k-means segmentation. Same-day-heavy, low-yield
+          markets are the Volume Trap made geographic.
         </p>
       </header>
 
