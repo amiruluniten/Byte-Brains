@@ -1,7 +1,7 @@
 # 4 · Findings material (structured against the official report template)
 
-Everything below is ready to adapt. Numbers are from bundle v1 (schema 1.0.0,
-checksum `ad9523c8`, generated 2026-09-13). Interpretation drafts are marked
+Everything below is ready to adapt. Numbers are from bundle v1 (schema 1.1.0,
+checksum `338e1b34`, generated 2026-09-16). Interpretation drafts are marked
 **[interpretation]** — adapt freely, keep the numbers exact. Method detail lives in
 `2-method-notes.md`; sources in `3-source-registry.md`; the exact bundle version
 and checksum to cite is in `pinned-bundle.md`; ready-to-paste dashboard figures
@@ -130,21 +130,32 @@ what the Critical Thinking & Defence score rewards.
 
 ### F1. The Missing Billions — the headline
 
-> **RM10.2 billion** (RM10,204.5 million, constant 2019 prices): the cumulative
+> **RM10.1 billion** (RM10,098.4 million, constant 2019 prices): the cumulative
 > 2020–2024 gap between what inbound tourism actually earned and what it would have
-> earned if each visitor had been worth a 2019 visitor.
+> earned if each visitor had been worth a 2019 visitor — recomputed from the TSA 2025
+> revised receipts (2024 inbound consumption restated, RM102,815.3 → RM102,931.3
+> million). The pre-registered window stays 2020–2024.
 
 - Year by year (RM million, 2019 prices): 2020 +1,786.6; 2021 +604.5; 2022 +4,293.3;
-  2023 +3,659.1; 2024 -139.1 (≈ zero).
-- **The stagnation line:** 2024 real per-visitor expenditure RM2,477.77 vs 2019's
-  RM2,474.10 — +0.15%. Each 2024 visitor was worth exactly what a 2019 visitor was
-  worth.
+  2023 +3,659.1; 2024 -245.2 (revised receipts; ≈ zero).
+- Including the preliminary 2025 year (-3,265.7 — actual receipts above the
+  2019-yield counterfactual), the cumulative 2020–2025 gap is RM6,832.7 million.
+  This is a **supplementary** figure only — the headline stays 2020–2024.
+- **The stagnation line:** 2024 real per-visitor expenditure RM2,480.56 (revised
+  receipts) vs 2019's RM2,474.10 — +0.26%. Each 2024 visitor was worth what a 2019
+  visitor was worth.
+- **2025 (preliminary) — the line breaks:** 2025p real per-visitor tourism yield
+  RM2,551.49 vs 2019's RM2,474.10 — +3.1%, constant 2019 prices. Real per-visitor
+  tourism yield stayed pinned to the anchor through 2024 — never more than 0.3% above
+  it — and rose clearly above only in 2025, five years on. All 2025 figures are
+  preliminary.
 - Never quote nominal gaps: on nominal prices the same arithmetic "shows" a false
-  +RM8,894.66 million surplus in 2024, because inflation (+9.3%) and volume (+8.3%)
-  mask the flat real yield.
+  +RM9,010.66 million surplus in 2024, because inflation (+9.3%) and volume (+8.3%)
+  mask the flat real yield. The 2025 row's invalid nominal twin is emitted the same
+  way.
 
 **[interpretation]** "The recovery made the counter bigger, not the visitor more
-valuable. Five years of recovery, zero value growth per visitor — that is the RM10.2
+valuable. Five years of recovery, zero value growth per visitor — that is the RM10.1
 billion story."
 
 ### F2. The Volume Trap — where the growth went
@@ -198,8 +209,8 @@ visible.
 
 What the project delivers, for the report's Output section:
 
-1. **The data bundle** — versioned, checksum-validated (bundle v1, schema 1.0.0,
-   checksum `ad9523c8`), one file that both the dashboard and this report cite.
+1. **The data bundle** — versioned, checksum-validated (bundle v1, schema 1.1.0,
+   checksum `338e1b34`), one file that both the dashboard and this report cite.
 2. **The dashboard** (Next.js, static, no backend — survives judging-day traffic;
    see ADR-0001/0002): headline landing page (arrivals and receipts side by side,
    basis-labelled); diagnosis view (extensive-vs-intensive decomposition, segment
@@ -220,9 +231,11 @@ What the project delivers, for the report's Output section:
 **[interpretation, ready to adapt]**
 
 > Malaysia's inbound tourism recovery has been extensive, not intensive. Between
-> 2020 and 2024 the sector fell RM10.2 billion short (constant 2019 prices) of the
+> 2020 and 2024 the sector fell RM10.1 billion short (constant 2019 prices) of the
 > receipts that 2019's value per visitor would have produced, and by 2024 each
-> visitor was worth exactly what a 2019 visitor was worth. The growth came from
+> visitor was worth what a 2019 visitor was worth. Preliminary 2025 data close the
+> story: real per-visitor tourism yield finally rose clearly above the 2019 anchor
+> only in 2025 — five years on. The growth came from
 > more visitors — increasingly the lowest-yield kind, as the same-day share rose
 > from 25.5% to 34.1% and land crossings carried two-thirds of arrivals. Arrival
 > targets reward precisely this traffic. The fix is a market-mix objective: grow the

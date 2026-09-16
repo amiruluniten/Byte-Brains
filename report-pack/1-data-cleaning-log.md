@@ -1,8 +1,8 @@
 # 1 · Data-cleaning log (plain language)
 
 Every dataset below went through the project's data pipeline, which produces one
-versioned output file — the **data bundle** (bundle v1, schema 1.0.0, checksum
-`ad9523c8`). Everything the dashboard shows and everything in this pack comes from
+versioned output file — the **data bundle** (bundle v1, schema 1.1.0, checksum
+`338e1b34`). Everything the dashboard shows and everything in this pack comes from
 that bundle, so the report can cite one version for all numbers.
 
 This log describes, for each source, what was changed on the way in, why, and what
@@ -12,11 +12,12 @@ exact input bytes are traceable.
 
 ---
 
-## A. DOSM Tourism Satellite Account workbooks (2015–2024 national series)
+## A. DOSM Tourism Satellite Account workbooks (2015–2025 national series)
 
-**Raw files:** `data/raw/tourism_2023.xlsx`, `data/raw/tourism_2024.xlsx`
-(downloaded from `https://storage.dosm.gov.my/tourism/tourism_2023.xlsx` and
-`.../tourism_2024.xlsx`, accessed 2026-09-13).
+**Raw files:** `data/raw/tourism_2023.xlsx`, `data/raw/tourism_2024.xlsx`,
+`data/raw/tourism_2025.xlsx` (downloaded from
+`https://storage.dosm.gov.my/tourism/tourism_2023.xlsx`, `.../tourism_2024.xlsx`
+and `.../tourism_2025.xlsx`; accessed 2026-09-13 and 2026-09-16).
 
 The TSA is the national flagship publication. Its workbook is a print-layout sheet,
 not a clean table, so several things had to be handled on the way in:
@@ -26,16 +27,20 @@ not a clean table, so several things had to be handled on the way in:
 | Row labels matched on the English half of bilingual Malay+English merged cells (e.g. "A1. Ketibaan pelancong ke Malaysia … Tourist arrivals to Malaysia"). | DOSM publishes bilingual labels in merged cells; matching on one language is stable. | A label rename in a future edition would break the match. Ground-truth checks (2019 inbound consumption RM86,706.5 million; 2019 tourist arrivals 26,100,784) fail the run loudly if the parse drifts. |
 | Years read from the header row (row 3), not assumed positional. | The sheets are laid out for printing. | A layout change would silently shift columns onto wrong years; the ground truths catch this. |
 | Each sheet contains side-by-side blocks: absolute values **and** percentage-share blocks. Only the values block is read. | The share block would give numbers ~100× too small. | Reading the wrong block is a classic silent error; the ground-truth checks make it loud. |
-| DOSM revision flags ("2023p" = preliminary) are **kept** on each observation, never stripped. | The report should be able to say a figure was preliminary at time of access. | Later revisions change values; the bundle records the source file and flag so the vintage is traceable. |
+| DOSM revision flags ("2025p" = preliminary) are **kept** on each observation, never stripped. | The report should be able to say a figure was preliminary at time of access. | Later revisions change values; the bundle records the source file and flag so the vintage is traceable. |
+| The TSA 2025 workbook's blank spacer rows and its `2025p` year-header marker are handled by the same anchor-row and year-header lookups; later official editions **win** on overlapping years, so the 2024 restatement is adopted. | The 2025 export's layout differs slightly; the revision policy (later official workbook wins) must be explicit. | A silent layout shift would misplace years; the ground-truth checks (2019 values, the documented 2024 restatement RM102,815.3 → RM102,931.3 million) fail the run loudly if parsing drifts. |
 | Footnote artefacts ("n.a", "4.1*") are treated as missing or footnotes — never as the number 4.1. | An asterisk is a footnote marker, not a decimal. | Parsing the marker would corrupt the series; ground truths catch it. |
 | Empty "phantom" formatting columns ignored. | The sheet has decorative empty columns. | Without care they would offset the column mapping. |
 | Each arrival series is split by **counting basis** — tourist (stays ≥1 night), visitor (all visitors), same-day visitor (excursionist) — and the year window is embedded in the series name. Bases are never merged into one series. | Tourist-basis series exclude same-day visitors; visitor-basis series include them. Mixing them silently changes the denominator and invents fake growth. | Cross-basis comparisons misstate recovery. The bundle refuses a mixed-basis series by construction. |
 
 **What comes out:** the `national_series` fragment — visitor arrivals 2019–2024
-(37,961,485 in 2024), tourist arrivals 2015–2023 and 2019–2024 (26,100,784 in 2019),
-same-day visitor (excursionist) arrivals 2019–2024 (8,944,841 in 2019; 12,944,787 in
-2024), and inbound tourism consumption 2015–2024 (RM86,706.5 million in 2019;
-RM102,815.3 million in 2024).
+and 2019–2025 (37,961,485 in 2024; 42,196,892 preliminary in 2025), tourist
+arrivals 2015–2023, 2019–2024 and 2019–2025 (26,100,784 in 2019; 26,613,597
+preliminary in 2025), same-day visitor (excursionist) arrivals 2019–2024 and
+2019–2025 (8,944,841 in 2019; 12,944,787 in 2024; 15,583,295 preliminary in 2025),
+and inbound tourism consumption 2015–2024 and 2015–2025 (RM86,706.5 million in
+2019; RM102,815.3 million in 2024 as first published, restated to RM102,931.3
+million by the TSA 2025 edition; RM119,312.0 million preliminary in 2025).
 
 ---
 
@@ -75,7 +80,9 @@ CPI by Division (2-digit)", overall division, 2010=100), downloaded via the repo
 
 **What comes out:** the `macro_series` fragment. Anchor values: CPI 2019 =
 121.483333; CPI 2024 = 132.791667; ratio 1.093085 — prices rose 9.3% from 2019 to
-2024, and every real-terms number in this pack removes exactly that effect.
+2024. CPI 2025 = 134.625, ratio 1.108177 (the preliminary year deflates by the same
+overall-series annual mean). Every real-terms number in this pack removes exactly
+these effects.
 
 ---
 
@@ -104,11 +111,13 @@ arithmetic over fragments A and C (method in `2-method-notes.md`).
   **visitor-basis** arrivals, exactly as published; the pairing is stated inside the
   bundle rather than hidden. **What could go wrong:** the two bases differ (the
   receipts series counts tourism consumption; arrivals include same-day visitors).
-  This is the pairing the official 2019 anchor uses, and a Tourism Malaysia receipts
-  variant gives the same conclusion (see method notes).
+  This is the pairing the official 2019 anchor uses — including for the preliminary
+  2025 row — and a Tourism Malaysia receipts variant gives the same conclusion (see
+  method notes).
 - A **naive nominal** twin of the counterfactual is emitted too, explicitly flagged
-  invalid — and the validator asserts it shows the false "surplus" the data actually
-  produces, so any future regression to a nominal headline fails the build.
+  invalid (including for the preliminary 2025 row) — and the validator asserts it
+  shows the false "surplus" the data actually produces, so any future regression to a
+  nominal headline fails the build.
 - Volume Trap indicators are computed from the national series (same-day visitor (excursionist) shares) plus one hand-extracted figure: land is the arrival mode for
   66.1% of 2024 visitors (25,080,202 of 37,961,485; Tourism Malaysia In Brief 2024,
   mode-of-arrival table), pinned by a ground-truth check.

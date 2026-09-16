@@ -116,17 +116,22 @@ def test_required_pack_files_exist():
 def test_headline_counterfactual_numbers_match_bundle():
     mb = load_bundle()["fragments"]["missing_billions"]
     years = mb["years"]
-    cum = sum(y["gap_2019_prices_rm_million"] for y in years if y["year"] >= 2020)
+    cum = sum(y["gap_2019_prices_rm_million"] for y in years if 2020 <= y["year"] <= 2024)
     y24 = next(y for y in years if y["year"] == 2024)
     y19 = next(y for y in years if y["year"] == 2019)
+    # the headline window stays the pre-registered 2020-2024 (issue #12/#13 guard)
+    assert mb["headline"]["window"] == "2020-2024"
+    assert abs(cum - mb["headline"]["cumulative_gap_rm_million"]) < 0.05, (
+        "headline must equal the sum of the fragment's own 2020-2024 rows"
+    )
     pack = all_pack_markdown()
     for grounded, needle in [
-        (cum, "10,204.5"),                                # cumulative 2020-2024 real gap
-        (y24["gap_2019_prices_rm_million"], "-RM139.07"),   # 2024 real gap ~ 0
-        (y24["naive_nominal_gap_rm_million"], "-RM8,894.66"),
+        (cum, "10,098.4"),                                # cumulative 2020-2024 real gap, revised receipts
+        (y24["gap_2019_prices_rm_million"], "-RM245.19"),   # 2024 real gap, revised receipts
+        (y24["naive_nominal_gap_rm_million"], "-RM9,010.66"),
         (y19["per_visitor_real_2019_rm"], "2,474.10"),
-        (y24["per_visitor_real_2019_rm"], "2,477.77"),
-        (y24["per_visitor_nominal_rm"], "2,708.41"),
+        (y24["per_visitor_real_2019_rm"], "2,480.56"),
+        (y24["per_visitor_nominal_rm"], "2,711.47"),
     ]:
         # the bundle value must actually appear in the pack at some quoted
         # precision — presence of the curated needle alone is not enough.
@@ -140,6 +145,41 @@ def test_headline_counterfactual_numbers_match_bundle():
             f"pack cites {needle} but the bundle now says {grounded:,.2f} — re-ground the pack"
         )
         assert needle in pack, f"pack never states {needle}"
+    # the headline is RM10.1 billion, recomputed from the TSA 2025 revised
+    # receipts — the old RM10.2 billion wording must be gone from the pack
+    assert "RM10.1 billion" in pack
+    for stale in ("10,204.5", "RM10.2 billion", "-RM139.07", "2,477.77", "2,708.41"):
+        assert stale not in pack, f"stale pre-#13 value still quoted: {stale}"
+
+
+def test_2025_preliminary_row_and_supplementary_match_bundle():
+    """Issue #14: the 2025 preliminary row and the labelled supplementary
+    cumulative figure are quoted from the bundle, never as the headline."""
+    mb = load_bundle()["fragments"]["missing_billions"]
+    y25 = next(y for y in mb["years"] if y["year"] == 2025)
+    assert y25["revision_status"] == "preliminary"
+    supp = mb["supplementary"]
+    assert supp["window"] == "2020-2025"
+    pack = all_pack_markdown()
+    for grounded, needle in [
+        (y25["receipts_nominal_rm_million"], "119,312.0"),
+        (y25["visitor_arrivals"], "42,196,892"),
+        (y25["per_visitor_real_2019_rm"], "2,551.49"),
+        (y25["actual_receipts_2019_prices_rm_million"], "107,665.1"),
+        (y25["counterfactual_receipts_2019_prices_rm_million"], "104,399.5"),
+        (y25["gap_2019_prices_rm_million"], "-3,265.7"),
+        (supp["cumulative_gap_rm_million"], "6,832.7"),
+    ]:
+        candidates = [f"{grounded:,.0f}", f"{grounded:,.1f}", f"{grounded:,.2f}"]
+        assert any(c in pack for c in candidates), (
+            f"pack never states 2025 figure {grounded:,.2f} — re-ground the pack"
+        )
+        assert needle in pack, f"pack never states {needle}"
+    # 2025 is visibly preliminary, and the 2020-2025 figure is labelled
+    # supplementary only (never the headline)
+    assert "2025p" in pack
+    assert "preliminary" in pack.lower()
+    assert "upplementary" in pack
 
 
 def test_volume_trap_numbers_match_bundle():
@@ -169,6 +209,10 @@ def test_national_series_numbers_match_bundle():
         ("arrivals_excursionist_2019_2024", 2024, "12,944,787"),
         ("inbound_consumption_tourist_2015_2024", 2019, "86,706.5"),
         ("inbound_consumption_tourist_2015_2024", 2024, "102,815.3"),
+        # the TSA 2025 edition (issue #13): 2024 restated, 2025 preliminary
+        ("inbound_consumption_tourist_2015_2025", 2024, "102,931.3"),
+        ("inbound_consumption_tourist_2015_2025", 2025, "119,312.0"),
+        ("arrivals_visitor_2019_2025", 2025, "42,196,892"),
     ]:
         bundle_str = f"{vals[(sid, year)]:,.0f}"
         assert bundle_str in pack, (
@@ -218,6 +262,8 @@ def test_cpi_deflator_matches_bundle():
     assert f"{mb['deflator']['anchor_index']:,.6f}" in pack     # 121.483333
     assert "132.791667" in pack                                 # CPI 2024
     assert "1.093085" in pack                                   # 2024/2019 ratio
+    assert "134.625" in pack                                    # CPI 2025
+    assert "1.108177" in pack                                   # 2025/2019 ratio
 
 
 # ------------------------------------------------- bundle citation -------

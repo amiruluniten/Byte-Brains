@@ -46,8 +46,9 @@ _Avoid_: local tourist
 ### Project framing
 
 **Missing Billions**:
-Our headline counterfactual — the RM10.2 billion cumulative gap (2020–2024, constant 2019
-prices) between actual receipts and receipts at 2019's real per-visitor yield. Paired with the
+Our headline counterfactual — the RM10.1 billion cumulative gap (RM10,098.4 million;
+2020–2024, constant 2019 prices, recomputed from the TSA 2025 revised receipts) between
+actual receipts and receipts at 2019's real per-visitor yield. Paired with the
 stagnation line: by 2024 each visitor was worth exactly what a 2019 visitor was worth. The
 regional (Thailand) yield gap is supporting context, never the headline. _Avoid_: revenue gap, shortfall
 

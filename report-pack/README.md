@@ -10,14 +10,15 @@ Every number in this pack comes from the **data bundle** — the single data fil
 whole project runs on (the dashboard reads the same file). This pack was built
 against:
 
-- **bundle v1 (schema 1.0.0), checksum `ad9523c8`** (full checksum
-  `ad9523c82ebaf162f5c88dcf87c2e60102770342835d2376017cca183ca30bbe`), generated
-  2026-09-13 from the DOSM Tourism Satellite Account workbooks, Tourism Malaysia
+- **bundle v1 (schema 1.1.0), checksum `338e1b34`** (full checksum
+  `338e1b3464f87b37507d8142263d3432395de2b943facb51928d24316bcfb20a`), generated
+  2026-09-16 from the DOSM Tourism Satellite Account workbooks (2015–2025; the TSA
+  2025 edition restates 2024 and adds 2025 as preliminary), Tourism Malaysia
   *Statistics in Brief 2024*, the DOSM CPI series, and the WEF TTDI indicator set.
 
-If the pipeline is re-run before submission (for example when 2025 receipts are
-published), the bundle checksum changes. Re-cite whatever bundle version the
-dashboard footer shows — the report must cite the same data the dashboard shows.
+If the pipeline is re-run before submission (for example when a later TSA edition
+revises these figures), the bundle checksum changes. Re-cite whatever bundle version
+the dashboard footer shows — the report must cite the same data the dashboard shows.
 
 ## Files
 
@@ -40,9 +41,14 @@ dashboard footer shows — the report must cite the same data the dashboard show
 - Use **extensive growth** (more visitors) vs **intensive growth** (more value per
   visitor) — this is the report's spine.
 - Use **tourist** for visitors who stay at least one night; use "same-day visitor (excursionist)" on first mention, then "same-day visitor".
-- The headline counterfactual is the **Missing Billions** (RM10.2 billion, 2020–2024,
-  constant 2019 prices). Regional comparisons (Thailand, Indonesia) are supporting
-  context with caveats — never the headline.
+- The headline counterfactual is the **Missing Billions** (RM10.1 billion —
+  RM10,098.4 million — 2020–2024, constant 2019 prices, recomputed from the TSA 2025
+  revised receipts). The 2020–2025 cumulative (RM6,832.7 million, includes the
+  preliminary 2025 year) is a supplementary figure only — never the headline.
+  Regional comparisons (Thailand, Indonesia) are supporting context with caveats —
+  never the headline.
+- 2025 figures are **preliminary** ("2025p" in the TSA). Every 2025 number carries
+  its preliminary marker wherever it is quoted.
 - The measurement critique is the **Volume Trap**: arrival-count KPIs reward
   low-yield same-day traffic.
 - Say **source market** (not "country") and **market mix** (not "portfolio") in prose.
@@ -54,7 +60,8 @@ dashboard footer shows — the report must cite the same data the dashboard show
 - The Missing Billions is a **real-terms (constant 2019 prices)** number only. A
   nominal comparison shows a false surplus — never quote nominal gaps.
 - Two "receipts" numbers exist and they are **not the same basis**: the TSA inbound
-  tourism consumption (RM102,815.3 million in 2024, from DOSM's national accounts
+  tourism consumption (RM102,931.3 million in 2024 as restated by the TSA 2025
+  edition — RM102,815.3 million as first published — from DOSM's national accounts
   tables) and Tourism Malaysia visitor receipts (RM106,783.11 million in 2024, from
   the expenditure survey). Each calculation names which one it uses. Do not mix them
   in one paragraph without saying so.

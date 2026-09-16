@@ -1,7 +1,7 @@
 # 2 · Method notes (plain language, no code)
 
 These are the four calculations behind the report. Every number quoted here is
-bundle v1 (schema 1.0.0, checksum `ad9523c8`), generated 2026-09-13.
+bundle v1 (schema 1.1.0, checksum `338e1b34`), generated 2026-09-16.
 
 ---
 
@@ -43,7 +43,7 @@ worth what a 2019 visitor was worth, in real terms?
    2019: RM86,706.5 million ÷ 35,045,625 = **RM2,474.10** per visitor.
 2. Deflate to 2019 purchasing power: divide by the CPI ratio CPI(t) ÷ CPI(2019).
    Prices rose 9.3% from 2019 to 2024 (CPI 121.483333 → 132.791667, ratio 1.093085),
-   so nominal 2024 per-visitor spending of RM2,708.41 is only **RM2,477.77** in 2019
+   so nominal 2024 per-visitor spending of RM2,711.47 is only **RM2,480.56** in 2019
    money.
 3. Counterfactual receipts = actual arrivals × the 2019 real per-visitor yield.
 4. Real gap = counterfactual - actual, everything in 2019 prices.
@@ -57,27 +57,49 @@ worth what a 2019 visitor was worth, in real terms?
 | 2021 | 389.8 | 399,865 | 962.22 | 384.8 | 989.3 | **+604.5** |
 | 2022 | 32,473.3 | 14,267,416 | 2,173.19 | 31,005.7 | 35,299.1 | **+4,293.3** |
 | 2023 | 72,992.8 | 28,964,308 | 2,347.77 | 68,001.6 | 71,660.7 | **+3,659.1** |
-| 2024 | 102,815.3 | 37,961,485 | 2,477.77 | 94,059.7 | 93,920.6 | **-139.1** |
+| 2024 | 102,931.3 | 37,961,485 | 2,480.56 | 94,165.8 | 93,920.6 | **-245.2** |
+| 2025p | 119,312.0 | 42,196,892 | 2,551.49 | 107,665.1 | 104,399.5 | **-3,265.7** |
 
-**The headline:** the cumulative real gap 2020–2024 is **RM10,204.5 million ≈
-RM10.2 billion** — the Missing Billions.
+**The headline:** the cumulative real gap 2020–2024 is **RM10,098.4 million ≈
+RM10.1 billion** — the Missing Billions (constant 2019 prices; recomputed from the
+TSA 2025 revised receipts — the TSA 2025 edition restates 2024 inbound consumption,
+RM102,815.3 → RM102,931.3 million, and the later official workbook wins). 2024 uses
+the revised figure; the 2025 row is preliminary ("2025p" in the TSA) and is **not**
+part of the headline. Including preliminary 2025, the
+cumulative 2020–2025 gap is RM6,832.7 million — a clearly-labelled **supplementary**
+figure only, never the headline.
 
-**The stagnation line:** by 2024, real per-visitor expenditure was RM2,477.77 against
-the 2019 anchor RM2,474.10 — a difference of +0.15%, i.e. the 2024 real gap is
--RM139.07 million, essentially zero at this data's precision. Each 2024 visitor was
-worth exactly what a 2019 visitor was worth. The recovery added **visitors** (+8.3%)
-and **prices** (+9.3%) — which together explain the nominal receipts jump to
-RM102,815.3 million (+18.6% on the TSA basis) — but added **no value per visitor**.
+**The stagnation line:** by 2024 (revised receipts), real per-visitor expenditure
+was RM2,480.56 against the 2019 anchor RM2,474.10 — a difference of +0.26%, i.e. the
+2024 real gap is -RM245.19 million, essentially zero at this data's precision. Each
+2024 visitor was worth what a 2019 visitor was worth. The recovery added
+**visitors** (+8.3%) and **prices** (+9.3%) — which together explain the nominal
+receipts jump to RM102,931.3 million (+18.7% on the TSA basis; RM102,815.3 million,
++18.6%, as the TSA 2024 edition first published it) — but added essentially **no
+value per visitor**.
+
+**The ending of the line (2025, preliminary).** The TSA 2025 edition labels 2025
+"2025p" — preliminary — and it is the year the stagnation line ends: 2025 real
+per-visitor tourism yield was RM2,551.49 against the 2019 anchor RM2,474.10 (+3.1%,
+constant 2019 prices). Real per-visitor tourism yield stayed pinned to the anchor
+through 2024 — never more than 0.3% above it — and rose clearly above only in 2025,
+five years on. Every 2025 figure is preliminary and stays marked "p"; the Missing
+Billions headline remains a 2020–2024 figure in constant 2019 prices. The 2025 row
+pairs the same Jad 1A inbound tourism consumption with visitor-basis arrivals — the
+same stated pairing as every other row.
 
 **Why only constant-2019-prices is valid.** Nominal per-visitor expenditure *rose*
-(RM2,474.10 → RM2,708.41), so a naive nominal counterfactual shows a false surplus of
-RM8,894.66 million in 2024 — the bundle emits that invalid nominal gap as
-**-RM8,894.66 million**, flagged invalid, precisely so nobody quotes it. Any nominal
-gap in the report is a mistake.
+(RM2,474.10 → RM2,711.47 in 2024), so a naive nominal counterfactual shows a false
+surplus of RM9,010.66 million in 2024 — the bundle emits that invalid nominal gap as
+**-RM9,010.66 million**, flagged invalid, precisely so nobody quotes it. The 2025
+row's invalid nominal twin is emitted the same way. Any nominal gap in the report is
+a mistake.
 
 **Receipts basis used.** The headline pairs the TSA inbound tourism consumption
-(Jad 1A, RM102,815.3 million in 2024) with visitor-basis arrivals — the same pairing
-the official 2019 anchor uses. As a robustness check, re-running the same arithmetic
+(Jad 1A, RM102,815.3 million in 2024 as first published; restated to RM102,931.3
+million by the TSA 2025 edition) with visitor-basis arrivals — the same pairing the
+official 2019 anchor uses, and the same pairing as the preliminary 2025 row. As a
+robustness check, re-running the same arithmetic
 on Tourism Malaysia's In Brief receipts basis (RM106,783.11 million) gives the same
 conclusion: a real 2024 gap of about -RM3.7 billion — small against RM100+ billion
 of receipts, still ≈ zero per visitor, and still no missing billions in nominal terms.
@@ -192,8 +214,9 @@ simulator reads is already in the bundle cited above.)*
 - **Population**: inbound international visitors to Malaysia only. Domestic visitors
   are out of scope — the TSA inbound tables and the source-market receipts tables do
   not cover them.
-- **Window**: 2019–2024. 2019 is the anchor year: the official pre-crisis baseline.
-  It is a measuring stick for the stagnation line, not a target to revert to.
+- **Window**: 2019–2025 (2025 preliminary, "2025p" in the TSA). 2019 is the anchor
+  year: the official pre-crisis baseline. It is a measuring stick for the stagnation
+  line, not a target to revert to.
 - **Source markets**: the top-20 markets in Tourism Malaysia's *Statistics in Brief
   2024*. Four of the twenty are excluded from the segmentation with stated reasons
   (no 2024 yield: Bangladesh, Myanmar; no receipts: Canada, Netherlands).

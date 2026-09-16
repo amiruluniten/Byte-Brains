@@ -1,7 +1,7 @@
 # 5 · Advisor summary (one page)
 
 **Project:** The Missing Billions — Making Every Visit Count
-**Team:** Byte-Brains · **Entry:** DOSM Datathon 2026 · **Data:** bundle v1 (schema 1.0.0, checksum `ad9523c8`, generated 2026-09-13)
+**Team:** Byte-Brains · **Entry:** DOSM Datathon 2026 · **Data:** bundle v1 (schema 1.1.0, checksum `338e1b34`, generated 2026-09-16)
 
 **The question.** Malaysia's inbound tourism recovered record arrival counts after
 the pandemic. Did it recover *value*? We measure the recovery on both sides — more
@@ -12,14 +12,20 @@ Development Index.
 
 **What we found.**
 
-- **The Missing Billions: RM10.2 billion** (constant 2019 prices). Cumulative
-  2020–2024 gap between actual inbound receipts and what Malaysia would have earned
-  if each visitor had been worth a 2019 visitor. In 2020–2023 the real per-visitor
-  gap was positive every year; by 2024 real per-visitor expenditure was RM2,477.77
-  against the 2019 anchor of RM2,474.10 — a difference of +0.15%. Each 2024 visitor
-  was worth exactly what a 2019 visitor was worth. **Five years of recovery, zero
-  value growth per visitor.** The nominal receipts jump (+18.6% on the TSA basis) is
-  fully explained by more visitors (+8.3%) and inflation (+9.3%).
+- **The Missing Billions: RM10.1 billion** (constant 2019 prices; RM10,098.4
+  million, recomputed from the TSA 2025 revised receipts). Cumulative 2020–2024 gap
+  between actual inbound receipts and what Malaysia would have earned if each visitor
+  had been worth a 2019 visitor. In 2020–2023 the real per-visitor gap was positive
+  every year; by 2024 real per-visitor expenditure was RM2,480.56 against the 2019
+  anchor of RM2,474.10 — a difference of +0.26%. Each 2024 visitor was worth what a
+  2019 visitor was worth. **Five years of recovery, zero value growth per visitor.**
+  The nominal receipts jump (+18.7% on the TSA basis) is fully explained by more
+  visitors (+8.3%) and inflation (+9.3%).
+- **The line breaks in 2025 (preliminary).** The TSA 2025 edition marks 2025
+  "2025p": real per-visitor tourism yield reached RM2,551.49 — clearly above the
+  2019 anchor for the first time, five years on. Every 2025 figure is preliminary;
+  the 2020–2025 cumulative gap (RM6,832.7 million) is a supplementary figure only,
+  never the headline.
 - **The Volume Trap.** Same-day visitors — who cross the land border, spend little,
   and leave — grew from 25.5% to 34.1% of all arrivals (2019→2024); land was the
   arrival mode for 66.1% of 2024 visitors. Singapore alone is 49.7% of arrivals at
@@ -50,9 +56,9 @@ everything.
 day), the reproducible data pipeline behind it, and the report you are advising on —
 all grounded in the same cited bundle version.
 
-**Where to poke at it.** The 2024 real gap is ≈ zero (-RM139.07 million), which we
-report as the *stagnation line* rather than a rounding footnote: the honest finding
-is that the recovery closed the volume gap and stopped there. The counterfactual
+**Where to poke at it.** The 2024 real gap is ≈ zero (-RM245.19 million, revised
+receipts), which we report as the *stagnation line* rather than a rounding footnote:
+the honest finding is that the recovery closed the volume gap and stopped there. The counterfactual
 uses the TSA receipts basis (tourist basis) with visitor arrivals, as the official
 2019 anchor does; a Tourism Malaysia receipts variant reaches the same conclusion.
 Regional comparisons mix survey and balance-of-payments bases — we carry that
